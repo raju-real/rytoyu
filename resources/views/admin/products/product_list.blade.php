@@ -1,0 +1,185 @@
+@extends('admin.layouts.app')
+@section('title','Product List')
+@push('css')
+    <style>
+        .table td {
+            text-align: left;
+        }
+    </style>
+@endpush
+
+@section('content')
+
+    <div class="row">
+        <div class="col-12">
+            @if(!authShopInfo())
+                <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center" role="alert">
+                    <i class="mdi mdi-alert-circle-outline me-2"></i>
+                    <span class="flex-grow-1">
+                                    You can't add/edit any product without setting your shop.
+                                    <a href="{{ route('admin.shop-info') }}"
+                                       class="alert-link text-decoration-underline">click here</a>
+                                    to set your shop.
+                                </span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0 font-size-18">Product List</h4>
+
+                <div class="page-title-right">
+                    @if(authShopInfo())
+                        <a href="{{ route('admin.products.create') }}" class="btn btn-sm btn-primary">
+                            <i class="fa fa-plus-circle"></i> Add New
+                        </a>
+                    @endif
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered mb-0 text-start">
+                            <thead>
+                            <tr>
+                                <th>Sl.no</th>
+                                <th>Thumbnail</th>
+                                <th>Name</th>
+                                <th>Brand</th>
+                                <th>Variant & Price</th>
+                                <th>Active Status</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @forelse($products as $product)
+                                <tr>
+                                    <td>{{ $loop->index + 1 }}</td>
+                                    <td>
+                                        @if($product->thumbnail_path != Null && file_exists($product->thumbnail_path))
+                                            <img src="{{ asset($product->thumbnail_path) }}"
+                                                 class="avatar-sm rounded-3 d-block ">
+                                        @else
+                                            <img src="{{ asset('assets/common/images/ecommerce.png') }}"
+                                                 class="avatar-sm rounded-3 d-block">
+                                        @endif
+                                    </td>
+                                    <td>{{ $product->name ?? '' }}</td>
+                                    <td>{{ $product->brand->name ?? "N/A" }}</td>
+                                    <td>
+                                        <a type="button" class="btn btn-sm btn-info view-product-variants"
+                                           data-bs-toggle="modal"
+                                           data-bs-target="#show-product-variants"
+                                           data-id="{{ $product->id }}">
+                                            <i class="fa fa-eye fa-xl"></i>
+                                        </a>
+
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" id="product-{{ $loop->index + 1 }}"
+                                               class="product-status" data-id="{{ $product->id }}"
+                                               switch="bool" {{ isActive($product->status) ? 'checked' : '' }} />
+                                        <label for="product-{{ $loop->index + 1 }}" data-on-label="Yes"
+                                               data-off-label="No"></label>
+                                    </td>
+                                    <td>
+                                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="Show Details"
+                                           href="{{ route('admin.products.show',$product->slug) }}"
+                                           class="btn btn-sm btn-soft-info"><i class="fa fa-eye"></i>
+                                        </a>
+                                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"
+                                           href="{{ route('admin.products.edit',$product->slug) }}"
+                                           class="btn btn-sm btn-soft-success"><i class="fa fa-edit"></i>
+                                        </a>
+                                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"
+                                           class="btn btn-sm btn-soft-danger delete-data"
+                                           data-id="{{ 'delete-product-'.$product->id }}"
+                                           href="javascript:void(0);">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+                                        <form id="delete-product-{{ $product->id }}"
+                                              action="{{ route('admin.products.destroy',$product->id) }}"
+                                              method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form>
+                                    </td>
+                                </tr>
+                            @empty
+                                <x-no-data-found></x-no-data-found>
+                            @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="col-lg-12">
+                    <ul class="pagination pagination-rounded justify-content-center mt-3 mb-4 pb-1">
+                        {{ $products->links() }}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="show-product-variants" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title product-modal-header" id="exampleModalLabel">Product Variants</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-md">
+                            <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Sub Category</th>
+                                <th>Sub subcategory</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <td id="category_name"></td>
+                                <td id="subcategory_name"></td>
+                                <td id="sub_subcategory_name"></td>
+                            </tbody>
+                        </table>
+                        <hr>
+                        <h3>Variants</h3>
+
+                        <table class="table table-bordered table-striped table-md">
+                            <thead>
+                            <tr>
+                                <th>Size</th>
+                                <th>Color</th>
+                                <th>Unit Price</th>
+                                <th>Discount Price</th>
+                                <th>Inventory</th>
+                            </tr>
+                            </thead>
+                            <tbody id="product-variants-container">
+                            <!-- Rows will be dynamically appended here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@endsection
+
+@push('js')
+    <script src="{{ asset('assets/admin/js/custom/product_lists.js') }}"></script>
+@endpush
