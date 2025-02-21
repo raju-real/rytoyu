@@ -16,7 +16,7 @@ class SubSubcategoryController extends Controller
     public function index()
     {
         $data = SubSubcategory::query();
-        $data->latest();
+        $data->sort();
         $data->when(request()->get('name'),function($query) {
            $name = request()->get('name');
            $query->where('name',"LIKE","%{$name}%");
@@ -75,6 +75,7 @@ class SubSubcategoryController extends Controller
             $sub_category->icon = uploadImage($request->file('icon'), 'sub_category');
         }
         $sub_category->status = $request->status;
+        $sub_category->sorting_serial = SubCategory::where('category_id',$request->category)->where('subcategory_id',$request->subcategory)->max('sorting_serial') + 1;
         $sub_category->created_by = Auth::id();
         $sub_category->save();
         return redirect()->route('admin.sub-subcategories.index')->with(successMessage());
@@ -148,5 +149,30 @@ class SubSubcategoryController extends Controller
     {
         SubSubcategory::findOrFail($id)->delete();
         return redirect()->route('admin.subcategories.index')->with(deleteMessage());
+    }
+
+    public function sortSubSubCategories(Request $request)
+    {
+        $category_id = $request->input('category');
+        $subcategory_id = $request->input('subcategory');
+
+        if ($request->has('ids')) {
+            $arr = $request->input('ids'); // Get the sorted array of subcategory IDs
+
+            foreach ($arr as $sortOrder => $id) {
+                // Update only the subcategories that belong to the given category_id
+                $row = SubSubcategory::where('category_id', $category_id)->where('subcategory_id',$subcategory_id)->find($id);
+
+                if ($row) {
+                    $row->sorting_serial = $sortOrder + 1; // Update sorting_serial
+                    $row->save();
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Sorting updated successfully.'
+            ]);
+        }
     }
 }

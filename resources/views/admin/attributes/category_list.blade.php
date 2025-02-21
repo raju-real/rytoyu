@@ -71,6 +71,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
+                    <x-sort-available />
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered mb-0 text-nowrap">
                             <thead>
@@ -78,24 +79,32 @@
                                 <th>Sl.no</th>
                                 <th>Name</th>
                                 <th>Icon</th>
+                                <th>Image</th>
                                 <th>Product Count</th>
                                 <th>Active Status</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="sort_section">
                             @forelse($categories as $category)
-                                <tr>
-                                    <td>{{ $loop->index + 1 }}</td>
-                                    <td>{{ $category->name ?? '' }}</td>
-                                    <td>
+                                <tr data-id="{{ $category->id }}">
+                                    <td class="handle sorting-serial">{{ $category->sorting_serial }}</td>
+                                    <td class="handle">{{ $category->name ?? '' }}</td>
+                                    <td class="handle">
                                         @if($category->icon != Null && file_exists($category->icon))
                                             <img src="{{ asset($category->icon) }}" class="avatar-sm rounded-3 d-block img-50">
                                         @else
                                             <img src="{{ asset(ecommerceIcon()) }}" class="avatar-sm rounded-3 d-block img-50">
                                         @endif
                                     </td>
-                                    <td>{{ $category?->products?->count() ?? 0 }}</td>
+                                    <td class="handle">
+                                        @if($category->image != Null && file_exists($category->image))
+                                            <img src="{{ asset($category->image) }}" class="avatar-sm rounded-3 d-block img-50">
+                                        @else
+                                            <img src="{{ asset(ecommerceIcon()) }}" class="avatar-sm rounded-3 d-block img-50">
+                                        @endif
+                                    </td>
+                                    <td class="handle">{{ $category?->products?->count() ?? 0 }}</td>
                                     <td>
                                         <input type="checkbox" id="category-{{ $loop->index + 1 }}" class="category-status" data-id="{{ $category->id }}" switch="bool" {{ isActive($category->status) ? 'checked' : '' }} />
                                         <label for="category-{{ $loop->index + 1 }}" data-on-label="Yes" data-off-label="No"></label>
@@ -104,18 +113,18 @@
                                         <a data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"
                                            href="{{ route('admin.categories.edit',$category->slug) }}"
                                            class="btn btn-sm btn-soft-success"><i class="fa fa-edit"></i></a>
-                                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"
-                                           class="btn btn-sm btn-soft-danger delete-data"
-                                           data-id="{{ 'delete-category-'.$category->id }}"
-                                           href="javascript:void(0);">
-                                            <i class="fa fa-trash"></i>
-                                        </a>
-                                        <form id="delete-category-{{ $category->id }}"
-                                              action="{{ route('admin.categories.destroy',$category->id) }}"
-                                              method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                        </form>
+{{--                                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"--}}
+{{--                                           class="btn btn-sm btn-soft-danger delete-data"--}}
+{{--                                           data-id="{{ 'delete-category-'.$category->id }}"--}}
+{{--                                           href="javascript:void(0);">--}}
+{{--                                            <i class="fa fa-trash"></i>--}}
+{{--                                        </a>--}}
+{{--                                        <form id="delete-category-{{ $category->id }}"--}}
+{{--                                              action="{{ route('admin.categories.destroy',$category->id) }}"--}}
+{{--                                              method="POST">--}}
+{{--                                            @csrf--}}
+{{--                                            @method('DELETE')--}}
+{{--                                        </form>--}}
                                     </td>
                                 </tr>
                             @empty

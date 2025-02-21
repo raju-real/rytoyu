@@ -100,6 +100,17 @@
     background: grey !important;
 }
 
+.color-box {
+    width: 80px; /* Adjust size as needed */
+    height: 20px;
+    display: inline-block;
+    border: 1px solid #ccc; /* Optional: Adds visibility */
+    text-align: center;
+    line-height: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
 
 @media (max-width: 576px) {
     .pagination li {

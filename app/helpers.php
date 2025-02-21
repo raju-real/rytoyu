@@ -109,12 +109,22 @@ if (!function_exists('getStatus')) {
     }
 }
 
+if (!function_exists('getConfirmStatus')) {
+    function getConfirmStatus(): array
+    {
+        return [
+            (object)['value' => 'yes', 'title' => 'Yes'],
+            (object)['value' => 'no', 'title' => 'No']
+        ];
+    }
+}
+
 if (!function_exists('webSectionFor')) {
     function webSectionFor(): array
     {
         return [
             (object)['value' => 'product', 'title' => 'Product'],
-            (object)['value' => 'category', 'title' => 'Category'],
+//            (object)['value' => 'category', 'title' => 'Category'],
             (object)['value' => 'campaign', 'title' => 'Campaign'],
             (object)['value' => 'advertisement', 'title' => 'Advertisement']
         ];
@@ -414,6 +424,13 @@ if (!function_exists('subCategoryNameBySlug')) {
     }
 }
 
+if (!function_exists('colorControl')) {
+    function colorControl($style, $colorCode)
+    {
+        return $style.': ' . $colorCode;
+    }
+}
+
 
 if (!function_exists('productTagsToArray')) {
     function productTagsToArray($product_id): array
@@ -422,3 +439,6 @@ if (!function_exists('productTagsToArray')) {
         return $product->product_tags ? explode(',', $product->product_tags) : [];
     }
 }
+
+// Website Section
+

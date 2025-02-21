@@ -30,18 +30,22 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
     Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
     Route::controller(\App\Http\Controllers\Admin\CategoryController::class)->group(function () {
         Route::put('update-category-status/{id}', 'updateCategoryStatus')->name('update-category-status');
+        Route::post('sort-categories', 'sortCategories')->name('sort-categories');
     });
     Route::resource('subcategories', \App\Http\Controllers\Admin\SubCategoryController::class);
     Route::controller(\App\Http\Controllers\Admin\SubCategoryController::class)->group(function () {
         Route::put('update-subcategory-status/{id}', 'updateSubCategoryStatus')->name('update-subcategory-status');
+        Route::post('sort-subcategories', 'sortSubCategories')->name('sort-subcategories');
     });
     Route::resource('sub-subcategories', \App\Http\Controllers\Admin\SubSubcategoryController::class);
     Route::controller(\App\Http\Controllers\Admin\SubSubcategoryController::class)->group(function () {
         Route::put('update-sub-subcategory-status/{id}', 'updateSubSubCategoryStatus')->name('update-sub-subcategory-status');
+        Route::post('sort-sub-subcategories', 'sortSubSubCategories')->name('sort-sub-subcategories');
     });
     Route::resource('brands', \App\Http\Controllers\Admin\BrandController::class);
     Route::controller(\App\Http\Controllers\Admin\BrandController::class)->group(function () {
         Route::put('update-brand-status/{id}', 'updateBrandStatus')->name('update-brand-status');
+        Route::post('sort-brands', 'sortBrands')->name('sort-brands');
     });
     Route::resource('sizes', \App\Http\Controllers\Admin\SizeController::class);
     Route::resource('colors', \App\Http\Controllers\Admin\ColorController::class);

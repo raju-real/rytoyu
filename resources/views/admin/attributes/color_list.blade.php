@@ -28,6 +28,7 @@
                             <tr>
                                 <th>Sl.no</th>
                                 <th>Name</th>
+                                <th>Code</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -36,6 +37,13 @@
                                 <tr>
                                     <td>{{ $loop->index + 1 }}</td>
                                     <td>{{ $color->name ?? '' }}</td>
+                                    <td>
+                                        <div class="color-box"
+                                             style="{{ colorControl('background-color', $color->color_code) }};{{ colorControl('color', $color->color_code) }}">
+                                            {{ $color->color_code ?? 'No Color' }}
+                                        </div>
+                                        {{ $color->color_code ?? 'No Color' }}
+                                    </td>
                                     <td>
                                         <a data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" href="{{ route('admin.colors.edit',$color->slug) }}"
                                            class="btn btn-sm btn-soft-success" ><i class="fa fa-edit"></i></a>

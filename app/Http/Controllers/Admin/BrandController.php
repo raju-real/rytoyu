@@ -14,7 +14,7 @@ class BrandController extends Controller
     public function index()
     {
         $data = Brand::query();
-        $data->latest();
+        $data->sort();
         $data->when(request()->get('name'),function($query) {
            $name = request()->get('name');
            $query->where('name',"LIKE","%{$name}%");
@@ -93,6 +93,7 @@ class BrandController extends Controller
             $brand->logo = uploadImage($request->file('logo'), 'brand');
         }
         $brand->status = $request->status;
+        $brand->sorting_serial = Brand::max('sorting_serial') + 1;
         $brand->created_by = Auth::id();
         $brand->save();
         return redirect()->route('admin.brands.index')->with(infoMessage());
@@ -121,5 +122,19 @@ class BrandController extends Controller
     {
         Brand::findOrFail($id)->delete();
         return redirect()->route('admin.brands.index')->with(deleteMessage());
+    }
+
+    public function sortBrands(Request $request)
+    {
+        if ($request->has('ids')) {
+            $arr = explode(',', $request->input('ids'));
+
+            foreach ($arr as $sortOrder => $id) {
+                $row = Brand::find($id);
+                $row->sorting_serial = $sortOrder + 1;
+                $row->save();
+            }
+            return ['success' => true, 'message' => 'Updated'];
+        }
     }
 }

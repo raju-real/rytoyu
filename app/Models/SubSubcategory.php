@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\ModelHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SubSubcategory extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, ModelHelper;
     protected $table = "sub_subcategories";
 
     public function category()
@@ -19,10 +20,5 @@ class SubSubcategory extends Model
     public function subcategory()
     {
         return $this->belongsTo(SubCategory::class,'subcategory_id','id');
-    }
-
-    public function scopeActive($query)
-    {
-        return $query->where('status','active');
     }
 }

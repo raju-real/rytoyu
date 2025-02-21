@@ -97,6 +97,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
+                        <x-sort-available />
                         <table class="table table-striped table-bordered mb-0 text-nowrap">
                             <thead>
                             <tr>
@@ -110,14 +111,14 @@
                                 <th>Action</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="sort_section">
                             @forelse($sub_subcategories as $sub_subcategory)
-                                <tr>
-                                    <td>{{ $loop->index + 1 }}</td>
-                                    <td>{{ $sub_subcategory->name ?? '' }}</td>
-                                    <td>{{ $sub_subcategory?->category?->name ?? '' }}</td>
-                                    <td>{{ $sub_subcategory?->subcategory?->name ?? '' }}</td>
-                                    <td>
+                                <tr data-id="{{ $sub_subcategory->id }}" data-category-id="{{ $sub_subcategory->category_id }}" data-subcategory-id="{{ $sub_subcategory->subcategory_id }}">
+                                    <td class="handle sorting-serial">{{ $sub_subcategory->sorting_serial }}</td>
+                                    <td class="handle">{{ $sub_subcategory->name ?? '' }}</td>
+                                    <td class="handle">{{ $sub_subcategory?->category?->name ?? '' }}</td>
+                                    <td class="handle">{{ $sub_subcategory?->subcategory?->name ?? '' }}</td>
+                                    <td class="handle">
                                         @if($sub_subcategory->icon != Null && file_exists($sub_subcategory->icon))
                                             <img src="{{ asset($sub_subcategory->icon) }}"
                                                  class="avatar-sm rounded-3 d-block img-50">
@@ -126,7 +127,7 @@
                                                  class="avatar-sm rounded-3 d-block img-50">
                                         @endif
                                     </td>
-                                    <td>{{ $sub_subcategory?->products?->count() ?? 0 }}</td>
+                                    <td class="handle">{{ $sub_subcategory?->products?->count() ?? 0 }}</td>
                                     <td>
                                         <input type="checkbox" id="sub-subcategory-{{ $loop->index + 1 }}" class="sub-subcategory-status" data-id="{{ $sub_subcategory->id }}" switch="bool" {{ isActive($sub_subcategory->status) ? 'checked' : '' }} />
                                         <label for="sub-subcategory-{{ $loop->index + 1 }}" data-on-label="Yes" data-off-label="No"></label>

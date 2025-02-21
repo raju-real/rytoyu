@@ -82,6 +82,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
+                        <x-sort-available />
                         <table class="table table-striped table-bordered mb-0 text-nowrap">
                             <thead>
                             <tr>
@@ -94,20 +95,20 @@
                                 <th>Action</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="sort_section">
                             @forelse($subcategories as $subcategory)
-                                <tr>
-                                    <td>{{ $loop->index + 1 }}</td>
-                                    <td>{{ $subcategory->name ?? '' }}</td>
-                                    <td>{{ $subcategory?->category?->name ?? '' }}</td>
-                                    <td>
+                                <tr data-id="{{ $subcategory->id }}" data-category-id="{{ $subcategory->category_id }}">
+                                    <td class="handle sorting-serial">{{ $subcategory->sorting_serial }}</td>
+                                    <td class="handle">{{ $subcategory->name ?? '' }}</td>
+                                    <td class="handle">{{ $subcategory?->category?->name ?? '' }}</td>
+                                    <td class="handle">
                                         @if($subcategory->icon != Null && file_exists($subcategory->icon))
                                             <img src="{{ asset($subcategory->icon) }}" class="avatar-sm rounded-3 d-block img-50">
                                         @else
                                             <img src="{{ asset(ecommerceIcon()) }}" class="avatar-sm rounded-3 d-block img-50">
                                         @endif
                                     </td>
-                                    <td>{{ $subcategory?->products?->count() ?? 0 }}</td>
+                                    <td class="handle">{{ $subcategory?->products?->count() ?? 0 }}</td>
                                     <td>
                                         <input type="checkbox" id="subcategory-{{ $loop->index + 1 }}" class="subcategory-status" data-id="{{ $subcategory->id }}" switch="bool" {{ isActive($subcategory->status) ? 'checked' : '' }} />
                                         <label for="subcategory-{{ $loop->index + 1 }}" data-on-label="Yes" data-off-label="No"></label>

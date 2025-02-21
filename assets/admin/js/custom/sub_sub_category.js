@@ -11,7 +11,7 @@
 
     $(document).on('change', '#category', function () {
         const category_id = $(this).val();
-        if(category_id) {
+        if (category_id) {
             appendSubCategory(category_id);
         } else {
             subCategorySelector.empty().append('<option value="">Select Subcategory</option>');
@@ -50,6 +50,31 @@
                 const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
                 AppHelpers.showAlert("error", "Error", errorMessage);
             });
+    });
+
+    $(".sort_section").sortable({
+        handle: '.handle',
+        placeholder: 'highlight',
+        axis: "y",
+        update: function () {
+            const sortData = $(this).sortable('toArray', {attribute: 'data-id'});
+            const category_id = $(this).find("tr").data("category-id");
+            const subcategory_id = $(this).find("tr").data("subcategory-id");
+            // Send sorted data to the server
+            axios.post(`${base_url}/sort-sub-subcategories`, {
+                category: category_id,
+                subcategory: subcategory_id,
+                ids: sortData
+            }).then(() => {
+                // Update UI with the new sorting serial numbers
+                $(this).find('tr').each((index, row) => {
+                    $(row).find('.sorting-serial').text(index + 1); // Update the serial number
+                });
+                console.log('Sorting updated successfully');
+            }).catch(error => {
+                console.error('Error while updating sorting:', error);
+            });
+        }
     });
 
 })(jQuery);

@@ -25,20 +25,26 @@ class ColorController extends Controller
 
     public function store(Request $request)
     {
-         $this->validate($request, [
+        $this->validate($request, [
             'name' => [
                 'required',
                 'string',
                 'max:50',
                 Rule::unique('colors', 'name')->whereNull('deleted_at')
             ],
+            'color_code' => [
+                'required',
+                'string',
+                'max:50'
+            ],
         ]);
         $color = new Color();
         $color->name = $request->name;
+        $color->color_code = $request->color_code;
         $color->slug = Str::slug($request->name);
         $color->created_by = Auth::id();
         $color->save();
-        if($request->ajax()) {
+        if ($request->ajax()) {
             return response()->json([
                 'status' => 'success',
                 'data' => $color
@@ -66,12 +72,19 @@ class ColorController extends Controller
                 'max:50',
                 Rule::unique('colors', 'name')->whereNull('deleted_at')->ignore($id),
             ],
+            'color_code' => [
+                'required',
+                'string',
+                'max:50',
+            ],
         ]);
 
         $color = Color::findOrFail($id);
         $color->name = $request->name;
+        $color->color_code = $request->color_code;
         $color->slug = Str::slug($request->name);
         $color->created_by = Auth::id();
+        $color->save();
         return redirect()->route('admin.colors.index')->with(infoMessage());
     }
 

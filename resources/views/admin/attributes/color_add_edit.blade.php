@@ -37,6 +37,18 @@
                                     @enderror
                                 </div>
                             </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">Color Code {!! starSign() !!}</label>
+                                    <input type="color" name="color_code"
+                                           value="{{ old('color_code') ?? $color->color_code ?? '#FFFFFF' }}"
+                                           class="form-control {{ hasError('color_code') }}"
+                                           placeholder="Color Code">
+                                    @error('color_code')
+                                    {!! displayError($message) !!}
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
                         <div>
                             <x-submit-button></x-submit-button>

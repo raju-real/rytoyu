@@ -15,17 +15,17 @@ class SubCategoryController extends Controller
     public function index()
     {
         $data = SubCategory::query();
-        $data->latest();
-        $data->when(request()->get('name'),function($query) {
-           $name = request()->get('name');
-           $query->where('name',"LIKE","%{$name}%");
+        $data->sort();
+        $data->when(request()->get('name'), function ($query) {
+            $name = request()->get('name');
+            $query->where('name', "LIKE", "%{$name}%");
         });
-        $data->when(request()->get('category'),function($query) {
-           $query->where('category_id',categoryIdBySlug(request()->get('category')));
+        $data->when(request()->get('category'), function ($query) {
+            $query->where('category_id', categoryIdBySlug(request()->get('category')));
         });
 
-        $data->when(request()->get('status'),function($query) {
-           $query->where('status',request()->get('status'));
+        $data->when(request()->get('status'), function ($query) {
+            $query->where('status', request()->get('status'));
         });
         $subcategories = $data->paginate(20);
         return view('admin.attributes.sub_category_list', compact('subcategories'));
@@ -34,7 +34,7 @@ class SubCategoryController extends Controller
     public function create()
     {
         $route = route('admin.subcategories.store');
-        return view('admin.attributes.sub_category_add_edit', compact( 'route'));
+        return view('admin.attributes.sub_category_add_edit', compact('route'));
     }
 
     public function store(Request $request)
@@ -63,6 +63,7 @@ class SubCategoryController extends Controller
             $sub_category->icon = uploadImage($request->file('icon'), 'sub_category');
         }
         $sub_category->status = $request->status;
+        $sub_category->sorting_serial = SubCategory::where('category_id', $request->category)->max('sorting_serial') + 1;
         $sub_category->created_by = Auth::id();
         $sub_category->save();
         return redirect()->route('admin.subcategories.index')->with(successMessage());
@@ -130,5 +131,28 @@ class SubCategoryController extends Controller
     {
         SubCategory::findOrFail($id)->delete();
         return redirect()->route('admin.subcategories.index')->with(deleteMessage());
+    }
+
+    public function sortSubCategories(Request $request)
+    {
+        $category_id = $request->input('category');
+        if ($request->has('ids')) {
+            $arr = $request->input('ids'); // Get the sorted array of subcategory IDs
+
+            foreach ($arr as $sortOrder => $id) {
+                // Update only the subcategories that belong to the given category_id
+                $row = SubCategory::where('category_id', $category_id)->find($id);
+
+                if ($row) {
+                    $row->sorting_serial = $sortOrder + 1; // Update sorting_serial
+                    $row->save();
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Sorting updated successfully.'
+            ]);
+        }
     }
 }

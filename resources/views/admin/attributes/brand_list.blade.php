@@ -72,6 +72,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
+                        <x-sort-available />
                         <table class="table table-striped table-bordered mb-0 text-nowrap">
                             <thead>
                             <tr>
@@ -83,19 +84,19 @@
                                 <th>Action</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="sort_section">
                             @forelse($brands as $brand)
-                                <tr>
-                                    <td>{{ $loop->index + 1 }}</td>
-                                    <td>{{ $brand->name ?? '' }}</td>
-                                    <td>
+                                <tr data-id="{{ $brand->id }}">
+                                    <td class="handle sorting-serial">{{ $loop->index + 1 }}</td>
+                                    <td class="handle">{{ $brand->name ?? '' }}</td>
+                                    <td class="handle">
                                         @if($brand->logo != Null && file_exists($brand->logo))
                                             <img src="{{ asset($brand->logo) }}" class="avatar-sm rounded-3 d-block img-50">
                                         @else
                                             <img src="{{ asset(ecommerceIcon()) }}" class="avatar-sm rounded-3 d-block img-50">
                                         @endif
                                     </td>
-                                    <td>{{ $brand?->products?->count() ?? 0 }}</td>
+                                    <td class="handle">{{ $brand?->products?->count() ?? 0 }}</td>
                                     <td>
                                         <input type="checkbox" id="brand-{{ $loop->index + 1 }}" class="brand-status" data-id="{{ $brand->id }}" switch="bool" {{ isActive($brand->status) ? 'checked' : '' }} />
                                         <label for="brand-{{ $loop->index + 1 }}" data-on-label="Yes" data-off-label="No"></label>
