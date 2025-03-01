@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class SubSubCategoryBanner extends Model
 {
     use HasFactory;
+    protected $table = 'sub_sub_category_banners';
 }

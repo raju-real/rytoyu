@@ -40,7 +40,17 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label class="form-label">Icon (Type:png, Max: 1MB)</label>
+                                    <label class="form-label d-flex align-items-center justify-content-between">
+                                        <span>Icon (Type:png, Max: 1MB) {!! starSign() !!}</span>
+                                        @if(isset($category->icon) && file_exists($category->icon))
+                                            <button type="button"
+                                                    class="custom-badge badge-info view-image"
+                                                    data-image-url="{{ asset($category->icon) }}"
+                                                    title="View Image">
+                                                <i class="fa fa-eye"></i>
+                                            </button>
+                                        @endif
+                                    </label>
                                     <input type="file" name="icon" class="form-control {{ hasError('icon') }}"
                                            accept=".png">
                                     @error('icon')
@@ -50,7 +60,17 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label class="form-label">Image (Type:jpg,jpeg,png, 748x378, Max: 1MB) {!! starSign() !!}</label>
+                                    <label class="form-label d-flex align-items-center justify-content-between">
+                                        <span>Image (Type:jpg,jpeg,png, 750x400, Max: 1MB) {!! starSign() !!}</span>
+                                        @if(isset($category->image) && file_exists($category->image))
+                                            <button type="button"
+                                                    class="custom-badge badge-info view-image"
+                                                    data-image-url="{{ asset($category->image) }}"
+                                                    title="View Image">
+                                                <i class="fa fa-eye"></i>
+                                            </button>
+                                        @endif
+                                    </label>
                                     <input type="file" name="image" class="form-control {{ hasError('image') }}"
                                            accept=".png,.jpg,.jpeg">
                                     @error('image')
@@ -115,7 +135,7 @@
                                             <div class="card-title">
                                                 Banner Images
                                                 <strong class="badge badge-pill badge-info">(Type:jpg,jpeg,png,
-                                                    Max:1MB, Rc: 774x229)</strong>
+                                                    Max:1MB, Rc: 775x230)</strong>
                                             </div>
                                         </div>
                                         <div class="card-body">

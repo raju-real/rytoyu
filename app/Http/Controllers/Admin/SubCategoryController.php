@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\SubCategory;
+use App\Models\SubCategoryBanner;
+use App\Traits\BannerImageValidation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -12,6 +14,7 @@ use Illuminate\Validation\Rule;
 
 class SubCategoryController extends Controller
 {
+    use BannerImageValidation;
     public function index()
     {
         $data = SubCategory::query();
@@ -39,12 +42,16 @@ class SubCategoryController extends Controller
 
     public function store(Request $request)
     {
-        $this->validate($request, [
+        $rules = [
             'name' => [
                 'required',
                 'string',
                 'max:50',
-                Rule::unique('sub_categories', 'name')->whereNull('deleted_at')
+                Rule::unique('sub_categories', 'name')
+                    ->where(function ($query) use ($request) {
+                        return $query->where('category_id', $request->category)
+                            ->whereNull('deleted_at'); // Ensuring soft deletes are considered
+                    }),
             ],
             'category' => [
                 'required',
@@ -53,19 +60,35 @@ class SubCategoryController extends Controller
             ],
             'icon' => 'nullable|sometimes|mimes:png|max:1024',
             'status' => 'required|in:active,inactive'
-        ]);
+        ];
+        $validation = $this->bannerImageRules($request, 'category_banners');
+        $rules = array_merge($rules, $validation['rules']);
+        $messages = $validation['messages'];
+        $request->validate($rules, $messages);
 
         $sub_category = new SubCategory();
         $sub_category->category_id = $request->category;
         $sub_category->name = $request->name;
-        $sub_category->slug = Str::slug($request->name);
+        $sub_category->slug = categorySlugById($request->category).'-'.Str::slug($request->name);
         if ($request->file('icon')) {
             $sub_category->icon = uploadImage($request->file('icon'), 'sub_category');
         }
+        $sub_category->is_mega_menu = $request->is_mega_menu;
         $sub_category->status = $request->status;
         $sub_category->sorting_serial = SubCategory::where('category_id', $request->category)->max('sorting_serial') + 1;
         $sub_category->created_by = Auth::id();
         $sub_category->save();
+        // Save banner images
+        if ($request['banner_images'] && count($request['banner_images']) > 0) {
+            foreach ($request['banner_images'] as $key => $image) {
+                if (isset($image['image']) && $request->hasFile("banner_images.{$key}.image")) {
+                    $banner_image = new SubCategoryBanner();
+                    $banner_image->subcategory_id = $sub_category->id;
+                    $banner_image->image = uploadImage($request->file("banner_images.{$key}.image"), 'subcategory');
+                    $banner_image->save();
+                }
+            }
+        }
         return redirect()->route('admin.subcategories.index')->with(successMessage());
     }
 
@@ -80,12 +103,16 @@ class SubCategoryController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
+         $rules = [
             'name' => [
                 'required',
                 'string',
                 'max:50',
-                Rule::unique('sub_categories', 'name')->whereNull('deleted_at')->ignore($id),
+                Rule::unique('sub_categories', 'name')
+                    ->where(function ($query) use ($request) {
+                        return $query->where('category_id', $request->category)
+                            ->whereNull('deleted_at'); // Ensuring soft deletes are considered
+                    })->ignore($id),
             ],
             'category' => [
                 'required',
@@ -94,18 +121,52 @@ class SubCategoryController extends Controller
             ],
             'icon' => 'nullable|sometimes|mimes:png|max:1024',
             'status' => 'required|in:active,inactive'
-        ]);
+        ];
+        $validation = $this->bannerImageRules($request, 'category_banners');
+        $rules = array_merge($rules, $validation['rules']);
+        $messages = $validation['messages'];
+        $request->validate($rules, $messages);
 
         $sub_category = SubCategory::findOrFail($id);
         $sub_category->name = $request->name;
         $sub_category->category_id = $request->category;
-        $sub_category->slug = Str::slug($request->name);
+        $sub_category->slug = categorySlugById($request->category).'-'.Str::slug($request->name);
         if ($request->file('icon')) {
             $sub_category->icon = uploadImage($request->file('icon'), 'sub_category');
         }
+        $sub_category->is_mega_menu = $request->is_mega_menu;
         $sub_category->status = $request->status;
         $sub_category->created_by = Auth::id();
         $sub_category->save();
+        // Update or create banner images
+        $existingImageIds = $sub_category->banner_images()->pluck('id')->toArray();
+        $requestImageIds = collect($request->banner_images)->pluck('id')->filter()->toArray();
+        $imagesToDelete = array_diff($existingImageIds, $requestImageIds);
+        if (!empty($imagesToDelete)) {
+            $sub_category->banner_images()
+                ->whereIn('id', $imagesToDelete)
+                ->get()
+                ->each(function ($image) {
+                    if ($image->image && file_exists($image->image)) {
+                        unlink($image->image);
+                    }
+                    $image->delete();
+                });
+        }
+        if ($request->banner_images) {
+            foreach ($request->banner_images as $key => $image) {
+                $banner_image = $image['is_new'] == 0 ? SubCategoryBanner::find($image['id']) : new SubCategoryBanner();
+
+                if (isset($image['image']) && $request->hasFile("banner_images.{$key}.image")) {
+                    if ($image['is_new'] == 0 && file_exists($banner_image->image)) {
+                        unlink($banner_image->image);
+                    }
+                    $banner_image->image = uploadImage($request->file("banner_images.{$key}.image"), 'category');
+                }
+                $banner_image->subcategory_id = $id;
+                $banner_image->save();
+            }
+        }
         return redirect()->route('admin.subcategories.index')->with(infoMessage());
     }
 

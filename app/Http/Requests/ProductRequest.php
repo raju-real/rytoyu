@@ -43,6 +43,7 @@ class ProductRequest extends FormRequest
                 Rule::unique('products', 'product_code')->whereNull('deleted_at')->ignore($recordId)
             ],
             'name' => ['required', 'string', 'max:191'],
+            'product_type' => ['required', 'int', 'exists:product_types,id'],
             'category' => ['required', 'int', 'exists:categories,id'],
             'subcategory' => ['nullable', 'sometimes', 'int', 'exists:sub_categories,id'],
             'sub_subcategory' => ['nullable', 'sometimes', 'int', 'exists:sub_subcategories,id'],

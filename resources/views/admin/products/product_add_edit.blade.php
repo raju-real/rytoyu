@@ -90,6 +90,22 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
+                                    <label class="form-label">Product Type {!! starSign() !!}</label>
+                                    <select name="product_type" id="product_type"
+                                            class="form-control select2 product_product_type product-input-control">
+                                        <option value="">Select Product Type</option>
+                                        @foreach (activeProductTypes() as $type)
+                                            <option value="{{ $type->id }}"
+                                                {{ isset($product) && $product->product_type_id == $type->id ? 'selected' : '' }}>
+                                                {{ $type->name ?? '' }}</option>
+                                        @endforeach
+                                    </select>
+                                    <span id="product_product_type_error"
+                                          class="text-danger font-weight-500 product-error-message"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
                                     <label class="form-label">Category {!! starSign() !!}</label>
                                     <select name="category" id="category"
                                             class="form-control select2 product_category product-input-control">
@@ -104,6 +120,10 @@
                                           class="text-danger font-weight-500 product-error-message"></span>
                                 </div>
                             </div>
+
+                        </div>
+
+                        <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Sub Category</label>
@@ -116,9 +136,6 @@
                                           class="text-danger font-weight-500 product-error-message"></span>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Sub Subcategory</label>
@@ -131,6 +148,8 @@
                                           class="text-danger font-weight-500 product-error-message"></span>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label d-flex align-items-center justify-content-between">

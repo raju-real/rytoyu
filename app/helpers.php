@@ -347,6 +347,13 @@ if (!function_exists('siteSettings')) {
     }
 }
 
+if (!function_exists('activeProductTypes')) {
+    function activeProductTypes()
+    {
+        return \App\Models\ProductType::active()->select('id', 'name', 'slug')->orderBy('name')->get();
+    }
+}
+
 if (!function_exists('activeCategories')) {
     function activeCategories()
     {
@@ -437,6 +444,32 @@ if (!function_exists('productTagsToArray')) {
     {
         $product = \App\Models\Product::find($product_id);
         return $product->product_tags ? explode(',', $product->product_tags) : [];
+    }
+}
+
+// Slug section
+if (!function_exists('categorySlugById')) {
+    function categorySlugById($id)
+    {
+        return \App\Models\Category::find($id)->slug ?? "";
+    }
+}
+if (!function_exists('subCategorySlugById')) {
+    function subCategorySlugById($id)
+    {
+        return \App\Models\SubCategory::find($id)->slug ?? "";
+    }
+}
+if (!function_exists('subSubCategorySlugById')) {
+    function subSubCategorySlugById($id)
+    {
+        return \App\Models\SubSubcategory::find($id)->slug ?? "";
+    }
+}
+if (!function_exists('brandSlugById')) {
+    function brandSlugById($id)
+    {
+        return \App\Models\SubSubcategory::find($id)->slug ?? "";
     }
 }
 

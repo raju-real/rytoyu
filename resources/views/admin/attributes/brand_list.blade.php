@@ -78,7 +78,8 @@
                             <tr>
                                 <th>Sl.no</th>
                                 <th>Name</th>
-                                <th>Icon</th>
+                                <th>Logo</th>
+                                <th>Image</th>
                                 <th>Product Count</th>
                                 <th>Active Status</th>
                                 <th>Action</th>
@@ -92,6 +93,13 @@
                                     <td class="handle">
                                         @if($brand->logo != Null && file_exists($brand->logo))
                                             <img src="{{ asset($brand->logo) }}" class="avatar-sm rounded-3 d-block img-50">
+                                        @else
+                                            <img src="{{ asset(ecommerceIcon()) }}" class="avatar-sm rounded-3 d-block img-50">
+                                        @endif
+                                    </td>
+                                    <td class="handle">
+                                        @if($brand->image != Null && file_exists($brand->image))
+                                            <img src="{{ asset($brand->image) }}" class="avatar-sm rounded-3 d-block img-50">
                                         @else
                                             <img src="{{ asset(ecommerceIcon()) }}" class="avatar-sm rounded-3 d-block img-50">
                                         @endif

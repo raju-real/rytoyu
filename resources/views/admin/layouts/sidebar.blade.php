@@ -57,6 +57,11 @@
             </a>
             <ul class="sub-menu" aria-expanded="false">
                 <li>
+                    <a href="{{ route('admin.product-types.index') }}" class="{{ isSubMenuActive('product-types') }}">
+                        <i class="bx bx-chevron-right"></i> Product Type
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('admin.categories.index') }}" class="{{ isSubMenuActive('categories') }}">
                         <i class="bx bx-chevron-right"></i> Category
                     </a>

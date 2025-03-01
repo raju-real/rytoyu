@@ -46,7 +46,7 @@ class CategoryController extends Controller
                 Rule::unique('categories', 'name')->whereNull('deleted_at')
             ],
             'icon' => 'nullable|sometimes|mimes:png|max:1024',
-            'image' => 'required|image|mimes:jpeg,jpg,png|dimensions:width=748,height=378|max:1024',
+            'image' => 'required|image|mimes:jpeg,jpg,png|dimensions:width=750,height=400|max:1024',
             'is_mega_menu' => 'required|in:yes,no',
             'status' => 'required|in:active,inactive',
         ];
@@ -105,7 +105,7 @@ class CategoryController extends Controller
                 Rule::unique('categories', 'name')->whereNull('deleted_at')->ignore($id),
             ],
             'icon' => 'nullable|sometimes|mimes:png|max:1024',
-            'image' => 'nullable|sometimes|image|mimes:jpeg,jpg,png|dimensions:width=748,height=378|max:1024',
+            'image' => 'nullable|sometimes|image|mimes:jpeg,jpg,png|dimensions:width=750,height=400|max:1024',
             'is_mega_menu' => 'required|in:yes,no',
             'status' => 'required|in:active,inactive',
         ];

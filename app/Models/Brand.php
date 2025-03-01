@@ -11,5 +11,14 @@ class Brand extends Model
 {
     use HasFactory, SoftDeletes, ModelHelper;
     protected $table = "brands";
+    protected $appends = ['total_banner_images'];
+    public function getTotalBannerImagesAttribute() {
+        return BrandBanner::where('brand_id',$this->id)->count();
+    }
+
+    public function banner_images()
+    {
+        return $this->hasMany(BrandBanner::class,'brand_id','id');
+    }
 
 }

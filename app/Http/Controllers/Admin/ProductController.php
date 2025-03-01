@@ -130,6 +130,7 @@ class ProductController extends Controller
         $product->product_code = $request->product_code;
         $product->name = $request->name;
         $product->slug = Str::slug($validatedData['product_code'] . '-' . $validatedData['name']);
+        $product->product_type_id = $validatedData['product_type'];
         $product->category_id = $validatedData['category'];
         $product->subcategory_id = $validatedData['subcategory'];
         $product->sub_subcategory_id = $validatedData['sub_subcategory'];
@@ -214,6 +215,7 @@ class ProductController extends Controller
         $product->product_code = $request->product_code;
         $product->name = $request->name;
         $product->slug = Str::slug($validatedData['product_code'] . '-' . $validatedData['name']);
+        $product->product_type_id = $validatedData['product_type'];
         $product->category_id = $validatedData['category'];
         $product->subcategory_id = $validatedData['subcategory'];
         $product->sub_subcategory_id = $validatedData['sub_subcategory'];

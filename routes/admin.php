@@ -27,6 +27,11 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
         Route::post('verify-code', 'verifyCode')->name('verify-code');
     });
     //Attributes
+    Route::resource('product-types', \App\Http\Controllers\Admin\ProductTypeController::class);
+    Route::controller(\App\Http\Controllers\Admin\ProductTypeController::class)->group(function () {
+        Route::put('update-product-type-status/{id}', 'updateProductTypeStatus')->name('update-product-type-status');
+        Route::post('sort-product-types', 'sortProductTypes')->name('sort-product-types');
+    });
     Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
     Route::controller(\App\Http\Controllers\Admin\CategoryController::class)->group(function () {
         Route::put('update-category-status/{id}', 'updateCategoryStatus')->name('update-category-status');
