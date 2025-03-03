@@ -172,6 +172,29 @@
                                           class="text-danger font-weight-500 product-error-message"></span>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label d-flex align-items-center justify-content-between">
+                                        <span>Tags</span>
+                                        <a type="button" class="text-primary" data-bs-toggle="modal"
+                                           data-bs-target="#tag-add-modal">
+                                            <i class="fa fa-plus-circle fa-xl"></i>
+                                        </a>
+                                    </label>
+                                    <select name="tags[]" id="tag"
+                                            class="form-control select2 product_tags product-input-control"
+                                            multiple="multiple" data-placeholder="Tags ...">
+                                        <option value="">Select Tags</option>
+                                        @foreach (allTags() as $tag)
+                                            <option value="{{ $tag->name }}"
+                                                {{ isset($product) && in_array($tag->name, productTagsToArray($product->id)) ? 'selected' : '' }}>
+                                                {{ $tag->name ?? '' }}</option>
+                                        @endforeach
+                                    </select>
+                                    <span id="product_tags_error"
+                                          class="text-danger font-weight-500 product-error-message"></span>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row">
@@ -215,6 +238,18 @@
                                               class="form-control product_product_specification product-input-control"
                                               id="product_specification">{{ $product->product_specification ?? '' }}</textarea>
                                     <span id="product_product_specification_error"
+                                          class="text-danger font-weight-500 product-error-message"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Product Compare</label>
+                                    <textarea name="product_compare"
+                                              class="form-control product_product_compare product-input-control"
+                                              id="product_compare">{{ $product->product_compare ?? '' }}</textarea>
+                                    <span id="product_product_compare_error"
                                           class="text-danger font-weight-500 product-error-message"></span>
                                 </div>
                             </div>
@@ -366,33 +401,6 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-3">
-                                    <label class="form-label d-flex align-items-center justify-content-between">
-                                        <span>Tags</span>
-                                        <a type="button" class="text-primary" data-bs-toggle="modal"
-                                           data-bs-target="#tag-add-modal">
-                                            <i class="fa fa-plus-circle fa-xl"></i>
-                                        </a>
-                                    </label>
-                                    <select name="tags[]" id="tag"
-                                            class="form-control select2 product_tags product-input-control"
-                                            multiple="multiple" data-placeholder="Tags ...">
-                                        <option value="">Select Tags</option>
-                                        @foreach (allTags() as $tag)
-                                            <option value="{{ $tag->name }}"
-                                                {{ isset($product) && in_array($tag->name, productTagsToArray($product->id)) ? 'selected' : '' }}>
-                                                {{ $tag->name ?? '' }}</option>
-                                        @endforeach
-                                    </select>
-                                    <span id="product_tags_error"
-                                          class="text-danger font-weight-500 product-error-message"></span>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="row">
                             <div class="col-md-6">
                                 <div class="row mb-3">
                                     <div class="col-md-6 mb-3">
@@ -494,7 +502,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Thumbnail (Type:jpg,jpeg,png, Max:
-                                        1MB, Rc: 323x479) {!! starSign() !!}</label>
+                                        1MB, Rc: 375x480) {!! starSign() !!}</label>
                                     <input type="file" name="product_thumbnail"
                                            class="form-control product_product_thumbnail product-input-control"
                                            accept=".jpg,.jpeg,.png">
@@ -508,7 +516,7 @@
                                             <div class="card-title">
                                                 Product Images
                                                 <small><strong class="badge badge-pill badge-info">(Type:jpg,jpeg,png,
-                                                        Max:1MB, Rc: 323x479)</strong></small>
+                                                        Max:1MB, Rc: 375x480)</strong></small>
                                             </div>
                                         </div>
                                         <div class="card-body">

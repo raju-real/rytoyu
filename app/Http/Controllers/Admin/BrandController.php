@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\BrandBanner;
+use App\Traits\BannerImageValidation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -12,6 +13,7 @@ use Illuminate\Validation\Rule;
 
 class BrandController extends Controller
 {
+    use BannerImageValidation;
     public function index()
     {
         $data = Brand::query();

@@ -56,9 +56,10 @@ class ProductRequest extends FormRequest
             'video_link' => ['nullable', 'sometimes', 'string', 'url', 'max:255'],
             'product_details' => ['required', 'max:5000'],
             'product_specification' => ['nullable', 'sometimes', 'max:5000'],
+            'product_compare' => ['nullable', 'sometimes', 'max:5000'],
             'product_thumbnail' => $isUpdating
-                ? ['nullable', 'image', 'mimes:jpg,jpeg,png', 'dimensions:width=323,height=479', 'max:1024', new ThumbnailExistsRule($recordId)]
-                : ['required', 'image', 'mimes:jpg,jpeg,png', 'dimensions:width=323,height=479', 'max:1024'],
+                ? ['nullable', 'image', 'mimes:jpg,jpeg,png', 'dimensions:width=375,height=480', 'max:1024', new ThumbnailExistsRule($recordId)]
+                : ['required', 'image', 'mimes:jpg,jpeg,png', 'dimensions:width=375,height=480', 'max:1024'],
 
 
             'is_refundable' => ['required', 'in:0,1'],
@@ -102,11 +103,11 @@ class ProductRequest extends FormRequest
             $rules["images.{$image['index_no']}.is_new"] = ['required', 'in:0,1'];
             $rules["images.{$image['index_no']}.image_id"] = ($isUpdating && $image['is_new'] == 0) ? ['required', 'exists:product_images,id'] : ['nullable'];
             if ($isUpdating && $image['is_new'] == 1) {
-                $rules["images.{$image['index_no']}.image"] = ['required', 'image', 'mimes:jpeg,jpg,png', 'dimensions:width=323,height=479', 'max:1024'];
+                $rules["images.{$image['index_no']}.image"] = ['required', 'image', 'mimes:jpeg,jpg,png', 'dimensions:width=375,height=480', 'max:1024'];
             } elseif ($isUpdating && $image['is_new'] == 0) {
-                $rules["images.{$image['index_no']}.image"] = ['nullable', 'sometimes', 'image', 'mimes:jpeg,jpg,png', 'dimensions:width=323,height=479', 'max:1024'];
+                $rules["images.{$image['index_no']}.image"] = ['nullable', 'sometimes', 'image', 'mimes:jpeg,jpg,png', 'dimensions:width=375,height=480', 'max:1024'];
             } elseif (!$isUpdating && $image['is_new'] == 1) {
-                $rules["images.{$image['index_no']}.image"] = ['required', 'image', 'mimes:jpeg,jpg,png', 'dimensions:width=323,height=479', 'max:1024'];
+                $rules["images.{$image['index_no']}.image"] = ['required', 'image', 'mimes:jpeg,jpg,png', 'dimensions:width=375,height=480', 'max:1024'];
             }
 
         }

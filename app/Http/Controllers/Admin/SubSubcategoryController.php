@@ -74,7 +74,7 @@ class SubSubcategoryController extends Controller
             'status' => 'required|in:active,inactive'
         ];
 
-        $validation = $this->bannerImageRules($request, 'sub_subcategory_banners');
+        $validation = $this->bannerImageRules($request, 'sub_sub_category_banners');
         $rules = array_merge($rules, $validation['rules']);
         $messages = $validation['messages'];
         $request->validate($rules, $messages);
@@ -143,7 +143,7 @@ class SubSubcategoryController extends Controller
             'status' => 'required|in:active,inactive'
         ];
 
-        $validation = $this->bannerImageRules($request, 'sub_subcategory_banners');
+        $validation = $this->bannerImageRules($request, 'sub_sub_category_banners');
         $rules = array_merge($rules, $validation['rules']);
         $messages = $validation['messages'];
         $request->validate($rules, $messages);

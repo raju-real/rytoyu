@@ -39,7 +39,17 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label class="form-label">Logo (Type:jpg,jpeg,png, 105x105, Max: 1MB) {!! starSign() !!}</label>
+                                    <label class="form-label d-flex align-items-center justify-content-between">
+                                        <span>Logo (Type:jpg,jpeg,png, 105x105, Max: 1MB) {!! starSign() !!}</span>
+                                        @if(isset($brand->logo) && file_exists($brand->logo))
+                                            <button type="button"
+                                                    class="custom-badge badge-info view-image"
+                                                    data-image-url="{{ asset($brand->logo) }}"
+                                                    title="View Image">
+                                                <i class="fa fa-eye"></i>
+                                            </button>
+                                        @endif
+                                    </label>
                                     <input type="file" name="logo" class="form-control {{ hasError('logo') }}" accept=".jpg,jpeg,.png">
                                     @error('logo')
                                     {!! displayError($message) !!}
@@ -48,9 +58,19 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label class="form-label">Image (Type:jpg,jpeg,png, 335x400, Max: 1MB)  {!! starSign() !!}</label>
-                                    <input type="file" name="logo" class="form-control {{ hasError('logo') }}" accept=".jpg,jpeg,.png">
-                                    @error('logo')
+                                    <label class="form-label d-flex align-items-center justify-content-between">
+                                        <span>Image (Type:jpg,jpeg,png, 335x400, Max: 1MB)  {!! starSign() !!}</span>
+                                        @if(isset($brand->image) && file_exists($brand->image))
+                                            <button type="button"
+                                                    class="custom-badge badge-info view-image"
+                                                    data-image-url="{{ asset($brand->image) }}"
+                                                    title="View Image">
+                                                <i class="fa fa-eye"></i>
+                                            </button>
+                                        @endif
+                                    </label>
+                                    <input type="file" name="image" class="form-control {{ hasError('image') }}" accept=".jpg,jpeg,.png">
+                                    @error('image')
                                     {!! displayError($message) !!}
                                     @enderror
                                 </div>

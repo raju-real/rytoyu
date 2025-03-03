@@ -138,6 +138,7 @@ class ProductController extends Controller
         $product->product_unit = $validatedData['unit'];
         $product->product_details = $validatedData['product_details'];
         $product->product_specification = $validatedData['product_specification'] ?? null;
+        $product->product_compare = $validatedData['product_compare'] ?? null;
         $product->short_description = $validatedData['short_description'];
         $product->special_note = $validatedData['special_note'];
         $product->warranty = $validatedData['warranty'] ?? Null;
@@ -168,6 +169,8 @@ class ProductController extends Controller
                         'is_default' => $variant['is_default'] ?? 0
                     ]);
                 }
+                // Update product table price
+                $this->updatePricing($product->id);
             }
 
             // Save product images
@@ -207,6 +210,12 @@ class ProductController extends Controller
         return view('admin.products.product_add_edit', compact('product', 'route'));
     }
 
+    public function show($slug)
+    {
+        $product = Product::whereSlug($slug)->firstOrFail();
+        return view('admin.products.product_details', compact('product', 'product'));
+    }
+
 
     public function update(ProductRequest $request, $id)
     {
@@ -223,6 +232,7 @@ class ProductController extends Controller
         $product->product_unit = $validatedData['unit'];
         $product->product_details = $validatedData['product_details'];
         $product->product_specification = $validatedData['product_specification'] ?? null;
+        $product->product_compare = $validatedData['product_compare'] ?? null;
         $product->short_description = $validatedData['short_description'];
         $product->special_note = $validatedData['special_note'];
         $product->warranty = $validatedData['warranty'] ?? Null;
@@ -262,6 +272,8 @@ class ProductController extends Controller
                     // Update or create variant
                     $product->variants()->updateOrCreate(['id' => $variant['variant_id'] ?? null], $variantData);
                 }
+                // Update product table price
+                $this->updatePricing($product->id);
             }
             // Update or create product images
             // Get existing image IDs from the database
@@ -360,6 +372,20 @@ class ProductController extends Controller
             'sub_subcategory_name' => $product->sub_subcategory->name ?? 'N/A',
             'brand_name' => $product->brand->name ?? 'N/A',
             'variants' => $product->variants
+        ]);
+    }
+
+    /**
+     * Update unit_price and discount_price based on the default product variant.
+     */
+    protected function updatePricing($product_id): void
+    {
+        $defaultVariant = ProductVariant::where('product_id', $product_id)
+            ->where('is_default', 1)
+            ->first();
+        Product::where('id',$product_id)->update([
+            'unit_price' => $defaultVariant->unit_price,
+            'discount_price' => $defaultVariant->discount_price
         ]);
     }
 }

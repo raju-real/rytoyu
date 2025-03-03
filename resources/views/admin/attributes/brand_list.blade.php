@@ -114,18 +114,18 @@
                                            href="{{ route('admin.brands.edit',$brand->slug) }}"
                                            class="btn btn-sm btn-soft-success"><i class="fa fa-edit"></i>
                                         </a>
-                                         <a data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"
-                                           class="btn btn-sm btn-soft-danger delete-data"
-                                           data-id="{{ 'delete-brand-'.$brand->id }}"
-                                           href="javascript:void(0);">
-                                            <i class="fa fa-trash"></i>
-                                        </a>
-                                        <form id="delete-brand-{{ $brand->id }}"
-                                              action="{{ route('admin.brands.destroy',$brand->id) }}"
-                                              method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                        </form>
+{{--                                         <a data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"--}}
+{{--                                           class="btn btn-sm btn-soft-danger delete-data"--}}
+{{--                                           data-id="{{ 'delete-brand-'.$brand->id }}"--}}
+{{--                                           href="javascript:void(0);">--}}
+{{--                                            <i class="fa fa-trash"></i>--}}
+{{--                                        </a>--}}
+{{--                                        <form id="delete-brand-{{ $brand->id }}"--}}
+{{--                                              action="{{ route('admin.brands.destroy',$brand->id) }}"--}}
+{{--                                              method="POST">--}}
+{{--                                            @csrf--}}
+{{--                                            @method('DELETE')--}}
+{{--                                        </form>--}}
                                     </td>
                                 </tr>
                             @empty

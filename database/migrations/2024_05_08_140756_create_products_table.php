@@ -23,8 +23,11 @@ return new class extends Migration
             $table->string('product_code')->unique()->nullable();
             $table->string('name',191);
             $table->string('slug',255)->unique();
+            $table->decimal('unit_price', 10, 2)->default(0);
+            $table->decimal('discount_price', 10, 2)->default(0);
             $table->longText('product_details')->nullable();
             $table->longText('product_specification')->nullable();
+            $table->longText('product_compare')->nullable();
             $table->text('short_description')->nullable();
             $table->text('special_note')->nullable();
             $table->text('warranty')->nullable();

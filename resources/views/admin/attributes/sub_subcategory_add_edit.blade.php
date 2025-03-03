@@ -67,7 +67,17 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label class="form-label">Icon (Type:png, Max: 1MB)</label>
+                                    <label class="form-label d-flex align-items-center justify-content-between">
+                                        <span>Icon (Type:png, Max: 1MB)</span>
+                                        @if(isset($sub_subcategory->icon) && file_exists($sub_subcategory->icon))
+                                            <button type="button"
+                                                    class="custom-badge badge-info view-image"
+                                                    data-image-url="{{ asset($sub_subcategory->icon) }}"
+                                                    title="View Image">
+                                                <i class="fa fa-eye"></i>
+                                            </button>
+                                        @endif
+                                    </label>
                                     <input type="file" name="icon" class="form-control {{ hasError('icon') }}" accept=".jpg,jpeg,.png">
                                     @error('icon')
                                     {!! displayError($message) !!}

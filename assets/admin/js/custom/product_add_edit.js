@@ -23,6 +23,7 @@
     CKEDITOR.config.allowedContent = true;
     CKEDITOR.replace("product_details", config);
     CKEDITOR.replace("product_specification", config);
+    CKEDITOR.replace("product_compare", config);
 
     const methodMode = $("#method_mode").val();
     const subCategorySelector = $("#subcategory");
