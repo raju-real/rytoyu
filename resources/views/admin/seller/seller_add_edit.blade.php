@@ -61,8 +61,18 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label class="form-label">Image (Type:jpg,jpeg,png, Max: 1MB)</label>
-                                    <input type="file" name="image" class="form-control {{ hasError('image') }}" accept=".jpg,.jpeg.png">
+                                    <label class="form-label d-flex align-items-center justify-content-between">
+                                        <span>Image (Type:jpg,jpeg,png, Max: 1MB)</span>
+                                        @if(isset($seller->image) && file_exists($seller->image))
+                                            <button type="button"
+                                                    class="custom-badge badge-info view-image"
+                                                    data-image-url="{{ asset($seller->image) }}"
+                                                    title="View Image">
+                                                <i class="fa fa-eye"></i>
+                                            </button>
+                                        @endif
+                                    </label>
+                                    <input type="file" name="image" class="form-control {{ hasError('image') }}" accept=".jpg,.jpeg,.png">
                                     @error('image')
                                     {!! displayError($message) !!}
                                     @enderror

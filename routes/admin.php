@@ -27,35 +27,37 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
         Route::post('verify-code', 'verifyCode')->name('verify-code');
     });
     //Attributes
-    Route::resource('product-types', \App\Http\Controllers\Admin\ProductTypeController::class);
-    Route::controller(\App\Http\Controllers\Admin\ProductTypeController::class)->group(function () {
-        Route::put('update-product-type-status/{id}', 'updateProductTypeStatus')->name('update-product-type-status');
-        Route::post('sort-product-types', 'sortProductTypes')->name('sort-product-types');
+    Route::middleware('admin')->group(function () {
+        Route::resource('product-types', \App\Http\Controllers\Admin\ProductTypeController::class);
+        Route::controller(\App\Http\Controllers\Admin\ProductTypeController::class)->group(function () {
+            Route::put('update-product-type-status/{id}', 'updateProductTypeStatus')->name('update-product-type-status');
+            Route::post('sort-product-types', 'sortProductTypes')->name('sort-product-types');
+        });
+        Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
+        Route::controller(\App\Http\Controllers\Admin\CategoryController::class)->group(function () {
+            Route::put('update-category-status/{id}', 'updateCategoryStatus')->name('update-category-status');
+            Route::post('sort-categories', 'sortCategories')->name('sort-categories');
+        });
+        Route::resource('subcategories', \App\Http\Controllers\Admin\SubCategoryController::class);
+        Route::controller(\App\Http\Controllers\Admin\SubCategoryController::class)->group(function () {
+            Route::put('update-subcategory-status/{id}', 'updateSubCategoryStatus')->name('update-subcategory-status');
+            Route::post('sort-subcategories', 'sortSubCategories')->name('sort-subcategories');
+        });
+        Route::resource('sub-subcategories', \App\Http\Controllers\Admin\SubSubcategoryController::class);
+        Route::controller(\App\Http\Controllers\Admin\SubSubcategoryController::class)->group(function () {
+            Route::put('update-sub-subcategory-status/{id}', 'updateSubSubCategoryStatus')->name('update-sub-subcategory-status');
+            Route::post('sort-sub-subcategories', 'sortSubSubCategories')->name('sort-sub-subcategories');
+        });
+        Route::resource('brands', \App\Http\Controllers\Admin\BrandController::class);
+        Route::controller(\App\Http\Controllers\Admin\BrandController::class)->group(function () {
+            Route::put('update-brand-status/{id}', 'updateBrandStatus')->name('update-brand-status');
+            Route::post('sort-brands', 'sortBrands')->name('sort-brands');
+        });
+        Route::resource('sizes', \App\Http\Controllers\Admin\SizeController::class);
+        Route::resource('colors', \App\Http\Controllers\Admin\ColorController::class);
+        Route::resource('units', \App\Http\Controllers\Admin\UnitController::class);
+        Route::resource('tags', \App\Http\Controllers\Admin\TagController::class);
     });
-    Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
-    Route::controller(\App\Http\Controllers\Admin\CategoryController::class)->group(function () {
-        Route::put('update-category-status/{id}', 'updateCategoryStatus')->name('update-category-status');
-        Route::post('sort-categories', 'sortCategories')->name('sort-categories');
-    });
-    Route::resource('subcategories', \App\Http\Controllers\Admin\SubCategoryController::class);
-    Route::controller(\App\Http\Controllers\Admin\SubCategoryController::class)->group(function () {
-        Route::put('update-subcategory-status/{id}', 'updateSubCategoryStatus')->name('update-subcategory-status');
-        Route::post('sort-subcategories', 'sortSubCategories')->name('sort-subcategories');
-    });
-    Route::resource('sub-subcategories', \App\Http\Controllers\Admin\SubSubcategoryController::class);
-    Route::controller(\App\Http\Controllers\Admin\SubSubcategoryController::class)->group(function () {
-        Route::put('update-sub-subcategory-status/{id}', 'updateSubSubCategoryStatus')->name('update-sub-subcategory-status');
-        Route::post('sort-sub-subcategories', 'sortSubSubCategories')->name('sort-sub-subcategories');
-    });
-    Route::resource('brands', \App\Http\Controllers\Admin\BrandController::class);
-    Route::controller(\App\Http\Controllers\Admin\BrandController::class)->group(function () {
-        Route::put('update-brand-status/{id}', 'updateBrandStatus')->name('update-brand-status');
-        Route::post('sort-brands', 'sortBrands')->name('sort-brands');
-    });
-    Route::resource('sizes', \App\Http\Controllers\Admin\SizeController::class);
-    Route::resource('colors', \App\Http\Controllers\Admin\ColorController::class);
-    Route::resource('units', \App\Http\Controllers\Admin\UnitController::class);
-    Route::resource('tags', \App\Http\Controllers\Admin\TagController::class);
     //Products
     Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
     Route::view('get-product-variant', 'admin.products.product_variant')->name('get-product-variant');
@@ -66,7 +68,7 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
     });
     //Inventory
     Route::controller(\App\Http\Controllers\Admin\InventoryController::class)->group(function () {
-       Route::get('product-stock-status','productStockStatus')->name('product-stock-status');
+        Route::get('product-stock-status', 'productStockStatus')->name('product-stock-status');
     });
     // Sellers
     Route::resource('sellers', \App\Http\Controllers\Admin\SellerController::class);
@@ -81,14 +83,14 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
     });
     // Webpage Manage Section
     Route::controller(\App\Http\Controllers\Admin\SectionController::class)->group(function () {
-       Route::get('sections','sectionList')->name('sections');
-       Route::get('add-section','addSection')->name('add-section');
-       Route::post('store-section','storeSection')->name('store-section');
-       Route::post('sort-section','sortSection')->name('sort-section');
-       Route::get('edit-section/{slug}','editSection')->name('edit-section');
-       Route::put('update-section/{slug}','updateSection')->name('update-section');
-       Route::delete('delete-section/{id}','deleteSection')->name('delete-section');
-       Route::put('update-section-status/{id}','updateSectionStatus')->name('update-section-status');
+        Route::get('sections', 'sectionList')->name('sections');
+        Route::get('add-section', 'addSection')->name('add-section');
+        Route::post('store-section', 'storeSection')->name('store-section');
+        Route::post('sort-section', 'sortSection')->name('sort-section');
+        Route::get('edit-section/{slug}', 'editSection')->name('edit-section');
+        Route::put('update-section/{slug}', 'updateSection')->name('update-section');
+        Route::delete('delete-section/{id}', 'deleteSection')->name('delete-section');
+        Route::put('update-section-status/{id}', 'updateSectionStatus')->name('update-section-status');
     });
 
     Route::get('logout', function () {

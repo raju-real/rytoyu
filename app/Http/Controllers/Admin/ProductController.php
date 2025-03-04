@@ -22,6 +22,31 @@ class ProductController extends Controller
     public function index()
     {
         $data = Product::query();
+        $data->when(request()->get('seller'),function ($query) {
+           $query->where('seller_id',sellerIdByCode(request()->get('seller')));
+        });
+        $data->when(request()->get('brand'),function ($query) {
+           $query->where('brand_id',brandIdBySlug(request()->get('brand')));
+        });
+        $data->when(request()->get('category'),function ($query) {
+           $query->where('category_id',categoryIdBySlug(request()->get('category')));
+        });
+        $data->when(request()->get('subcategory'),function ($query) {
+           $query->where('subcategory_id',subCategoryIdBySlug(request()->get('subcategory')));
+        });
+        $data->when(request()->get('subcategory'),function ($query) {
+           $query->where('subcategory_id',subCategoryIdBySlug(request()->get('subcategory')));
+        });
+        $data->when(request()->get('sub_subcategory'),function ($query) {
+           $query->where('sub_subcategory_id',subSubCategoryIdBySlug(request()->get('sub_subcategory')));
+        });
+        $data->when(request()->get('status'), function ($query) {
+            $query->where('status', request()->get('status'));
+        });
+
+        if(authAdminType() === 'seller') {
+            $data->where('seller_id',Auth::id());
+        }
         $products = $data->latest()->paginate(20);
         return view('admin.products.product_list', compact('products'));
     }
@@ -127,6 +152,7 @@ class ProductController extends Controller
     {
         $validatedData = $request->validated();
         $product = new Product();
+        $product->seller_id = Auth::id();
         $product->product_code = $request->product_code;
         $product->name = $request->name;
         $product->slug = Str::slug($validatedData['product_code'] . '-' . $validatedData['name']);

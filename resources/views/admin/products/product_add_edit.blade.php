@@ -501,8 +501,18 @@
 
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Thumbnail (Type:jpg,jpeg,png, Max:
-                                        1MB, Rc: 375x480) {!! starSign() !!}</label>
+                                    <label class="form-label d-flex align-items-center justify-content-between">
+                                        <span>Thumbnail (Type:jpg,jpeg,png, Max:
+                                        1MB, Rc: 375x480) {!! starSign() !!}</span>
+                                        @if(isset($product->thumbnail_path) && file_exists($product->thumbnail_path))
+                                            <button type="button"
+                                                    class="custom-badge badge-info view-image"
+                                                    data-image-url="{{ asset($product->thumbnail_path) }}"
+                                                    title="View Image">
+                                                <i class="fa fa-eye"></i>
+                                            </button>
+                                        @endif
+                                    </label>
                                     <input type="file" name="product_thumbnail"
                                            class="form-control product_product_thumbnail product-input-control"
                                            accept=".jpg,.jpeg,.png">

@@ -16,11 +16,11 @@ class SellerController extends Controller
     public function index()
     {
         $data = Admin::query();
-        $data->seller();
         $data->latest();
         $data->when(request()->get('search'), function ($query) {
             $search = request()->get('search');
             $query->where('name', "LIKE", "%{$search}%")
+                ->orWhere('code', $search)
                 ->orWhere('email', $search)
                 ->orWhere('mobile', $search);
         });
@@ -28,7 +28,8 @@ class SellerController extends Controller
         $data->when(request()->get('status'), function ($query) {
             $query->where('status', request()->get('status'));
         });
-        $sellers = $data->paginate(15);
+        $data->seller();
+        $sellers = $data->paginate(20);
         return view('admin.seller.seller_list', compact('sellers'));
     }
 

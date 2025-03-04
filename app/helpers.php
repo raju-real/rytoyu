@@ -180,6 +180,20 @@ if(!function_exists('authAdmin')) {
     }
 }
 
+if(!function_exists('authAdminType')) {
+    function authAdminType()
+    {
+        return auth()->guard('admin')->user()->type ?? null;
+    }
+}
+
+if(!function_exists('authSellerId')) {
+    function authSellerId()
+    {
+        return auth()->guard('admin')->user()->type == 'seller' ? auth()->user()->id : 1;
+    }
+}
+
 if(!function_exists('authShopInfo')) {
     function authShopInfo() {
         return auth()->guard('admin')->user()->shop;
@@ -361,6 +375,13 @@ if (!function_exists('activeCategories')) {
     }
 }
 
+if (!function_exists('allBrands')) {
+    function allBrands()
+    {
+        return \App\Models\Brand::select('id', 'name', 'slug', 'logo')->orderBy('name')->get();
+    }
+}
+
 if (!function_exists('activeBrands')) {
     function activeBrands()
     {
@@ -396,10 +417,31 @@ if (!function_exists('allTags')) {
     }
 }
 
+if (!function_exists('allSellers')) {
+    function allSellers()
+    {
+        return Admin::with('shop')->orderBy('name')->get();
+    }
+}
+
 if (!function_exists('activeSellers')) {
     function activeSellers()
     {
         return Admin::active()->approved()->get();
+    }
+}
+
+if (!function_exists('sellerIdByCode')) {
+    function sellerIdByCode($code)
+    {
+        return Admin::whereCode($code)->first()->id ?? null;
+    }
+}
+
+if (!function_exists('brandIdBySlug')) {
+    function brandIdBySlug($slug)
+    {
+        return \App\Models\Brand::whereSlug($slug)->first()->id ?? null;
     }
 }
 
@@ -421,6 +463,20 @@ if (!function_exists('subCategoryIdBySlug')) {
     function subCategoryIdBySlug($slug)
     {
         return \App\Models\SubCategory::whereSlug($slug)->first()->id ?? null;
+    }
+}
+
+if (!function_exists('subSubCategoryIdBySlug')) {
+    function subSubCategoryIdBySlug($slug)
+    {
+        return \App\Models\SubSubcategory::whereSlug($slug)->first()->id ?? null;
+    }
+}
+
+if (!function_exists('subSubCategoryNameBySlug')) {
+    function subSubCategoryNameBySlug($slug)
+    {
+        return \App\Models\SubSubcategory::whereSlug($slug)->first()->name ?? null;
     }
 }
 
