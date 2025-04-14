@@ -7,13 +7,11 @@
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                 <h4 class="mb-sm-0 font-size-18">Category List</h4>
-
                 <div class="page-title-right">
                     <a href="{{ route('admin.categories.create') }}" class="btn btn-sm btn-primary">
                         <i class="fa fa-plus-circle"></i> Add New
                     </a>
                 </div>
-
             </div>
         </div>
     </div>

@@ -46,37 +46,37 @@
                 </a>
                 <ul class="sub-menu" aria-expanded="false">
                     <li>
-                        <a href="{{ route('admin.sections') }}" class="{{ isSubMenuActive('sections') }}">
+                        <a href="{{ route('admin.sliders.index') }}" class="{{ isSubMenuActive('sliders') }}">
                             <i class="bx bx-chevron-right"></i> Sliders
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.sections') }}" class="{{ isSubMenuActive('sections') }}">
+                        <a href="" class="{{ isSubMenuActive('sections') }}">
                             <i class="bx bx-chevron-right"></i> Announcements
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.sections') }}" class="{{ isSubMenuActive('sections') }}">
+                        <a href="" class="{{ isSubMenuActive('sections') }}">
                             <i class="bx bx-chevron-right"></i> New In
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.sections') }}" class="{{ isSubMenuActive('sections') }}">
+                        <a href="" class="{{ isSubMenuActive('sections') }}">
                             <i class="bx bx-chevron-right"></i> Product Types
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.sections') }}" class="{{ isSubMenuActive('sections') }}">
+                        <a href="" class="{{ isSubMenuActive('sections') }}">
                             <i class="bx bx-chevron-right"></i> Brands
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.sections') }}" class="{{ isSubMenuActive('sections') }}">
+                        <a href="" class="{{ isSubMenuActive('sections') }}">
                             <i class="bx bx-chevron-right"></i> Latest Offer
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.sections') }}" class="{{ isSubMenuActive('sections') }}">
+                        <a href="" class="{{ isSubMenuActive('sections') }}">
                             <i class="bx bx-chevron-right"></i> Just For You
                         </a>
                     </li>

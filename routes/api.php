@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,3 +38,14 @@ Route::get('subcategory-wise-sub-subcategories/{subcategory_id}', function ($sub
         'append_value' => $append_value
     ]);
 });
+
+Route::get('search-products',function () {
+    $query = request()->get('query');
+    $products = Product::where('name', 'LIKE', "%{$query}%")
+        ->orWhere('product_code', 'LIKE', "%{$query}%")
+        ->orWhere('product_code', $query)
+        ->select('id', 'seller_id', 'name', 'product_code', 'thumbnail_path') // Include only necessary fields
+        ->get();
+
+    return response()->json(['products' => $products]);
+})->name('search-products');

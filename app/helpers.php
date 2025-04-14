@@ -3,6 +3,7 @@
 use App\Models\Admin;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
 if (!function_exists('successMessage')) {
@@ -346,10 +347,18 @@ if (!function_exists('isSubMenuActive')) {
         return request()->segment(1) == $fieldName ? 'active' : '';
     }
 }
+
 if (!function_exists('generateVerificationCode')) {
     function generateVerificationCode(): int
     {
         return mt_rand(100000, 999999); // Generate 6-digit code
+    }
+}
+
+if (!function_exists('textLimit')) {
+    function textLimit($text = "")
+    {
+        return Str::limit($text, 20, '...');
     }
 }
 
@@ -510,18 +519,21 @@ if (!function_exists('categorySlugById')) {
         return \App\Models\Category::find($id)->slug ?? "";
     }
 }
+
 if (!function_exists('subCategorySlugById')) {
     function subCategorySlugById($id)
     {
         return \App\Models\SubCategory::find($id)->slug ?? "";
     }
 }
+
 if (!function_exists('subSubCategorySlugById')) {
     function subSubCategorySlugById($id)
     {
         return \App\Models\SubSubcategory::find($id)->slug ?? "";
     }
 }
+
 if (!function_exists('brandSlugById')) {
     function brandSlugById($id)
     {

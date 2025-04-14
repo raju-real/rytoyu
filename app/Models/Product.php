@@ -11,8 +11,13 @@ class Product extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = "products";
-    protected $appends = ['total_variant', 'total_images'];
+    protected $appends = ['total_variant', 'total_images','seller_shop_name'];
     protected $fillable = ['name', 'unit_price', 'discount_price', 'category_id', 'slug'];
+
+    public function seller()
+    {
+        return $this->belongsTo(Admin::class,'seller_id','id');
+    }
 
     public function getTotalVariantAttribute()
     {
@@ -22,6 +27,11 @@ class Product extends Model
     public function getTotalImagesAttribute()
     {
         return ProductImage::where('product_id', $this->id)->count();
+    }
+
+    public function getSellerShopNameAttribute()
+    {
+        return SellerShop::where('seller_id',$this->seller_id)->first()->shop_name ?? '';
     }
 
     public function type()

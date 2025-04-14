@@ -1,3071 +1,1206 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="RAFCART - Multipurpose eCommerce HTML Template">
-    <meta name="author" content="Programming Kit">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="base-url" base_url="{!! url('/') !!}"/>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title',siteSettings()['company_name'])</title>
-    <link rel="shortcut icon" href="{{ asset('assets/user/images/favicon.png') }}" type="image/x-icon">
-
-    <!-- all css -->
-    <link rel="stylesheet" href="{{ asset('assets/user/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/user/css/jquery-ui.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/user/css/slick.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/user/css/line-awesome.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/user/css/nice-select.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/user/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/user/css/responsive.css') }}">
+    <!-- Favicon -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144"
+          href="{{ asset('assets/user/images/favicon.png') }}">
+    <link rel="shortcut icon" href="{{ asset('assets/user/images/favicon.png') }}">
+    <!-- CSS Global -->
+    <link href="{{ asset('assets/user/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/user/plugins/bootstrap-select/css/bootstrap-select.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/user/plugins/fontawesome/css/all.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/user/plugins/prettyphoto/css/prettyPhoto.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/user/plugins/owl-carousel2/assets/owl.carousel.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/user/plugins/owl-carousel2/assets/owl.theme.default.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/user/plugins/animate/animate.min.css') }}" rel="stylesheet">
+    <!-- Theme CSS -->
+    <link href="{{ asset('assets/user/css/theme.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/user/css/theme-green-1.css') }}" rel="stylesheet" id="theme-config-link">
+    <!-- Head Libs -->
+    <script src="{{ asset('assets/user/plugins/modernizr.custom.js') }}"></script>
+    <!--[if lt IE 9]>
+    <script src="{{ asset('assets/user/plugins/iesupport/html5shiv.js') }}"></script>
+    <script src="{{ asset('assets/user/plugins/iesupport/respond.min.js') }}"></script>
+    <![endif]-->
 </head>
-
-<body>
-
-    <!-- Preloader -->
-    <div class="preloader">
-        <img src="{{ asset('assets/user/images/preloader.gif') }}" alt="preloader">
+<body id="home" class="wide">
+<!-- PRELOADER -->
+<div id="preloader">
+    <div id="preloader-status">
+        <div class="spinner">
+            <div class="rect1"></div>
+            <div class="rect2"></div>
+            <div class="rect3"></div>
+            <div class="rect4"></div>
+            <div class="rect5"></div>
+        </div>
+        <div id="preloader-title">Loading</div>
     </div>
-
-    <!-- top header -->
-    <header class="home-3">
+</div>
+<!-- /PRELOADER -->
+<!-- WRAPPER -->
+<div class="wrapper">
+    <!-- Popup: Shopping cart items -->
+    <div class="modal fade popup-cart" id="popup-cart" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="container">
+                <div class="cart-items">
+                    <div class="cart-items-inner">
+                        <div class="media">
+                            <a class="pull-left" href="#"><img class="media-object item-image"
+                                                               src="{{ asset('assets/user/img/preview/shop/order-1s.jpg') }}"
+                                                               alt=""></a>
+                            <p class="pull-right item-price">TK:1,400.00</p>
+                            <div class="media-body">
+                                <h4 class="media-heading item-title"><a href="#">1x Standard Product</a></h4>
+                                <p class="item-desc">Lorem ipsum dolor</p>
+                            </div>
+                        </div>
+                        <div class="media">
+                            <p class="pull-right item-price">TK:1,400.00</p>
+                            <div class="media-body">
+                                <h4 class="media-heading item-title summary">Subtotal</h4>
+                            </div>
+                        </div>
+                        <div class="media">
+                            <div class="media-body">
+                                <div>
+                                    <a href="#" class="btn btn-theme bg-red" data-dismiss="modal">Close</a><!--
+                                    --><a href=""
+                                          class="btn btn-theme btn-theme-transparent btn-call-checkout chek-orange">Checkout</a>
+                                </div>
+                                <!-- hopping-cart.html -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Popup: Shopping cart items -->
+    <!-- Header top bar -->
+    <div class="top-bar">
         <div class="container">
-            <div class="d-flex align-items-center justify-content-sm-between">
+            <div class="top-bar-inner">
+                <div class="top-bar-left">
+                    <ul class="list-inline">
+                        <li class="hidden-xs"><a href="">About</a></li>
+                        <li class="hidden-xs"><a href="">My Account</a></li>
+                        <li class="hidden-xs"><a href="">Contact</a></li>
+                        <li class="hidden-xs"><a href="">FAQ</a></li>
+                    </ul>
+                </div>
+                <!--  <div class="top-bar-left">
+                   <label class="free-o"><span>Free Shipping With Orders</span> <strong>Over  Tk.2000</strong></label>
+                   </div> -->
+                <div class="top-bar-right">
+                    <ul class="list-inline">
+                        <li class="icon-user"><a href="accountinformation.html"><img src="assets/user/img/user.svg"
+                                                                                     alt=""/>
+                                <span>My Account</span></a></li>
+                        <li class="icon-user"><a href="login.html"><img src="assets/user/img/user.svg" alt=""/> <span>Login</span></a>
+                        </li>
+                        <li class="icon-form"><a href="registration.html"><img src="assets/user/img/mem.svg" alt=""/>
+                                <span>Not a Member? <span class="colored">Sign Up</span></span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Header top bar -->
+    <!-- HEADER -->
+    <header class="header fixed">
+        <div class="header-wrapper">
+            <div class="container">
+                <div class="navigation-wrapper">
+                    <!-- Navigation -->
+                    <nav class="navigation closed clearfix">
+                        <a href="#" class="menu-toggle-close btn"><i class="fa fa-times"></i></a>
+                        <ul class="nav sf-menu">
+                            <li class="megamenu">
+                                <a href="#">WOMEN</a>
+                                <ul>
+                                    <li class="row">
+                                        <div class="col-md-4">
+                                            <h4 class="block-title"><span>Winter</span></h4>
+                                            <ul>
+                                                <li><a href="#">Dresses</a></li>
+                                                <li><a href="#">Rompers & Jumpsuits</a></li>
+                                                <li><a href="#">Bodysuits</a></li>
+                                                <li><a href="#">Shirts & Blouses</a></li>
+                                                <li><a href="#">Coats & Jackets</a></li>
+                                                <li><a href="#">Blazers</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h4 class="block-title"><span>Casual Dresses</span></h4>
+                                            <ul>
+                                                <li><a href="#">T-Shirts & Vests</a></li>
+                                                <li><a href="#">Sweaters & Cardigans</a></li>
+                                                <li><a href="#">Hoodies & Sweats</a></li>
+                                                <li><a href="#">Coats & Jackets</a></li>
+                                                <li><a href="#">Shirts</a></li>
+                                                <li><a href="#">Shorts</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h4 class="block-title"><span>Our Featured Offers</span></h4>
+                                            <ul>
+                                                <li><a href="#">T-Shirts & Vests</a></li>
+                                                <li><a href="#">Sweaters & Cardigans</a></li>
+                                                <li><a href="#">Hoodies & Sweats</a></li>
+                                                <li><a href="#">Coats & Jackets</a></li>
+                                                <li><a href="#">Shirts</a></li>
+                                                <li><a href="#">Shorts</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="megamenu">
+                                <a href="#">MEN</a>
+                                <ul>
+                                    <li class="row">
+                                        <div class="col-md-4">
+                                            <h4 class="block-title"><span>Winter</span></h4>
+                                            <ul>
+                                                <li><a href="#">Dresses</a></li>
+                                                <li><a href="#">Rompers & Jumpsuits</a></li>
+                                                <li><a href="#">Bodysuits</a></li>
+                                                <li><a href="#">Shirts & Blouses</a></li>
+                                                <li><a href="#">Coats & Jackets</a></li>
+                                                <li><a href="#">Blazers</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h4 class="block-title"><span>Casual Dresses</span></h4>
+                                            <ul>
+                                                <li><a href="#">T-Shirts & Vests</a></li>
+                                                <li><a href="#">Sweaters & Cardigans</a></li>
+                                                <li><a href="#">Hoodies & Sweats</a></li>
+                                                <li><a href="#">Coats & Jackets</a></li>
+                                                <li><a href="#">Shirts</a></li>
+                                                <li><a href="#">Shorts</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h4 class="block-title"><span>Our Featured Offers</span></h4>
+                                            <ul>
+                                                <li><a href="#">T-Shirts & Vests</a></li>
+                                                <li><a href="#">Sweaters & Cardigans</a></li>
+                                                <li><a href="#">Hoodies & Sweats</a></li>
+                                                <li><a href="#">Coats & Jackets</a></li>
+                                                <li><a href="#">Shirts</a></li>
+                                                <li><a href="#">Shorts</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="megamenu">
+                                <a href="#">BRANDS</a>
+                                <ul>
+                                    <li class="row">
+                                        <div class="col-md-4">
+                                            <h4 class="block-title"><span>Sonos</span></h4>
+                                            <ul>
+                                                <li><a href="#">Sonos 1</a></li>
+                                                <li><a href="#">Sonos 2</a></li>
+                                                <li><a href="#">Sonos 3</a></li>
+                                                <li><a href="#">Sonos 4</a></li>
+                                                <li><a href="#">Sonos 5</a></li>
+                                                <li><a href="#">Sonos 6</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h4 class="block-title"><span>Toshiba</span></h4>
+                                            <ul>
+                                                <li><a href="#">Toshiba 1</a></li>
+                                                <li><a href="#">Toshiba 2</a></li>
+                                                <li><a href="#">Toshiba 3</a></li>
+                                                <li><a href="#">Toshiba 4</a></li>
+                                                <li><a href="#">Toshiba 5</a></li>
+                                                <li><a href="#">Toshiba 6</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h4 class="block-title"><span>Xiaomi</span></h4>
+                                            <ul>
+                                                <li><a href="#">Xiaomi 1</a></li>
+                                                <li><a href="#">Xiaomi 2</a></li>
+                                                <li><a href="#">Xiaomi 3</a></li>
+                                                <li><a href="#">Xiaomi 4</a></li>
+                                                <li><a href="#">Xiaomi 5</a></li>
+                                                <li><a href="#">Xiaomi 6</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><a href="" class="orange-text">SALE</a></li>
+                        </ul>
+                    </nav>
+                    <!-- /Navigation -->
+                </div>
+                <!-- Logo -->
                 <div class="logo">
-                    <a href="{{ route('home') }}">
-                        <img loading="lazy"  src="{{ asset('assets/dev/ex_logo.jpg') }}" alt="logo">
-                    </a>
+                    <a href="{{ route('home') }}"><img src="{{ asset(siteSettings()['logo'] ?? devLogo()) }}" alt="logo"/></a>
                 </div>
-                <div class="search_wrap d-none d-lg-block">
-                    <div class="search d-flex">
-                        <div class="search_category">
-                            <select class="nice_select">
-                                <option value="">All category</option>
-                                <option value="">Men</option>
-                            </select>
-                        </div>
-                        <div class="search_input">
-                            <input type="text" placeholder="Search" id="show_suggest">
-                        </div>
-                        <div class="search_subimt">
-                            <button>
-                                <span class="d-none d-sm-inline-block">Search</span>
-                            </button>
-                        </div>
-                        <div class="search_suggest shadow-sm">
-                            <div class="search_result_product">
-                                <a href="product-view.html" class="single_sresult_product">
-                                    <div class="sresult_img">
-                                        <img loading="lazy"  src="assets/user/images/laptop-2.png" alt="product">
-                                    </div>
-                                    <div class="sresult_content">
-                                        <h4>HP Pavilion 15</h4>
-                                        <div class="price">
-                                            <span class="org_price">$45.00</span>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="product-view.html" class="single_sresult_product">
-                                    <div class="sresult_img">
-                                        <img loading="lazy"  src="assets/user/images/laptop-1.png" alt="product">
-                                    </div>
-                                    <div class="sresult_content">
-                                        <h4>HP Pavilion 15</h4>
-                                        <div class="price">
-                                            <span class="org_price">$45.00</span>
-                                        </div>
-                                    </div>
-                                </a>
-
-                            </div>
-                        </div>
+                <!-- /Logo -->
+                <!-- Header search -->
+                <div class="header-search">
+                    <input class="form-control" type="text" placeholder="Search for products brands and more"/>
+                    <button><i class="fa fa-search"></i></button>
+                </div>
+                <!-- /Header search -->
+                <!-- Header shopping cart -->
+                <div class="header-cart">
+                    <div class="cart-wrapper">
+                        <a href="wishlist.html" class="btn btn-theme-transparent hidden-xs hidden-sm"><i
+                                class="fa-regular fa-heart"></i></a>
+                        <a href="#" class="btn btn-theme-transparent cart-value" data-toggle="modal"
+                           data-target="#popup-cart"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs"> TK:1,400.00 </span>
+                            <i class="fa fa-angle-down cart-drop"></i></a>
+                        <!-- Mobile menu toggle button -->
+                        <a href="#" class="menu-toggle btn btn-theme-transparent"><i class="fa fa-bars"></i></a>
+                        <!-- /Mobile menu toggle button -->
                     </div>
                 </div>
-                <div class="header_icon d-flex align-items-center ms-auto ms-sm-0">
-                    <a href="wish-list.html" class="icon_wrp text-center wishlist ms-0">
-                        <span class="icon">
-                            <i class="icon-heart"></i>
-                        </span>
-                        <span class="icon_text">Wish List</span>
-                        <span class="pops">6</span>
-                    </a>
-                    <div class="shopcart">
-                        <a href="shopping-cart.html" class="icon_wrp text-center d-none d-lg-block">
-                            <span class="icon">
-                                <i class="icon-cart"></i>
-                            </span>
-                            <span class="icon_text">Cart</span>
-                            <span class="pops">8</span>
-                        </a>
-                        <div class="shopcart_dropdown">
-                            <div class="cart_droptitle">
-                                <h4 class="text_lg">2 Items</h4>
-                            </div>
-                            <div class="cartsdrop_wrap">
-                                <a href="product-view.html" class="single_cartdrop mb-3">
-                                    <span class="remove_cart"><i class="las la-times"></i></span>
-                                    <div class="cartdrop_img">
-                                        <img loading="lazy"  src="assets/user/images/shoes-5.png" alt="product">
-                                    </div>
-                                    <div class="cartdrop_cont">
-                                        <h5 class="text_lg mb-0 default_link">
-                                            Men casual shoes
-                                        </h5>
-                                        <p class="mb-0 text_xs text_p">x1 <span class="ms-2">$450</span></p>
-                                    </div>
-                                </a>
-                                <a href="product-view.html" class="single_cartdrop">
-                                    <span class="remove_cart"><i class="las la-times"></i></span>
-                                    <div class="cartdrop_img">
-                                        <img loading="lazy"  src="assets/user/images/headphone-2.png" alt="product">
-                                    </div>
-                                    <div class="cartdrop_cont">
-                                        <h5 class="text_lg mb-0 default_link">
-                                            Men casual shoes
-                                        </h5>
-                                        <p class="mb-0 text_xs text_p">x1 <span class="ms-2">$450</span></p>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="total_cartdrop">
-                                <h4 class="text_lg text-uppercase mb-0">Sub Total:</h4>
-                                <h4 class="text_lg mb-0 ms-2">$980.00</h4>
-                            </div>
-                            <div class="cartdrop_footer d-flex mt-3">
-                                <a href="shopping-cart.html" class="default_btn w-50 text_xs px-1">View Cart</a>
-                                 <a href="checkout.html" class="default_btn second ms-3 w-50 text_xs px-1">Checkout</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="position-relative myacwrap home-1">
-                        <a href="javascript:void(0)" class="icon_wrp text-center myacc">
-                            <span class="icon">
-                                <i class="icon-user-line"></i>
-                            </span>
-                            <span class="icon_text">Account</span>
-                        </a>
-                        <div class="myacc_cont">
-                            <div class="ac_join">
-                                <p>Welcome to RAFCART Shop</p>
-                                <div class="account_btn d-flex justify-content-between">
-                                   <a href="register.html" class="default_btn">Join</a>
-                                    <a href="login.html" class="default_btn second">Sing in</a>
+                <!-- Header shopping cart -->
+                <div class="text-slider">
+                    <span>MAKING </span>
+                    <div id="carousel-example-generic " class="carousel carousel-fade slide slider-slo"
+                         data-ride="carousel">
+                        <!-- Wrapper for slides -->
+                        <div class="carousel-inner" role="listbox">
+                            <div class="item active">
+                                <div class="carousel-caption">
+                                    BANGLADESH
                                 </div>
                             </div>
-                            <div class="ac_links">
-                                  <a href="account.html" class="myac">
-                                    <i class="lar la-id-card"></i>
-                                    My Account
-                                </a>
-                               <a href="account-order-history.html">
-                                    <i class="las la-gift"></i>
-                                    My Order
-                                </a>
-                               <a href="wish-list.html">
-                                    <i class="lar la-heart"></i>
-                                    My Wishlist
-                                </a>
-                                <a href="shopping-cart.html">
-                                     <i class="icon-cart"></i>
-                                    My Cart
-                                </a>
-                                <a href="login.html">
-                                    <i class="las la-power-off"></i>
-                                    Log out
-                                </a>
+                            <div class="item">
+                                <div class="carousel-caption">
+                                    YOU
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <span>LOOK <i>GOOD</i><strong class="orange-text font-s">.</strong></span>
                 </div>
             </div>
         </div>
     </header>
-
-    <!-- navbar -->
-    <nav class="d-none d-lg-block home-3">
-        <div class="container">
-            <div class="d-flex">
-                <div class="all_category">
-                    <div class="bars text-white d-flex align-items-center justify-content-center">
-                        <span class="icon"> <i class="las la-bars"></i></span>
-                        <span class="icon_text">All categories</span>
-                    </div>
-                    <div class="sub_categories active">
-                        <h5 class="d-block position-relative d-lg-none subcats_title">
-                            All categories
-
-                        </h5>
-                        <a href="#" class="singlecats">
-                            <span class="img_wrp">
-                               <i class="las la-shoe-prints"></i>
-                            </span>
-                            <span class="txt">Shoes</span>
-                        </a>
-
-                        <div class="singlecats withsub">
-                            <span class="img_wrp">
-                               <i class="las la-male"></i>
-                            </span>
-                            <span class="txt">Men</span>
-                            <span class="wsicon"><i class="las la-angle-right"></i></span>
-                            <div class="mega_menu">
-                                <div class="single_mega_menu">
-                                    <div class="mega_menu_wrap">
-                                        <h4>Hot sale</h4>
-                                        <div class="mega_categories">
-                                            <a href="#">Hoodies $ Sweatshirts</a>
-                                            <a href="#">T-Shirt</a>
-                                            <a href="#">Men’s Sets</a>
-                                            <a href="#">Jacket</a>
-                                            <a href="#">Shoes</a>
+    <!-- /HEADER -->
+    <!-- CONTENT AREA -->
+    <div class="content-area">
+        <!-- PAGE -->
+        <section class="page-section no-padding slider slider-banner">
+            <div class="container full-width">
+                <div class="main-slider">
+                    <div class="owl-carousel" id="main-slider">
+                        <!-- Slide 1 -->
+                        <div class="item slide1">
+                            <img class="slide-img" src="{{ asset('assets/user/img/1.png') }}" alt=""/>
+                            <div class="caption">
+                                <div class="container">
+                                    <div class="div-table">
+                                        <div class="div-cell">
+                                            <div class="caption-content">
+                                                <h2 class="caption-title">Lifestyle Collection</h2>
+                                                <h3 class="caption-subtitle">FOR TRAVELING </h3>
+                                                <h5 class="sale-p">Sale Up to
+                                                    <label class="orange-text">
+                                                        30% Off
+                                                        <span>
+                                                            <img src="{{ asset('assets/user/img/border.png') }}" alt="img">
+                                                         </span>
+                                                    </label>
+                                                </h5>
+                                                <p class="caption-text">
+                                                    <a class="btn btn-theme" href="#">SHOP NOW</a>
+                                                </p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="mega_menu_wrap">
-                                        <h4>Bottoms</h4>
-                                        <div class="mega_categories">
-                                            <a href="#">Casual Pants</a>
-                                            <a href="#">Men’s Sleep & Lounge</a>
-                                            <a href="#">Jeans</a>
-                                            <a href="#">Shorts</a>
-                                            <a href="#">Towel</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="single_mega_menu">
-                                    <div class="mega_menu_wrap">
-                                        <h4>Outerwear $ Jackets</h4>
-                                        <div class="mega_categories">
-                                            <a href="#">Jacket</a>
-                                            <a href="#">Sweaters</a>
-                                            <a href="#">Casual Faux Leather</a>
-                                            <a href="#">Parks</a>
-                                            <a href="#">Jeans</a>
-                                        </div>
-                                    </div>
-                                    <div class="mega_menu_wrap">
-                                        <h4>Underwear & Loun</h4>
-                                        <div class="mega_categories">
-                                            <a href="#">Boxes</a>
-                                            <a href="#">Berifs</a>
-                                            <a href="#">Long Johns</a>
-                                            <a href="#">Men’s Sleep & Lounge</a>
-                                            <a href="#">Parks</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="single_mega_menu">
-                                    <div class="mega_menu_wrap">
-                                        <h4>Accessories</h4>
-                                        <div class="mega_categories">
-                                            <a href="#">Scarves</a>
-                                            <a href="#">Skullies & Beanies</a>
-                                            <a href="#">Casual Faux Leather</a>
-                                            <a href="#">Prescription Glasses</a>
-                                            <a href="#">Belt</a>
-                                        </div>
-                                    </div>
-                                    <div class="mega_menu_wrap">
-                                        <h4>Novelty & Special</h4>
-                                        <div class="mega_categories">
-                                            <a href="#">Cosplay Costumes</a>
-                                            <a href="#">Stage & Dance Wear</a>
-                                            <a href="#">Exotic Apparel</a>
-                                            <a href="#">Scarves</a>
-                                            <a href="#">Men’s Sets</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="single_mega_menu brnd">
-                                    <div class="mega_brands">
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-1.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-2.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-3.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-4.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-5.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-6.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-7.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-8.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-9.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-10.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-11.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-12.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-13.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-14.png" alt="brand">
-                                        </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <a href="#" class="singlecats">
-                            <span class="img_wrp">
-                                <i class="las la-female"></i>
-                            </span>
-                            <span class="txt">Women</span>
-                        </a>
-                        <a href="#" class="singlecats">
-                            <span class="img_wrp">
-                                <i class="las la-plug"></i>
-                            </span>
-                            <span class="txt">Electronisc</span>
-                        </a>
-                        <a href="#" class="singlecats">
-                            <span class="img_wrp">
-                                <i class="las la-headphones"></i>
-                            </span>
-                            <span class="txt">Headphones</span>
-                        </a>
-                        <a href="#" class="singlecats">
-                            <span class="img_wrp">
-                                 <i class="icon-watch"></i>
-                            </span>
-                            <span class="txt">Watches</span>
-                        </a>
-                        <div class="singlecats withsub">
-                            <span class="img_wrp">
-                                 <i class="las la-desktop"></i>
-                            </span>
-                            <span class="txt">Computer</span>
-                            <span class="wsicon"><i class="las la-angle-right"></i></span>
-                            <div class="mega_menu">
-                                <div class="single_mega_menu">
-                                    <div class="mega_menu_wrap">
-                                        <h4>Macbook</h4>
-                                        <div class="mega_categories">
-                                            <a href="#">Mackbook m1</a>
-                                            <a href="#">Mackbook pro</a>
-                                            <a href="#">Mackbook air</a>
-                                            <a href="#">Mackbook 2015</a>
-                                            <a href="#">Mackbook 2020</a>
+                        <!-- /Slide 1 -->
+                        <!-- Slide 2 -->
+                        <div class="item slide2">
+                            <img class="slide-img" src="{{ asset('assets/user/img/1.png') }}" alt=""/>
+                            <div class="caption">
+                                <div class="container">
+                                    <div class="div-table">
+                                        <div class="div-cell">
+                                            <div class="caption-content">
+                                                <h2 class="caption-title">Lifestyle Collection</h2>
+                                                <h3 class="caption-subtitle"><span>FOR TRAVELING </span></h3>
+                                                <h5 class="sale-p">Sale Up to
+                                                    <label class="orange-text">
+                                                        30% Off
+                                                        <span>
+                                                            <img src="{{ asset('assets/user/img/border.png') }}" alt="img">
+                                                         </span>
+                                                    </label>
+                                                </h5>
+                                                <p class="caption-text">
+                                                    <a class="btn btn-theme" href="#">SHOP NOW</a>
+                                                </p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="mega_menu_wrap">
-                                        <h4>Laptop</h4>
-                                        <div class="mega_categories">
-                                            <a href="#">Razer</a>
-                                            <a href="#">Hp Laptop</a>
-                                            <a href="#">Dell Notebook</a>
-                                            <a href="#">Asus</a>
-                                            <a href="#">Lenovo</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="single_mega_menu">
-                                    <div class="mega_menu_wrap">
-                                        <h4>Dasktop</h4>
-                                        <div class="mega_categories">
-                                            <a href="#">Brand Dasktop</a>
-                                            <a href="#">All in one pc</a>
-                                            <a href="#">Mini PC</a>
-                                            <a href="#">Customize PC</a>
-                                            <a href="#">Dasktop Accessories</a>
-                                        </div>
-                                    </div>
-                                    <div class="mega_menu_wrap">
-                                        <h4>Monitor</h4>
-                                        <div class="mega_categories">
-                                            <a href="#">Samsung</a>
-                                            <a href="#">Philips</a>
-                                            <a href="#">LG</a>
-                                            <a href="#">HP</a>
-                                            <a href="#">Xiaomi</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="single_mega_menu">
-                                    <div class="mega_menu_wrap">
-                                        <h4>Accessories</h4>
-                                        <div class="mega_categories">
-                                            <a href="#">Dasktop Ram</a>
-                                            <a href="#">Motherboard</a>
-                                            <a href="#">SSD Card</a>
-                                            <a href="#">Hard disk</a>
-                                            <a href="#">Processor</a>
-                                        </div>
-                                    </div>
-                                    <div class="mega_menu_wrap">
-                                        <h4>Gaming</h4>
-                                        <div class="mega_categories">
-                                            <a href="#">Gaming console</a>
-                                            <a href="#">Gaming Chair</a>
-                                            <a href="#">Gaming Desk</a>
-                                            <a href="#">Gaming Controller</a>
-                                            <a href="#">Keyboard</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="single_mega_menu brnd">
-                                    <div class="mega_brands">
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-1.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-2.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-3.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-4.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-5.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-6.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-7.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-8.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-9.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-10.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-11.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-12.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-13.png" alt="brand">
-                                        </a>
-                                        <a href="#" class="mega_brnd_img">
-                                            <img loading="lazy"  src="assets/user/images/brand-14.png" alt="brand">
-                                        </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <a href="#" class="singlecats">
-                            <span class="img_wrp">
-                                <i class="las la-mobile"></i>
-                            </span>
-                            <span class="txt">Mobile</span>
-                        </a>
+                        <!-- /Slide 2 -->
                     </div>
                 </div>
-                <ul class="nav_bar flex-grow-1">
-                    <li class="withsubs">
-                        <a href="index-1.html">Home <span><i class="las la-angle-down"></i></span></a>
-                        <ul class="subnav">
-                            <li><a href="index-1.html">Home page 1 </a></li>
-                            <li><a href="index-2.html">Home page 2</a></li>
-                            <li><a href="index-3.html">Home page 3</a></li>
-                        </ul>
-                    </li>
-                    <li class="withsubs">
-                        <a href="shop-list.html">Shop <span><i class="las la-angle-down"></i></span></a>
-                        <ul class="subnav">
-                            <li><a href="shop-list.html">List view </a></li>
-                            <li><a href="shop-grid.html">Grid view</a></li>
-                            <li><a href="shop-grid-2.html">Grid view 2</a></li>
+            </div>
+            <div class="notification-offer">
+                <!--       <div class="container-fluid">
+                   <div class="marquee">
+                   <div class="track">
+                   <div class="content">
+                   <ul class="ul-m">
+                   <li>
+                   <span>Free Shipping With Orders <strong>Over Tk.2000</strong></span>
+                   <span>Sign-Up To Receive Flat <strong>Tk.100 off</strong></span>
+                   </li>
 
-                            <li><a href="shopping-cart.html">Shopping cart</a></li>
-                            <li><a href="product-view.html">Product view</a></li>
-                        </ul>
-                    </li>
-                    <li class="withsubs">
-                        <a href="shop-list.html">Pages <span><i class="las la-angle-down"></i></span></a>
-                        <div class="subnav py-3 px-2 d-flex gx-4">
-                            <div class="single_subnav">
-                                <h5 class="text_lg ps-3 mb-2">Others pages</h5>
-                                <ul>
-                                    <li><a href="about-us.html">About us</a></li>
-                                    <li><a href="contact-us.html">Contact us</a></li>
 
-                                    <li><a href="track-order.html">Track order</a></li>
-                                    <li><a href="faq.html">FAQ</a></li>
-                                    <li><a href="404.html">404</a></li>
-                                </ul>
-                            </div>
-                            <div class="single_subnav">
-                                <h5 class="text_lg ps-3 mb-2">Account pages</h5>
-                                <ul>
-                                    <li><a href="account.html">My Account</a></li>
-                                    <li><a href="login.html">Login</a></li>
-                                    <li><a href="register.html">Register</a></li>
-                                    <li><a href="shop-grid.html">Forgot password</a></li>
-                                </ul>
-                            </div>
-                            <div class="single_subnav">
-                                <h5 class="text_lg ps-3 mb-2">Checkout page</h5>
-                                <ul>
-                                    <li><a href="shop-list.html">Checkout</a></li>
-                                    <li><a href="shop-list.html">Payment</a></li>
-                                    <li><a href="shop-list.html">Payment success</a></li>
-
-                                </ul>
+                   </div>
+                   </div>
+                   </div> -->
+                <marquee behavior="scroll" direction="right" scrollamount="3">
+                    <ul class="ul-m">
+                        <li>Free Shipping With Orders <strong>Over Tk.2000</strong></li>
+                        <li>Sign-Up To Receive Flat <strong>Tk.100 off</strong></li>
+                        <li>Free Shipping With Orders <strong>Over Tk.2000</strong></li>
+                        <li>Sign-Up To Receive Flat <strong>Tk.100 off</strong></li>
+                        <li>Free Shipping With Orders <strong>Over Tk.2000</strong></li>
+                        <li>Sign-Up To Receive Flat <strong>Tk.100 off</strong></li>
+                        <li>Free Shipping With Orders <strong>Over Tk.2000</strong></li>
+                        <li>Sign-Up To Receive Flat <strong>Tk.100 off</strong></li>
+                        <li>Free Shipping With Orders <strong>Over Tk.2000</strong></li>
+                        <li>Sign-Up To Receive Flat <strong>Tk.100 off</strong></li>
+                        <li>Free Shipping With Orders <strong>Over Tk.2000</strong></li>
+                        <li>Sign-Up To Receive Flat <strong>Tk.100 off</strong></li>
+                        <li>Free Shipping With Orders <strong>Over Tk.2000</strong></li>
+                        <li>Sign-Up To Receive Flat <strong>Tk.100 off</strong></li>
+                        <li>Free Shipping With Orders <strong>Over Tk.2000</strong></li>
+                        <li>Sign-Up To Receive Flat <strong>Tk.100 off</strong></li>
+                        <li>Free Shipping With Orders <strong>Over Tk.2000</strong></li>
+                        <li>Sign-Up To Receive Flat <strong>Tk.100 off</strong></li>
+                        <li>Free Shipping With Orders <strong>Over Tk.2000</strong></li>
+                        <li>Sign-Up To Receive Flat <strong>Tk.100 off</strong></li>
+                        <li>Free Shipping With Orders <strong>Over Tk.2000</strong></li>
+                        <li>Sign-Up To Receive Flat <strong>Tk.100 off</strong></li>
+                        <li>Free Shipping With Orders <strong>Over Tk.2000</strong></li>
+                        <li>Sign-Up To Receive Flat <strong>Tk.100 off</strong></li>
+                        <li>Free Shipping With Orders <strong>Over Tk.2000</strong></li>
+                        <li>Sign-Up To Receive Flat <strong>Tk.100 off</strong></li>
+                        <li>Free Shipping With Orders <strong>Over Tk.2000</strong></li>
+                        <li>Sign-Up To Receive Flat <strong>Tk.100 off</strong></li>
+                        <li>Free Shipping With Orders <strong>Over Tk.2000</strong></li>
+                        <li>Sign-Up To Receive Flat <strong>Tk.100 off</strong></li>
+                        <li>Free Shipping With Orders <strong>Over Tk.2000</strong></li>
+                        <li>Sign-Up To Receive Flat <strong>Tk.100 off</strong></li>
+                        <li>Free Shipping With Orders <strong>Over Tk.2000</strong></li>
+                        <li>Sign-Up To Receive Flat <strong>Tk.100 off</strong></li>
+                        <li>Free Shipping With Orders <strong>Over Tk.2000</strong></li>
+                        <li>Sign-Up To Receive Flat <strong>Tk.100 off</strong></li>
+                    </ul>
+                </marquee>
+            </div>
+            <div>
+    </div>
+    </section>
+    <!-- /PAGE -->
+    <!-- New in -->
+    <section class="page-section col-md-12 p-0">
+        <div class="container-fluid p-0">
+            <h2 class="section-title"><span>New in</span></h2>
+            <p class="text-center p-destails">Because the best looks don't wait. Discover the latest arrivals.</p>
+            <div class="top-products-carousel">
+                <div class="owl-carousel slider-c-custom" id="top-products-carouselt">
+                    <div class="thumbnail no-border no-padding">
+                        <div class="media">
+                            <img class="img-sl" src="{{ asset('assets/user/img/s1.png') }}" alt=""/>
+                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
+                                    class="fa-regular fa-eye"></i></button>
+                        </div>
+                        <div class="caption text-center">
+                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                            <p class="p-title">Brand Name</p>
+                            <div class="price">
+                                <ins>TK:1,400.00</ins>
+                                <del>TK:1800.00</del>
                             </div>
                         </div>
+                    </div>
+                    <div class="thumbnail no-border no-padding">
+                        <div class="media">
+                            <img class="img-sl" src="assets/user/img/s2.png" alt=""/>
+                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
+                                    class="fa-regular fa-eye"></i></button>
+                        </div>
+                        <div class="caption text-center">
+                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                            <p class="p-title">Brand Name</p>
+                            <div class="price">
+                                <ins>TK:1,400.00</ins>
+                                <del>TK:1800.00</del>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="thumbnail no-border no-padding">
+                        <div class="media">
+                            <img class="img-sl" src="assets/user/img/s3.png" alt=""/>
+                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
+                                    class="fa-regular fa-eye"></i></button>
+                        </div>
+                        <div class="caption text-center">
+                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                            <p class="p-title">Brand Name</p>
+                            <div class="price">
+                                <ins>TK:1,400.00</ins>
+                                <del>TK:1800.00</del>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="thumbnail no-border no-padding">
+                        <div class="media">
+                            <img class="img-sl" src="assets/user/img/s4.png" alt=""/>
+                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
+                                    class="fa-regular fa-eye"></i></button>
+                        </div>
+                        <div class="caption text-center">
+                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                            <p class="p-title">Brand Name</p>
+                            <div class="price">
+                                <ins>TK:1,400.00</ins>
+                                <del>TK:1800.00</del>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="thumbnail no-border no-padding">
+                        <div class="media">
+                            <img class="img-sl" src="assets/user/img/s5.png" alt=""/>
+                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
+                                    class="fa-regular fa-eye"></i></button>
+                        </div>
+                        <div class="caption text-center">
+                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                            <p class="p-title">Brand Name</p>
+                            <div class="price">
+                                <ins>TK:1,400.00</ins>
+                                <del>TK:1800.00</del>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- end new in -->
+    <!-- edit  -->
+    <section class="edit-area col-md-12 p-0">
+        <div class="container">
+            <div class="col-md-12 text-center">
+                <h2 class="section-title"><span>Edits</span></h2>
+                <p class="text-center p-destails">Curated collection for every vibe. Find your perfect fit for any
+                    occasion.</p>
+            </div>
+        </div>
+        <div class="edit-list">
+            <div class="edit-block">
+                <img src="assets/user/img/edit1.png" alt="img">
+                <div class="edit-details">
+                    <h3>Basics</h3>
+                    <div class="btn-row">
+                        <button class="btn btn-shop orange-bg">SHOP WOMEN</button>
+                        <button class="btn btn-shop orange-bg">SHOP MEN</button>
+                    </div>
+                </div>
+            </div>
+            <div class="edit-block">
+                <img src="assets/user/img/edit2.png" alt="img">
+                <div class="edit-details">
+                    <h3>Casual Wear</h3>
+                    <div class="btn-row">
+                        <button class="btn btn-shop orange-bg">SHOP WOMEN</button>
+                        <button class="btn btn-shop orange-bg">SHOP MEN</button>
+                    </div>
+                </div>
+            </div>
+            <div class="edit-block">
+                <img src="assets/user/img/edit3.png" alt="img">
+                <div class="edit-details">
+                    <h3>Office Wear</h3>
+                    <div class="btn-row">
+                        <button class="btn btn-shop orange-bg">SHOP WOMEN</button>
+                        <button class="btn btn-shop orange-bg">SHOP MEN</button>
+                    </div>
+                </div>
+            </div>
+            <div class="edit-block">
+                <img src="assets/user/img/edit4.png" alt="img">
+                <div class="edit-details">
+                    <h3>Traditional</h3>
+                    <div class="btn-row">
+                        <button class="btn btn-shop orange-bg">SHOP WOMEN</button>
+                        <button class="btn btn-shop orange-bg">SHOP MEN</button>
+                    </div>
+                </div>
+            </div>
+            <div class="edit-block">
+                <img src="assets/user/img/edit5.png" alt="img">
+                <div class="edit-details">
+                    <h3>Pants</h3>
+                    <div class="btn-row">
+                        <button class="btn btn-shop orange-bg">SHOP WOMEN</button>
+                        <button class="btn btn-shop orange-bg">SHOP MEN</button>
+                    </div>
+                </div>
+            </div>
+            <div class="edit-block">
+                <img src="assets/user/img/edit6.png" alt="img">
+                <div class="edit-details">
+                    <h3>Footwear</h3>
+                    <div class="btn-row">
+                        <button class="btn btn-shop orange-bg">SHOP WOMEN</button>
+                        <button class="btn btn-shop orange-bg">SHOP MEN</button>
+                    </div>
+                </div>
+            </div>
+            <div class="edit-block">
+                <img src="assets/user/img/edit7.png" alt="img">
+                <div class="edit-details">
+                    <h3>Jewelry</h3>
+                    <div class="btn-row">
+                        <button class="btn btn-shop orange-bg">SHOP WOMEN</button>
+                        <button class="btn btn-shop orange-bg">SHOP MEN</button>
+                    </div>
+                </div>
+            </div>
+            <div class="edit-block">
+                <img src="assets/user/img/edit8.png" alt="img">
+                <div class="edit-details">
+                    <h3>Accessories</h3>
+                    <div class="btn-row">
+                        <button class="btn btn-shop orange-bg">SHOP WOMEN</button>
+                        <button class="btn btn-shop orange-bg">SHOP MEN</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--end edit -->
+    <!--Brands -->
+    <section class="page-section  col-md-12 p-0">
+        <div class="container-fluid p-0">
+            <h2 class="section-title"><span>Brands </span></h2>
+            <p class="text-center p-destails">From timeless classics to trendsetters, explore the brands that define
+                style.</p>
+            <div class="top-products-carousel">
+                <div class="owl-carousel slider-c-custom" id="top-products-carouselb">
+                    <div class="thumbnail no-border no-padding">
+                        <div class="media">
+                            <img class="img-sl" src="assets/user/img/b1.png" alt=""/>
+                        </div>
+                        <img src="assets/user/img/brandl.png" class="brand-logo">
+                    </div>
+                    <div class="thumbnail no-border no-padding">
+                        <div class="media">
+                            <img class="img-sl" src="assets/user/img/b2.png" alt=""/>
+                        </div>
+                        <img src="assets/user/img/brandl1.png" class="brand-logo">
+                    </div>
+                    <div class="thumbnail no-border no-padding">
+                        <div class="media">
+                            <img class="img-sl" src="assets/user/img/b3.png" alt=""/>
+                        </div>
+                        <img src="assets/user/img/brandl2.png" class="brand-logo">
+                    </div>
+                    <div class="thumbnail no-border no-padding">
+                        <div class="media">
+                            <img class="img-sl" src="assets/user/img/b4.png" alt=""/>
+                        </div>
+                        <img src="assets/user/img/brandl4.png" class="brand-logo">
+                    </div>
+                    <div class="thumbnail no-border no-padding">
+                        <div class="media">
+                            <img class="img-sl" src="assets/user/img/b3.png" alt=""/>
+                        </div>
+                        <img src="assets/user/img/brandl1.png" class="brand-logo">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- end Latest offers -->
+    <!-- Latest offers -->
+    <section class="page-section  col-md-12 p-0">
+        <div class="container-fluid p-0">
+            <h2 class="section-title"><span>Latest offers </span></h2>
+            <p class="text-center p-destails">Style steals you can't miss!</p>
+            <div class="top-products-carousel">
+                <div class="owl-carousel slider-c-custom" id="top-products-carousel">
+                    <div class="thumbnail no-border no-padding">
+                        <div class="media">
+                            <img class="img-sl" src="assets/user/img/l1.png" alt=""/>
+                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
+                                    class="fa-regular fa-eye"></i></button>
+                        </div>
+                        <div class="caption text-center">
+                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                            <p class="p-title">Brand Name</p>
+                            <div class="price">
+                                <ins>TK:1,400.00</ins>
+                                <del>TK:1800.00</del>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="thumbnail no-border no-padding">
+                        <div class="media">
+                            <img class="img-sl" src="assets/user/img/l2.png" alt=""/>
+                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
+                                    class="fa-regular fa-eye"></i></button>
+                        </div>
+                        <div class="caption text-center">
+                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                            <p class="p-title">Brand Name</p>
+                            <div class="price">
+                                <ins>TK:1,400.00</ins>
+                                <del>TK:1800.00</del>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="thumbnail no-border no-padding">
+                        <div class="media">
+                            <img class="img-sl" src="assets/user/img/s5.png" alt=""/>
+                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
+                                    class="fa-regular fa-eye"></i></button>
+                        </div>
+                        <div class="caption text-center">
+                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                            <p class="p-title">Brand Name</p>
+                            <div class="price">
+                                <ins>TK:1,400.00</ins>
+                                <del>TK:1800.00</del>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="thumbnail no-border no-padding">
+                        <div class="media">
+                            <img class="img-sl" src="assets/user/img/l3.png" alt=""/>
+                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
+                                    class="fa-regular fa-eye"></i></button>
+                        </div>
+                        <div class="caption text-center">
+                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                            <p class="p-title">Brand Name</p>
+                            <div class="price">
+                                <ins>TK:1,400.00</ins>
+                                <del>TK:1800.00</del>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="thumbnail no-border no-padding">
+                        <div class="media">
+                            <img class="img-sl" src="assets/user/img/s3.png" alt=""/>
+                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
+                                    class="fa-regular fa-eye"></i></button>
+                        </div>
+                        <div class="caption text-center">
+                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                            <p class="p-title">Brand Name</p>
+                            <div class="price">
+                                <ins>TK:1,400.00</ins>
+                                <del>TK:1800.00</del>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- end Latest offers -->
+    <!-- Just for you -->
+    <section class="page-section  col-md-12 p-0">
+        <div class="container-fluid p-0">
+            <h2 class="section-title"><span>Just for you  </span></h2>
+            <p class="text-center p-destails">Your wardrobe upgrade starts here.</p>
+            <div class="top-products-carousel">
+                <div class="owl-carousel slider-c-custom" id="top-products-carouselj">
+                    <div class="thumbnail no-border no-padding">
+                        <div class="media">
+                            <img class="img-sl" src="assets/user/img/j1.png" alt=""/>
+                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
+                                    class="fa-regular fa-eye"></i></button>
+                        </div>
+                        <div class="caption text-center">
+                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                            <p class="p-title">Brand Name</p>
+                            <div class="price">
+                                <ins>TK:1,400.00</ins>
+                                <del>TK:1800.00</del>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="thumbnail no-border no-padding">
+                        <div class="media">
+                            <img class="img-sl" src="assets/user/img/j2.png" alt=""/>
+                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
+                                    class="fa-regular fa-eye"></i></button>
+                        </div>
+                        <div class="caption text-center">
+                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                            <p class="p-title">Brand Name</p>
+                            <div class="price">
+                                <ins>TK:1,400.00</ins>
+                                <del>TK:1800.00</del>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="thumbnail no-border no-padding">
+                        <div class="media">
+                            <img class="img-sl" src="assets/user/img/j3.png" alt=""/>
+                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
+                                    class="fa-regular fa-eye"></i></button>
+                        </div>
+                        <div class="caption text-center">
+                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                            <p class="p-title">Brand Name</p>
+                            <div class="price">
+                                <ins>TK:1,400.00</ins>
+                                <del>TK:1800.00</del>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="thumbnail no-border no-padding">
+                        <div class="media">
+                            <img class="img-sl" src="assets/user/img/j4.png" alt=""/>
+                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
+                                    class="fa-regular fa-eye"></i></button>
+                        </div>
+                        <div class="caption text-center">
+                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                            <p class="p-title">Brand Name</p>
+                            <div class="price">
+                                <ins>TK:1,400.00</ins>
+                                <del>TK:1800.00</del>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="thumbnail no-border no-padding">
+                        <div class="media">
+                            <img class="img-sl" src="assets/user/img/s3.png" alt=""/>
+                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
+                                    class="fa-regular fa-eye"></i></button>
+                        </div>
+                        <div class="caption text-center">
+                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                            <p class="p-title">Brand Name</p>
+                            <div class="price">
+                                <ins>TK:1,400.000</ins>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- end Just for you -->
+    <!-- become a partner -->
+    <section class="offter-block-list">
+        <div class="row m-0">
+            <div class="col-md-4 p-0">
+                <div class="alll-offer-list bg-gray">
+                    <div class="icon-offer"><img src="assets/user/img/off1.svg" alt="icon"></div>
+                    <div class="offer-details">
+                        <p>
+                            <strong>Sing up to receive special offers:</strong>
+                            Unlock exclusive deals and the latest trends.</p>
+                        <button class="btn orange-bg"><span>Join Now</span></button>
+                    </div>
+                    <img class="shape" src="assets/user/img/shape.svg" alt="">
+                </div>
+            </div>
+            <div class="col-md-4 p-0">
+                <div class="alll-offer-list bg-gray">
+                    <div class="icon-offer"><img src="assets/user/img/off2.svg" alt="icon"></div>
+                    <div class="offer-details">
+                        <p>
+                            <strong>Become a partner: </strong>
+                            Grow your brand with us and reach fashion lovers across Bangladesh.
+                        </p>
+                        <button class="btn orange-bg"><span>Apply</span></button>
+                    </div>
+                    <img class="shape" src="assets/user/img/shape.svg" alt="">
+                </div>
+            </div>
+            <div class="col-md-4 p-0">
+                <div class="alll-offer-list bg-gray">
+                    <div class="icon-offer"><img src="assets/user/img/off3.svg" alt="icon"></div>
+                    <div class="offer-details">
+                        <p><strong>Join our team:</strong> Be part of something big-shape the future of fashion with
+                            Rytoyu! </p>
+                        <button class="btn orange-bg"><span>Apply</span></button>
+                    </div>
+                    <img class="shape" src="assets/user/img/shape.svg" alt="">
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- end become a partner -->
+    <div class="clearfix"></div>
+</div>
+<!-- /CONTENT AREA -->
+<div class="chat-wa">
+    <img src="assets/user/img/chat.svg">
+</div>
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-widgets">
+        <div class="container">
+            <div class="col-md-12 text-center border-b">
+                <div class="form-list-search">
+                    <input type="text" name="" placeholder="Search for products brands and more" class="form-control">
+                    <button class="btn orange-bg">SERACH<i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <ul class="list-inline list-group footer-nav">
+                    <li>
+                        <a href="">WOMEN</a>
                     </li>
-                    <li><a href="contact-us.html">contact</a></li>
-                    <li class="tophead_items ms-auto">
-                        <a href="tel:+18475555555" class="me-0 pe-0"> <span><i class="las la-phone"></i></span>
-                            call: +123 456 7890</a>
+                    <li>
+                        <a href="">MEN</a>
+                    </li>
+                    <li>
+                        <a href="">BRANDS</a>
+                    </li>
+                    <li>
+                        <a href="">SHOP</a>
+                    </li>
+                    <li>
+                        <a href="">NEW</a>
                     </li>
                 </ul>
             </div>
-        </div>
-    </nav>
-
-    <!-- mobile bottom bar -->
-    <div class="mobile_bottombar d-block d-lg-none">
-        <div class="header_icon">
-            <a href="javascript:void(0)" class="icon_wrp text-center open_menu">
-                <span class="icon">
-                    <i class="las la-bars"></i>
-                </span>
-                <span class="icon_text">Menu</span>
-            </a>
-            <a href="javascript:void(0)" class="icon_wrp text-center open_category">
-                <span class="icon">
-                   <i class="icon-list-ul"></i>
-                </span>
-                <span class="icon_text">Categories</span>
-            </a>
-            <a href="javascript:void(0)" class="icon_wrp text-center" id="src_icon">
-                <span class="icon">
-                   <i class="icon-search-left"></i>
-                </span>
-                <span class="icon_text">Search</span>
-            </a>
-            <a href="javascript:void(0)" class="icon_wrp crt text-center" id="openCart">
-                <span class="icon">
-                    <i class="icon-cart"></i>
-                </span>
-                <span class="icon_text">Cart</span>
-                <span class="pops">8</span>
-            </a>
-        </div>
-    </div>
-
-    <!-- mobile menu -->
-    <div class="mobile_menwrap d-lg-none" id="mobile_menwrap">
-        <div class="mobile_menu_2">
-            <h5 class="mobile_title">
-                Menu
-                <span class="sidebarclose" id="menuclose">
-                    <i class="las la-times"></i>
-                </span>
-            </h5>
-            <ul>
-                <li class="withsub">
-                    <a href="javascript:void(0)">
-                        Home
-                    </a>
-                    <div class="submn">
-                        <a href="index-1.html">Home 1</a>
-                        <a href="index-2.html">Home 2</a>
-                        <a href="index-3.html">Home 3</a>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="widget">
+                        <h4 class="widget-title">FOLLOW US</h4>
+                        <ul class="social-icons">
+                            <li><a href="#" class="facebook"><i class="fa-brands fa-facebook-f"></i></a></li>
+                            <li><a href="#" class="twitter"><i class="fa-brands fa-instagram"></i></a></li>
+                            <li><a href="#" class="instagram"><i class="fa-brands fa-tiktok"></i></a></li>
+                            <li><a href="#" class="pinterest"><i class="fa-brands fa-linkedin-in"></i></a></li>
+                        </ul>
                     </div>
-                </li>
-
-                <li class="withsub">
-                    <a href="javascript:void(0)">
-                        Shop
-                    </a>
-                    <div class="submn">
-                        <a href="shop-list.html">List View</a>
-                        <a href="shop-grid.html">Grid View</a>
-                        <a href="shop-grid-2.html">Grid View 2</a>
-                        <a href="wish-list.html">Wishlist</a>
-                        <a href="shopping-cart.html">Shopping cart</a>
-                        <a href="product-view.html">Product view</a>
-                    </div>
-                </li>
-                <li class="withsub">
-                    <a href="javascript:void(0)">
-                        My Account
-                    </a>
-                    <div class="submn">
-                        <a href="account.html">My account</a>
-                        <a href="login.html">Login</a>
-                        <a href="register.html">Register</a>
-                        <a href="forgot-password.html">Forgot password</a>
-                    </div>
-                </li>
-                <li class="withsub">
-                    <a href="javascript:void(0)">
-                        Other pages
-                    </a>
-                    <div class="submn">
-                        <a href="about-us.html">about us</a>
-                        <a href="contact-us.html">Contact us</a>
-                        <a href="track-order.html">Track order</a>
-                        <a href="faq.html">FAQ</a>
-                        <a href="404.html">404</a>
-                        <a href="checkout.html">Checkout</a>
-                        <a href="payment.html">Payment</a>
-                        <a href="order-completed.html">Order complete</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </div>
-
-    <!--  mobile cart -->
-    <div class="mobile_menwrap d-lg-none" id="mobileCart">
-        <div class="mobile_cart_wrap d-flex flex-column">
-            <h5 class="mobile_title">
-                Cart
-                <span class="sidebarclose" id="mobileCartClose">
-                    <i class="las la-times"></i>
-                </span>
-            </h5>
-            <div class="px-3 py-3 flex-grow-1 d-flex flex-column">
-                <div class="cart_droptitle">
-                    <h4 class="text_lg">Total 2 Items</h4>
                 </div>
-                <div class="cartsdrop_wrap">
-                    <a href="product-view.html" class="single_cartdrop mb-3">
-                        <span class="remove_cart"><i class="las la-times"></i></span>
-                        <div class="cartdrop_img">
-                            <img loading="lazy"  src="assets/user/images/shoes-5.png" alt="product">
-                        </div>
-                        <div class="cartdrop_cont">
-                            <h5 class="text_lg mb-0 default_link">
-                                Men casual shoes
-                            </h5>
-                            <p class="mb-0 text_xs text_p">x1 <span class="ms-2">$450</span></p>
-                        </div>
-                    </a>
-                    <a href="product-view.html" class="single_cartdrop">
-                        <span class="remove_cart"><i class="las la-times"></i></span>
-                        <div class="cartdrop_img">
-                            <img loading="lazy"  src="assets/user/images/headphone-2.png" alt="product">
-                        </div>
-                        <div class="cartdrop_cont">
-                            <h5 class="text_lg mb-0 default_link">
-                                Men casual shoes
-                            </h5>
-                            <p class="mb-0 text_xs text_p">x1 <span class="ms-2">$450</span></p>
-                        </div>
-                    </a>
+                <div class="col-md-6 text-center">
+                    <a href="index"><img class="logo-f" src="assets/user/img/logo.svg" alt="logo"></a>
+                    <p class="p-f">
+                        Corporate Office: Rupayan Shopping Square, Level-5, Plot-2, Block-G,<br>
+                        Sayem Sobhan Anvir Road, Bashundhara R/A, Dhaka-1229, Bangladesh.
+                    </p>
+                    <h4 class="h4-f">Need help? Call Us:<span class="orange-text">01712768782</span></h4>
+                    <p class="mail-f">contact@rytoyu.com</p>
                 </div>
-                <div class="mt-auto">
-                    <div class="total_cartdrop">
-                        <h4 class="text_lg text-uppercase mb-0">Sub Total:</h4>
-                        <h4 class="text_lg mb-0 ms-2">$980.00</h4>
-                    </div>
-                    <div class="cartdrop_footer mt-3 d-flex">
-                        <a href="shopping-cart.html" class="default_btn w-50 text_xs px-1">View Cart</a>
-                         <a href="checkout.html" class="default_btn second ms-3 w-50 text_xs px-1">Checkout</a>
-                    </div>
+                <div class="col-md-3">
+                    <ul class="ul-link-f">
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- mobile searchbar -->
-    <div class="mobile_search_bar">
-        <div class="mobile_search_text">
-            <p>What you are looking for?</p>
-            <span class="close_mbsearch" id="close_mbsearch">
-                <i class="las la-times"></i>
-            </span>
-        </div>
-        <form>
-            <input type="text" placeholder="search products...">
-            <button>
-                <i class="icon-search-left"></i>
-            </button>
-        </form>
-
-        <div class="search_result_product">
-            <a href="product-view.html" class="single_sresult_product">
-                <div class="sresult_img">
-                    <img loading="lazy"  src="assets/user/images/laptop-2.png" alt="product">
-                </div>
-                <div class="sresult_content">
-                    <h4>HP Pavilion 15</h4>
-                    <div class="price">
-                        <span class="org_price">$45.00</span>
-                        <span class="prev_price">$55.45</span>
-                    </div>
-                </div>
-            </a>
-            <a href="product-view.html" class="single_sresult_product">
-                <div class="sresult_img">
-                    <img loading="lazy"  src="assets/user/images/phone-1.png" alt="product">
-                </div>
-                <div class="sresult_content">
-                    <h4>Xiaomi Note 7 Pro</h4>
-                    <div class="price">
-                        <span class="org_price">$45.00</span>
-                        <span class="prev_price">$55.45</span>
-                    </div>
-                </div>
-            </a>
-        </div>
-    </div>
-
-    <!-- mobile category -->
-    <div class="mobile_menwrap d-lg-none" id="mobile_catwrap">
-        <div class="sub_categories">
-            <h5 class="mobile_title">
-                All categories
-                <span class="sidebarclose" id="catclose">
-                    <i class="las la-times"></i>
-                </span>
-            </h5>
-
-            <a href="#" class="singlecats">
-                <span class="img_wrp">
-                   <i class="las la-shoe-prints"></i>
-                </span>
-                <span class="txt">Shoes</span>
-            </a>
-
-            <div class="singlecats withsub">
-                <span class="img_wrp">
-                   <i class="las la-male"></i>
-                </span>
-                <span class="txt">Men</span>
-                <span class="wsicon"><i class="las la-angle-right"></i></span>
-                <div class="mega_menu">
-                    <div class="single_mega_menu">
-                        <div class="mega_menu_wrap">
-                            <h4>Hot sale</h4>
-                            <div class="mega_categories">
-                                <a href="#">Hoodies $ Sweatshirts</a>
-                                <a href="#">T-Shirt</a>
-                                <a href="#">Men’s Sets</a>
-                                <a href="#">Jacket</a>
-                                <a href="#">Shoes</a>
-                            </div>
-                        </div>
-                        <div class="mega_menu_wrap">
-                            <h4>Bottoms</h4>
-                            <div class="mega_categories">
-                                <a href="#">Casual Pants</a>
-                                <a href="#">Men’s Sleep & Lounge</a>
-                                <a href="#">Jeans</a>
-                                <a href="#">Shorts</a>
-                                <a href="#">Towel</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="single_mega_menu">
-                        <div class="mega_menu_wrap">
-                            <h4>Outerwear $ Jackets</h4>
-                            <div class="mega_categories">
-                                <a href="#">Jacket</a>
-                                <a href="#">Sweaters</a>
-                                <a href="#">Casual Faux Leather</a>
-                                <a href="#">Parks</a>
-                                <a href="#">Jeans</a>
-                            </div>
-                        </div>
-                        <div class="mega_menu_wrap">
-                            <h4>Underwear & Loun</h4>
-                            <div class="mega_categories">
-                                <a href="#">Boxes</a>
-                                <a href="#">Berifs</a>
-                                <a href="#">Long Johns</a>
-                                <a href="#">Men’s Sleep & Lounge</a>
-                                <a href="#">Parks</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="single_mega_menu">
-                        <div class="mega_menu_wrap">
-                            <h4>Accessories</h4>
-                            <div class="mega_categories">
-                                <a href="#">Scarves</a>
-                                <a href="#">Skullies & Beanies</a>
-                                <a href="#">Casual Faux Leather</a>
-                                <a href="#">Prescription Glasses</a>
-                                <a href="#">Belt</a>
-                            </div>
-                        </div>
-                        <div class="mega_menu_wrap">
-                            <h4>Novelty & Special</h4>
-                            <div class="mega_categories">
-                                <a href="#">Cosplay Costumes</a>
-                                <a href="#">Stage & Dance Wear</a>
-                                <a href="#">Exotic Apparel</a>
-                                <a href="#">Scarves</a>
-                                <a href="#">Men’s Sets</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="single_mega_menu brnd">
-                        <div class="mega_brands">
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-1.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-2.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-3.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-4.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-5.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-6.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-7.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-8.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-9.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-10.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-11.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-12.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-13.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-14.png" alt="brand">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <a href="#" class="singlecats">
-                <span class="img_wrp">
-                    <i class="las la-female"></i>
-                </span>
-                <span class="txt">Women</span>
-            </a>
-            <a href="#" class="singlecats">
-                <span class="img_wrp">
-                    <i class="las la-plug"></i>
-                </span>
-                <span class="txt">Electronisc</span>
-            </a>
-            <a href="#" class="singlecats">
-                <span class="img_wrp">
-                    <i class="las la-headphones"></i>
-                </span>
-                <span class="txt">Headphones</span>
-            </a>
-            <a href="#" class="singlecats">
-                <span class="img_wrp">
-                     <i class="icon-watch"></i>
-                </span>
-                <span class="txt">Watches</span>
-            </a>
-            <div class="singlecats withsub">
-                <span class="img_wrp">
-                     <i class="las la-desktop"></i>
-                </span>
-                <span class="txt">Computer</span>
-                <span class="wsicon"><i class="las la-angle-right"></i></span>
-                <div class="mega_menu">
-                    <div class="single_mega_menu">
-                        <div class="mega_menu_wrap">
-                            <h4>Macbook</h4>
-                            <div class="mega_categories">
-                                <a href="#">Mackbook m1</a>
-                                <a href="#">Mackbook pro</a>
-                                <a href="#">Mackbook air</a>
-                                <a href="#">Mackbook 2015</a>
-                                <a href="#">Mackbook 2020</a>
-                            </div>
-                        </div>
-                        <div class="mega_menu_wrap">
-                            <h4>Laptop</h4>
-                            <div class="mega_categories">
-                                <a href="#">Razer</a>
-                                <a href="#">Hp Laptop</a>
-                                <a href="#">Dell Notebook</a>
-                                <a href="#">Asus</a>
-                                <a href="#">Lenovo</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="single_mega_menu">
-                        <div class="mega_menu_wrap">
-                            <h4>Dasktop</h4>
-                            <div class="mega_categories">
-                                <a href="#">Brand Dasktop</a>
-                                <a href="#">All in one pc</a>
-                                <a href="#">Mini PC</a>
-                                <a href="#">Customize PC</a>
-                                <a href="#">Dasktop Accessories</a>
-                            </div>
-                        </div>
-                        <div class="mega_menu_wrap">
-                            <h4>Monitor</h4>
-                            <div class="mega_categories">
-                                <a href="#">Samsung</a>
-                                <a href="#">Philips</a>
-                                <a href="#">LG</a>
-                                <a href="#">HP</a>
-                                <a href="#">Xiaomi</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="single_mega_menu">
-                        <div class="mega_menu_wrap">
-                            <h4>Accessories</h4>
-                            <div class="mega_categories">
-                                <a href="#">Dasktop Ram</a>
-                                <a href="#">Motherboard</a>
-                                <a href="#">SSD Card</a>
-                                <a href="#">Hard disk</a>
-                                <a href="#">Processor</a>
-                            </div>
-                        </div>
-                        <div class="mega_menu_wrap">
-                            <h4>Gaming</h4>
-                            <div class="mega_categories">
-                                <a href="#">Gaming console</a>
-                                <a href="#">Gaming Chair</a>
-                                <a href="#">Gaming Desk</a>
-                                <a href="#">Gaming Controller</a>
-                                <a href="#">Keyboard</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="single_mega_menu brnd">
-                        <div class="mega_brands">
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-1.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-2.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-3.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-4.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-5.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-6.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-7.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-8.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-9.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-10.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-11.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-12.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-13.png" alt="brand">
-                            </a>
-                            <a href="#" class="mega_brnd_img">
-                                <img loading="lazy"  src="assets/user/images/brand-14.png" alt="brand">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <a href="#" class="singlecats">
-                <span class="img_wrp">
-                    <i class="las la-mobile"></i>
-                </span>
-                <span class="txt">Mobile</span>
-            </a>
-        </div>
-    </div>
-
-    <!-- hero area -->
-    <div class="container-lg home_2_hero_wrp home-3">
-        <div class="row">
-            <div class="col-xl-9">
-                <div class="home_2_hero">
-                    <div class="container">
-                        <div class="hero_slider_active">
-                            <div class="single_hero_slider bg-3">
-                                <div class="container">
-                                    <div class="row align-items-center">
-                                        <div class="col-lg-6 col-sm-7">
-                                            <div class="hero_content text-center text-sm-start ps-4">
-                                                <p>Get up to 50% off Today only</p>
-                                                <h1>Fanideaz Men's Regular <br class="d-block d-sm-none"> Fit Polo T-Shirt
-                                                </h1>
-                                                <div class="hero_btn">
-                                                    <a class="default_btn small rounded" href="shop-grid.html">View all</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-sm-5 d-none d-sm-block">
-                                            <div class="hero_img">
-                                                <img loading="lazy"  src="assets/user/images/men-1.png" alt="shirt">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="single_hero_slider bg-2">
-                                <div class="container">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-6">
-                                            <div class="hero_content text-center text-sm-start ps-4">
-                                                <p>Get up to 50% off Today only</p>
-                                                <h1>Fanideaz Men's Regular Fit Polo T-Shirt</h1>
-                                                <div class="hero_btn">
-                                                    <a class="default_btn small rounded" href="shop-grid.html">View all</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 d-none d-sm-block">
-                                            <div class="hero_img">
-                                                <img loading="lazy"  src="assets/user/images/men-1.png" alt="shirt">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="single_hero_slider bg-1">
-                                <div class="container">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-6">
-                                            <div class="hero_content text-center text-sm-start ps-4">
-                                                <p>Get up to 50% off Today only</p>
-                                                <h1>Fanideaz Men's Regular Fit Polo T-Shirt</h1>
-                                                <div class="hero_btn">
-                                                    <a class="default_btn small rounded" href="shop-grid.html">View all</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 d-none d-sm-block">
-                                            <div class="hero_img">
-                                                <img loading="lazy"  src="assets/user/images/men-1.png" alt="shirt">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3">
-                <div class="banner_collection mt-5 pt-2 pt-xl-0 mt-xl-0 d-flex flex-xl-column flex-row gap-3">
-                    <a href="#" class="single_bannercol">
-                        <h4>Shoes Collection</h4>
-                        <h5>30% off</h5>
-                        <div class="bancol_img">
-                            <img loading="lazy"  src="assets/user/images/shoes-4.png" alt="shoes">
-                        </div>
-                    </a>
-                    <a href="#" class="single_bannercol">
-                        <h4>Sunglasses Collection</h4>
-                        <h5>20% off</h5>
-                        <div class="bancol_img">
-                            <img loading="lazy"  src="assets/user/images/glass.png" alt="shoes">
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-     <!-- features area -->
-     <section class="features_area  section_padding">
-
-    </section>
-
-    <!-- Flash Sale -->
-    <div class="top_arrival_wrp home-3 section_padding_b">
-        <div class="container">
-            <h2 class="section_title_3">Flash sale</h2>
-            <div class="d-flex align-items-center justify-content-between mb-4">
-                <div class="flash_counter">
-                    <div class="end_in">Ending in</div>
-                    <div class="single_count">00</div>
-                    <div class="time_sep">:</div>
-                    <div class="single_count" id="count_minute">00</div>
-                    <div class="time_sep">:</div>
-                    <div class="single_count" id="count_second">00</div>
-                </div>
-                <div class="seemore_2">
-                    <a href="#">See More <span><i class="las la-angle-right"></i></span></a>
-                </div>
-            </div>
-            <div class="product_slider_2">
-                <div class="single_toparrival">
-                    <div class="topariv_img">
-                        <img loading="lazy"  src="assets/user/images/parse.png" alt="product">
-                        <div class="prod_soh">
-                            <div class="adto_wish">
-                                <i class="icon-heart"></i>
-                            </div>
-                            <div class="qk_view open_quickview">
-                                <span><i class="las la-eye"></i></span>
-                                Quick View
-                            </div>
-                        </div>
-                    </div>
-                    <div class="topariv_cont">
-                        <a href="product-view.html">
-                            <h4>Women Scrub Leather</h4>
-                        </a>
-                        <div class="price mb-1 mt-2">
-                            <span class="org_price">$45.00</span>
-                        </div>
-                        <div class="rating">
-                            <div class="d-flex align-items-center justify-content-start">
-                                <div class="rating_star">
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                </div>
-                                <p class="rating_count mb-0">(150)</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="full_atc_btn">
-                        <button>
-                            <span class="me-1"><i class="icon-cart"></i></span>
-                            add to cart
-                        </button>
-                    </div>
-                </div>
-                <div class="single_toparrival">
-                    <div class="topariv_img">
-                        <img loading="lazy"  src="assets/user/images/shirt-2.png" alt="product">
-                        <div class="prod_soh">
-                            <div class="adto_wish">
-                                <i class="icon-heart"></i>
-                            </div>
-                            <div class="qk_view open_quickview">
-                                <span><i class="las la-eye"></i></span>
-                                Quick View
-                            </div>
-                        </div>
-                    </div>
-                    <div class="topariv_cont">
-                        <a href="product-view.html">
-                            <h4>Men T-SHIRT ΚΑΝΟΝΙΚΗ </h4>
-                        </a>
-                        <div class="price mb-1 mt-2">
-                            <span class="org_price">$45.00</span>
-                        </div>
-                        <div class="rating">
-                            <div class="d-flex align-items-center justify-content-start">
-                                <div class="rating_star">
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                </div>
-                                <p class="rating_count mb-0">(150)</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="full_atc_btn">
-                        <button>
-                            <span class="me-1"><i class="icon-cart"></i></span>
-                            add to cart
-                        </button>
-                    </div>
-                </div>
-                <div class="single_toparrival">
-                    <div class="topariv_img">
-                        <img loading="lazy"  src="assets/user/images/toy.png" alt="product">
-                        <div class="prod_soh">
-                            <div class="adto_wish">
-                                <i class="icon-heart"></i>
-                            </div>
-                            <div class="qk_view open_quickview">
-                                <span><i class="las la-eye"></i></span>
-                                Quick View
-                            </div>
-                        </div>
-                    </div>
-                    <div class="topariv_cont">
-                        <a href="product-view.html">
-                            <h4>Playmobil Princess M</h4>
-                        </a>
-                        <div class="price mb-1 mt-2">
-                            <span class="org_price">$45.00</span>
-                        </div>
-                        <div class="rating">
-                            <div class="d-flex align-items-center justify-content-start">
-                                <div class="rating_star">
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                </div>
-                                <p class="rating_count mb-0">(150)</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="full_atc_btn">
-                        <button>
-                            <span class="me-1"><i class="icon-cart"></i></span>
-                            add to cart
-                        </button>
-                    </div>
-                </div>
-                <div class="single_toparrival">
-                    <div class="topariv_img">
-                        <img loading="lazy"  src="assets/user/images/shoes-5.png" alt="product">
-                        <div class="prod_soh">
-                            <div class="adto_wish">
-                                <i class="icon-heart"></i>
-                            </div>
-                            <div class="qk_view open_quickview">
-                                <span><i class="las la-eye"></i></span>
-                                Quick View
-                            </div>
-                        </div>
-                    </div>
-                    <div class="topariv_cont">
-                        <a href="product-view.html">
-                            <h4>Men's Running Shoes</h4>
-                        </a>
-                        <div class="price mb-1 mt-2">
-                            <span class="org_price">$45.00</span>
-                        </div>
-                        <div class="rating">
-                            <div class="d-flex align-items-center justify-content-start">
-                                <div class="rating_star">
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                </div>
-                                <p class="rating_count mb-0">(150)</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="full_atc_btn">
-                        <button>
-                            <span class="me-1"><i class="icon-cart"></i></span>
-                            add to cart
-                        </button>
-                    </div>
-                </div>
-                <div class="single_toparrival">
-                    <div class="topariv_img">
-                        <img loading="lazy"  src="assets/user/images/shoes-3.png" alt="product">
-                        <div class="prod_soh">
-                            <div class="adto_wish">
-                                <i class="icon-heart"></i>
-                            </div>
-                            <div class="qk_view open_quickview">
-                                <span><i class="las la-eye"></i></span>
-                                Quick View
-                            </div>
-                        </div>
-                    </div>
-                    <div class="topariv_cont">
-                        <a href="product-view.html">
-                            <h4>Women Hill Leather</h4>
-                        </a>
-                        <div class="price mb-1 mt-2">
-                            <span class="org_price">$45.00</span>
-                        </div>
-                        <div class="rating">
-                            <div class="d-flex align-items-center justify-content-start">
-                                <div class="rating_star">
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                </div>
-                                <p class="rating_count mb-0">(150)</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="full_atc_btn">
-                        <button>
-                            <span class="me-1"><i class="icon-cart"></i></span>
-                            add to cart
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- New Arrivals -->
-    <div class="top_arrival_wrp home-3 section_padding_b">
-        <div class="container">
-            <div class="title-section d-flex justify-content-between">
-                <h2 class="section_title_3">New Arrivals</h2>
-            <div class="seemore_2 float-end">
-                    <a href="#">See More <span><i class="las la-angle-right"></i></span></a>
-                </div>
-            </div>
-            <div class="product_slider_2">
-                <div class="single_toparrival">
-                    <div class="topariv_img">
-                        <img loading="lazy"  src="assets/user/images/parse.png" alt="product">
-                        <div class="prod_soh">
-                            <div class="adto_wish">
-                                <i class="icon-heart"></i>
-                            </div>
-                            <div class="qk_view open_quickview">
-                                <span><i class="las la-eye"></i></span>
-                                Quick View
-                            </div>
-                        </div>
-                    </div>
-                    <div class="topariv_cont">
-                        <a href="product-view.html">
-                            <h4>Women Scrub Leather</h4>
-                        </a>
-                        <div class="price mb-1 mt-2">
-                            <span class="org_price">$45.00</span>
-                        </div>
-                        <div class="rating">
-                            <div class="d-flex align-items-center justify-content-start">
-                                <div class="rating_star">
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                </div>
-                                <p class="rating_count mb-0">(150)</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="full_atc_btn">
-                        <button>
-                            <span class="me-1"><i class="icon-cart"></i></span>
-                            add to cart
-                        </button>
-                    </div>
-                </div>
-                <div class="single_toparrival">
-                    <div class="topariv_img">
-                        <img loading="lazy"  src="assets/user/images/shirt-2.png" alt="product">
-                        <div class="prod_soh">
-                            <div class="adto_wish">
-                                <i class="icon-heart"></i>
-                            </div>
-                            <div class="qk_view open_quickview">
-                                <span><i class="las la-eye"></i></span>
-                                Quick View
-                            </div>
-                        </div>
-                    </div>
-                    <div class="topariv_cont">
-                        <a href="product-view.html">
-                            <h4>Men T-SHIRT ΚΑΝΟΝΙΚΗ </h4>
-                        </a>
-                        <div class="price mb-1 mt-2">
-                            <span class="org_price">$45.00</span>
-                        </div>
-                        <div class="rating">
-                            <div class="d-flex align-items-center justify-content-start">
-                                <div class="rating_star">
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                </div>
-                                <p class="rating_count mb-0">(150)</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="full_atc_btn">
-                        <button>
-                            <span class="me-1"><i class="icon-cart"></i></span>
-                            add to cart
-                        </button>
-                    </div>
-                </div>
-                <div class="single_toparrival">
-                    <div class="topariv_img">
-                        <img loading="lazy"  src="assets/user/images/toy.png" alt="product">
-                        <div class="prod_soh">
-                            <div class="adto_wish">
-                                <i class="icon-heart"></i>
-                            </div>
-                            <div class="qk_view open_quickview">
-                                <span><i class="las la-eye"></i></span>
-                                Quick View
-                            </div>
-                        </div>
-                    </div>
-                    <div class="topariv_cont">
-                        <a href="product-view.html">
-                            <h4>Playmobil Princess M</h4>
-                        </a>
-                        <div class="price mb-1 mt-2">
-                            <span class="org_price">$45.00</span>
-                        </div>
-                        <div class="rating">
-                            <div class="d-flex align-items-center justify-content-start">
-                                <div class="rating_star">
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                </div>
-                                <p class="rating_count mb-0">(150)</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="full_atc_btn">
-                        <button>
-                            <span class="me-1"><i class="icon-cart"></i></span>
-                            add to cart
-                        </button>
-                    </div>
-                </div>
-                <div class="single_toparrival">
-                    <div class="topariv_img">
-                        <img loading="lazy"  src="assets/user/images/shoes-5.png" alt="product">
-                        <div class="prod_soh">
-                            <div class="adto_wish">
-                                <i class="icon-heart"></i>
-                            </div>
-                            <div class="qk_view open_quickview">
-                                <span><i class="las la-eye"></i></span>
-                                Quick View
-                            </div>
-                        </div>
-                    </div>
-                    <div class="topariv_cont">
-                        <a href="product-view.html">
-                            <h4>Men's Running Shoes</h4>
-                        </a>
-                        <div class="price mb-1 mt-2">
-                            <span class="org_price">$45.00</span>
-                        </div>
-                        <div class="rating">
-                            <div class="d-flex align-items-center justify-content-start">
-                                <div class="rating_star">
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                </div>
-                                <p class="rating_count mb-0">(150)</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="full_atc_btn">
-                        <button>
-                            <span class="me-1"><i class="icon-cart"></i></span>
-                            add to cart
-                        </button>
-                    </div>
-                </div>
-                <div class="single_toparrival">
-                    <div class="topariv_img">
-                        <img loading="lazy"  src="assets/user/images/shoes-3.png" alt="product">
-                        <div class="prod_soh">
-                            <div class="adto_wish">
-                                <i class="icon-heart"></i>
-                            </div>
-                            <div class="qk_view open_quickview">
-                                <span><i class="las la-eye"></i></span>
-                                Quick View
-                            </div>
-                        </div>
-                    </div>
-                    <div class="topariv_cont">
-                        <a href="product-view.html">
-                            <h4>Women Hill Leather</h4>
-                        </a>
-                        <div class="price mb-1 mt-2">
-                            <span class="org_price">$45.00</span>
-                        </div>
-                        <div class="rating">
-                            <div class="d-flex align-items-center justify-content-start">
-                                <div class="rating_star">
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                </div>
-                                <p class="rating_count mb-0">(150)</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="full_atc_btn">
-                        <button>
-                            <span class="me-1"><i class="icon-cart"></i></span>
-                            add to cart
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Best Selling -->
-    <div class="top_arrival_wrp home-3 section_padding_b">
-        <div class="container">
-            <div class="title-section d-flex justify-content-between">
-                <h2 class="section_title_3">Best Selling</h2>
-            <div class="seemore_2 float-end">
-                    <a href="#">See More <span><i class="las la-angle-right"></i></span></a>
-                </div>
-            </div>
-            <div class="product_slider_2">
-                <div class="single_toparrival">
-                    <div class="topariv_img">
-                        <img loading="lazy"  src="assets/user/images/parse.png" alt="product">
-                        <div class="prod_soh">
-                            <div class="adto_wish">
-                                <i class="icon-heart"></i>
-                            </div>
-                            <div class="qk_view open_quickview">
-                                <span><i class="las la-eye"></i></span>
-                                Quick View
-                            </div>
-                        </div>
-                    </div>
-                    <div class="topariv_cont">
-                        <a href="product-view.html">
-                            <h4>Women Scrub Leather</h4>
-                        </a>
-                        <div class="price mb-1 mt-2">
-                            <span class="org_price">$45.00</span>
-                        </div>
-                        <div class="rating">
-                            <div class="d-flex align-items-center justify-content-start">
-                                <div class="rating_star">
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                </div>
-                                <p class="rating_count mb-0">(150)</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="full_atc_btn">
-                        <button>
-                            <span class="me-1"><i class="icon-cart"></i></span>
-                            add to cart
-                        </button>
-                    </div>
-                </div>
-                <div class="single_toparrival">
-                    <div class="topariv_img">
-                        <img loading="lazy"  src="assets/user/images/shirt-2.png" alt="product">
-                        <div class="prod_soh">
-                            <div class="adto_wish">
-                                <i class="icon-heart"></i>
-                            </div>
-                            <div class="qk_view open_quickview">
-                                <span><i class="las la-eye"></i></span>
-                                Quick View
-                            </div>
-                        </div>
-                    </div>
-                    <div class="topariv_cont">
-                        <a href="product-view.html">
-                            <h4>Men T-SHIRT ΚΑΝΟΝΙΚΗ </h4>
-                        </a>
-                        <div class="price mb-1 mt-2">
-                            <span class="org_price">$45.00</span>
-                        </div>
-                        <div class="rating">
-                            <div class="d-flex align-items-center justify-content-start">
-                                <div class="rating_star">
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                </div>
-                                <p class="rating_count mb-0">(150)</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="full_atc_btn">
-                        <button>
-                            <span class="me-1"><i class="icon-cart"></i></span>
-                            add to cart
-                        </button>
-                    </div>
-                </div>
-                <div class="single_toparrival">
-                    <div class="topariv_img">
-                        <img loading="lazy"  src="assets/user/images/toy.png" alt="product">
-                        <div class="prod_soh">
-                            <div class="adto_wish">
-                                <i class="icon-heart"></i>
-                            </div>
-                            <div class="qk_view open_quickview">
-                                <span><i class="las la-eye"></i></span>
-                                Quick View
-                            </div>
-                        </div>
-                    </div>
-                    <div class="topariv_cont">
-                        <a href="product-view.html">
-                            <h4>Playmobil Princess M</h4>
-                        </a>
-                        <div class="price mb-1 mt-2">
-                            <span class="org_price">$45.00</span>
-                        </div>
-                        <div class="rating">
-                            <div class="d-flex align-items-center justify-content-start">
-                                <div class="rating_star">
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                </div>
-                                <p class="rating_count mb-0">(150)</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="full_atc_btn">
-                        <button>
-                            <span class="me-1"><i class="icon-cart"></i></span>
-                            add to cart
-                        </button>
-                    </div>
-                </div>
-                <div class="single_toparrival">
-                    <div class="topariv_img">
-                        <img loading="lazy"  src="assets/user/images/shoes-5.png" alt="product">
-                        <div class="prod_soh">
-                            <div class="adto_wish">
-                                <i class="icon-heart"></i>
-                            </div>
-                            <div class="qk_view open_quickview">
-                                <span><i class="las la-eye"></i></span>
-                                Quick View
-                            </div>
-                        </div>
-                    </div>
-                    <div class="topariv_cont">
-                        <a href="product-view.html">
-                            <h4>Men's Running Shoes</h4>
-                        </a>
-                        <div class="price mb-1 mt-2">
-                            <span class="org_price">$45.00</span>
-                        </div>
-                        <div class="rating">
-                            <div class="d-flex align-items-center justify-content-start">
-                                <div class="rating_star">
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                </div>
-                                <p class="rating_count mb-0">(150)</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="full_atc_btn">
-                        <button>
-                            <span class="me-1"><i class="icon-cart"></i></span>
-                            add to cart
-                        </button>
-                    </div>
-                </div>
-                <div class="single_toparrival">
-                    <div class="topariv_img">
-                        <img loading="lazy"  src="assets/user/images/shoes-3.png" alt="product">
-                        <div class="prod_soh">
-                            <div class="adto_wish">
-                                <i class="icon-heart"></i>
-                            </div>
-                            <div class="qk_view open_quickview">
-                                <span><i class="las la-eye"></i></span>
-                                Quick View
-                            </div>
-                        </div>
-                    </div>
-                    <div class="topariv_cont">
-                        <a href="product-view.html">
-                            <h4>Women Hill Leather</h4>
-                        </a>
-                        <div class="price mb-1 mt-2">
-                            <span class="org_price">$45.00</span>
-                        </div>
-                        <div class="rating">
-                            <div class="d-flex align-items-center justify-content-start">
-                                <div class="rating_star">
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                    <span><i class="las la-star"></i></span>
-                                </div>
-                                <p class="rating_count mb-0">(150)</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="full_atc_btn">
-                        <button>
-                            <span class="me-1"><i class="icon-cart"></i></span>
-                            add to cart
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ad banner -->
-    <div class="ad_banner_area section_padding_b">
-        <div class="container">
-            <a href="#">
-
-                <picture>
-                    <source media="(min-width: 768px)" srcset="assets/user/images/offer-3.jpg">
-                    <img loading="lazy"  class="w-100" src="assets/user/images/offer-mobile-3.jpg" alt="ad">
-                </picture>
-            </a>
-        </div>
-    </div>
-
-     <!-- recomended -->
-    <section class="new_arrive section_padding_b">
-        <div class="container">
-            <div class="d-flex align-items-start justify-content-between">
-                <h2 class="section_title_2">Recomended for you</h2>
-                <div class="seemore_2 pt-2">
-                    <a href="#">See More <span><i class="las la-angle-right"></i></span></a>
-                </div>
-            </div>
-            <div class="row gy-4">
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/laptop-3.png" alt="product">
-                            <span class="tag">Hot</span>
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>HP Pavilion 15</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$45.00</span>
-                                    <span class="prev_price">$55.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/mouch-logi.png" alt="product">
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>Logitech Wireless Mouse</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$45.00</span>
-                                    <span class="prev_price">$55.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/headphone-3.png" alt="product">
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>COWIN E7 Active</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$45.00</span>
-                                    <span class="prev_price">$55.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/phone-1.png" alt="product">
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>Xiaomi Note 7 Pro</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$45.00</span>
-                                    <span class="prev_price">$55.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/phone-2.png" alt="product">
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>iPhone 11 Pro</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$45.00</span>
-                                    <span class="prev_price">$55.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/laptop-2.png" alt="product">
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>HP Omen 13</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$45.00</span>
-                                    <span class="prev_price">$55.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/coverpad.png" alt="product">
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>Anti-Fray Cloth Gaming</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$95.00</span>
-                                    <span class="prev_price">$120.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/headphone-2.png" alt="product">
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>Bose Headphone</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$45.00</span>
-                                    <span class="prev_price">$55.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/laptop-3.png" alt="product">
-                            <span class="tag">Hot</span>
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>HP Pavilion 15</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$45.00</span>
-                                    <span class="prev_price">$55.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/mouch-logi.png" alt="product">
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>Logitech Wireless Mouse</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$45.00</span>
-                                    <span class="prev_price">$55.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/headphone-3.png" alt="product">
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>COWIN E7 Active</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$45.00</span>
-                                    <span class="prev_price">$55.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/phone-1.png" alt="product">
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>Xiaomi Note 7 Pro</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$45.00</span>
-                                    <span class="prev_price">$55.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/phone-2.png" alt="product">
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>iPhone 11 Pro</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$45.00</span>
-                                    <span class="prev_price">$55.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/laptop-2.png" alt="product">
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>HP Omen 13</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$45.00</span>
-                                    <span class="prev_price">$55.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/coverpad.png" alt="product">
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>Anti-Fray Cloth Gaming</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$95.00</span>
-                                    <span class="prev_price">$120.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/headphone-2.png" alt="product">
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>Bose Headphone</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$45.00</span>
-                                    <span class="prev_price">$55.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/laptop-3.png" alt="product">
-                            <span class="tag">Hot</span>
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>HP Pavilion 15</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$45.00</span>
-                                    <span class="prev_price">$55.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/mouch-logi.png" alt="product">
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>Logitech Wireless Mouse</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$45.00</span>
-                                    <span class="prev_price">$55.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/headphone-3.png" alt="product">
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>COWIN E7 Active</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$45.00</span>
-                                    <span class="prev_price">$55.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/phone-1.png" alt="product">
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>Xiaomi Note 7 Pro</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$45.00</span>
-                                    <span class="prev_price">$55.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/phone-2.png" alt="product">
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>iPhone 11 Pro</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$45.00</span>
-                                    <span class="prev_price">$55.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/laptop-2.png" alt="product">
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>HP Omen 13</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$45.00</span>
-                                    <span class="prev_price">$55.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/coverpad.png" alt="product">
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>Anti-Fray Cloth Gaming</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$95.00</span>
-                                    <span class="prev_price">$120.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_new_arrive">
-                        <div class="sna_img">
-                            <img loading="lazy"  class="prd_img" src="assets/user/images/headphone-2.png" alt="product">
-                            <div class="prodcut_hovcont">
-                                <a href="javascript:void(0)" class="icon open_quickview" tabindex="0">
-                                   <i class="icon-search-left"></i>
-                                </a>
-                                <a href="#" class="icon" tabindex="0">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="sna_content">
-                            <a href="product-view.html">
-                                <h4>Bose Headphone</h4>
-                            </a>
-                            <div class="ratprice">
-                                <div class="price">
-                                    <span class="org_price">$45.00</span>
-                                    <span class="prev_price">$55.45</span>
-                                </div>
-                                <div class="rating">
-                                    <div class="d-flex align-items-center justify-content-start">
-                                        <div class="rating_star">
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                            <span><i class="las la-star"></i></span>
-                                        </div>
-                                        <p class="rating_count">(150)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product_adcart">
-                                <button class="default_btn">Add to cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-     <!-- footer area -->
-    <footer>
+    <div class="footer-meta">
         <div class="container">
             <div class="row">
-                <div class="col-lg-4 mb-4 mb-md-0">
-                    <div class="row">
-                        <div class="col-12 col-md-6 col-lg-12">
-                            <div class="footer_logo">
-                                <img loading="lazy"  src="assets/user/images/svg/logo.svg" alt="easy shop">
-                            </div>
-                            <div class="footet_text">
-                                <p>Lorem ipsum, or lipsum as it is sometimes kno
-                                    wn, is dummy text used in laying out print, gra
-                                    phic or web designs the passage.</p>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6 col-lg-12">
-                            <div class="footer_newslet">
-                                <h4>Newsletter</h4>
-                                <form class="footernews_form">
-                                    <input type="text" placeholder="Your email address">
-                                    <button type="submit" class="default_btn">Subscribe</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 mb-3 mb-md-0">
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="footer_menu">
-                                <h4 class="footer_title">My Account</h4>
-                                <a href="account-order-history.html">Orders</a>
-                                <a href="wish-list.html">Wishlist</a>
-                                <a href="track-order.html">Track Order</a>
-                                <a href="#">Manage Account</a>
-                                <a href="return-order.html">Return Order</a>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="footer_menu">
-                                <h4 class="footer_title">Information</h4>
-                                <a href="about-us.html">About Us</a>
-                                <a href="return-policy.html">Return Policy</a>
-                                <a href="terms-condition.html">Terms & condition</a>
-                                <a href="privacy-policy.html">Privacy Policy</a>
-                                <a href="faq.html">FAQ</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="footer_download">
-                        <div class="row">
-                            <div class="col-lg-6 col-lg-12">
-                                <h4 class="footer_title">Contact</h4>
-                                <div class="footer_contact">
-                                    <p>
-                                        <span class="icn"><i class="las la-map-marker-alt"></i></span>
-
-                                        7895 Dr New Albuquerue, NM 19800, <br> United
-                                        States Of America
-                                    </p>
-                                    <p class="phn">
-                                        <span class="icn"><i class="las la-phone"></i></span>
-                                        +566 477 256, +566 254 575
-                                    </p>
-                                    <p class="eml">
-                                        <span class="icn"><i class="lar la-envelope"></i></span>
-                                        info@domain.com
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="footer_social col-lg-6 col-lg-12">
-                                <div class="footer_icon d-flex">
-                                    <a href="#" class="facebook"><i class="lab la-facebook-f"></i></a>
-                                    <a href="#" class="twitter"><i class="lab la-twitter"></i></a>
-                                    <a href="#" class="instagram"><i class="lab la-instagram"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- copyright -->
-    <div class="copyright_wrap">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <p class="copyright_text">© RAFCART - All Rights Reserved</p>
-                </div>
-                <div class="col-md-6">
-                    <div class="payment_method">
-                        <img loading="lazy"  src="assets/images/payment-method.png" alt="payment method">
-                    </div>
+                <div class="col-sm-12 text-center">
+                    <div class="copyright">© Copyright 2024 rytoyu. All Rights Reserved.</div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- product quick view -->
-    <div class="product_quickview">
-        <div class="prodquick_wrap position-relative">
-            <div class="close_quickview">
-                <i class="las la-times"></i>
+</footer>
+<!-- /FOOTER -->
+<div id="to-top" class="to-top"><i class="fa fa-angle-up"></i></div>
+</div>
+<!-- /WRAPPER -->
+<!-- product -datails modal -->
+<div class="modal" id="addcart" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg custom-modal" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="product_view_slider">
-                        <div class="single_viewslider">
-                            <img loading="lazy"  src="assets/user/images/slider-1.png" alt="product">
+            <div class="modal-body p-thumbnails">
+                <div class="row product-single">
+                    <div class="col-md-6">
+                        <div class="owl-carousel img-carousel img-carousel2">
+                            <div class="item">
+                                <a class="btn btn-theme btn-theme-transparent btn-zoom" href="assets/user/img/s1.png"
+                                   data-gal="prettyPhoto"><i class="fa fa-plus"></i></a>
+                                <a href="assets/user/img/s1.png" data-gal="prettyPhoto"><img class="img-responsive"
+                                                                                             src="assets/user/img/s1.png"
+                                                                                             alt=""/></a>
+                            </div>
+                            <div class="item">
+                                <a class="btn btn-theme btn-theme-transparent btn-zoom"
+                                   href="assets/user/img/preview/shop/product-1-big.jpg" data-gal="prettyPhoto"><i
+                                        class="fa fa-plus"></i></a>
+                                <a href="assets/user/img/preview/shop/product-1-big.jpg" data-gal="prettyPhoto"><img
+                                        class="img-responsive" src="assets/user/img/preview/shop/product-1-big.jpg"
+                                        alt=""/></a>
+                            </div>
+                            <div class="item">
+                                <a class="btn btn-theme btn-theme-transparent btn-zoom"
+                                   href="assets/user/img/preview/shop/product-1-big.jpg" data-gal="prettyPhoto"><i
+                                        class="fa fa-plus"></i></a>
+                                <a href="assets/user/img/preview/shop/product-1-big.jpg" data-gal="prettyPhoto"><img
+                                        class="img-responsive" src="assets/user/img/preview/shop/product-1-big.jpg"
+                                        alt=""/></a>
+                            </div>
+                            <div class="item">
+                                <a class="btn btn-theme btn-theme-transparent btn-zoom"
+                                   href="assets/user/img/preview/shop/product-1-big.jpg" data-gal="prettyPhoto"><i
+                                        class="fa fa-plus"></i></a>
+                                <a href="assets/user/img/preview/shop/product-1-big.jpg" data-gal="prettyPhoto"><img
+                                        class="img-responsive" src="assets/user/img/preview/shop/product-1-big.jpg"
+                                        alt=""/></a>
+                            </div>
                         </div>
-                        <div class="single_viewslider">
-                            <img loading="lazy"  src="assets/user/images/slider-2.png" alt="product">
-                        </div>
-                        <div class="single_viewslider">
-                            <img loading="lazy"  src="assets/user/images/slider-3.png" alt="product">
-                        </div>
-                        <div class="single_viewslider">
-                            <img loading="lazy"  src="assets/user/images/slider-4.png" alt="product">
-                        </div>
-                        <div class="single_viewslider">
-                            <img loading="lazy"  src="assets/user/images/slider-5.png" alt="product">
-                        </div>
-                        <div class="single_viewslider">
-                            <img loading="lazy"  src="assets/user/images/slider-1.png" alt="product">
+                        <div class="row product-thumbnails">
+                            <div class="col-xs-2 col-sm-2 col-md-3"><a href="#"
+                                                                       onclick="jQuery('.img-carousel').trigger('to.owl.carousel', [0, 300]);"><img
+                                        src="assets/user/img/s1.png" alt=""/></a></div>
+                            <div class="col-xs-2 col-sm-2 col-md-3"><a href="#"
+                                                                       onclick="jQuery('.img-carousel').trigger('to.owl.carousel', [1, 300]);"><img
+                                        src="assets/user/img/preview/shop/product-thumb-2.jpg" alt=""/></a></div>
+                            <div class="col-xs-2 col-sm-2 col-md-3"><a href="#"
+                                                                       onclick="jQuery('.img-carousel').trigger('to.owl.carousel', [2, 300]);"><img
+                                        src="assets/user/img/preview/shop/product-thumb-3.jpg" alt=""/></a></div>
+                            <div class="col-xs-2 col-sm-2 col-md-3"><a href="#"
+                                                                       onclick="jQuery('.img-carousel').trigger('to.owl.carousel', [3, 300]);"><img
+                                        src="assets/user/img/preview/shop/product-thumb-4.jpg" alt=""/></a></div>
                         </div>
                     </div>
-                    <div class="product_viewslid_nav">
-                        <div class="single_viewslid_nav">
-                            <img loading="lazy"  src="assets/user/images/slider-1.png" alt="product">
+                    <div class="col-md-6">
+                        <div class="back-to-category">
+                            <span class="link"><i class="fa fa-angle-left"></i> Back to <a
+                                    href="category.html">Category</a></span>
                         </div>
-                        <div class="single_viewslid_nav">
-                            <img loading="lazy"  src="assets/user/images/slider-2.png" alt="product">
+                        <div class="brand-name">
+                            <a href=""> RichMan</a>
                         </div>
-                        <div class="single_viewslid_nav">
-                            <img loading="lazy"  src="assets/user/images/slider-3.png" alt="product">
-                        </div>
-                        <div class="single_viewslid_nav">
-                            <img loading="lazy"  src="assets/user/images/slider-4.png" alt="product">
-                        </div>
-                        <div class="single_viewslid_nav">
-                            <img loading="lazy"  src="assets/user/images/slider-5.png" alt="product">
-                        </div>
-                        <div class="single_viewslid_nav">
-                            <img loading="lazy"  src="assets/user/images/slider-1.png" alt="product">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="product_info_wrapper">
-                        <div class="product_base_info">
-                            <h1>MEN'S ADIDAS COURTSMASH</h1>
+                        <h2 class="product-title">Standard Product Header Here</h2>
+                        <div class="product-rating clearfix">
                             <div class="rating">
-                                <div class="d-flex align-items-center">
-                                    <div class="rating_star">
-                                        <span><i class="las la-star"></i></span>
-                                        <span><i class="las la-star"></i></span>
-                                        <span><i class="las la-star"></i></span>
-                                        <span><i class="las la-star"></i></span>
-                                        <span><i class="las la-star"></i></span>
-                                    </div>
-                                    <p class="rating_count">50 Reviews</p>
-                                </div>
+                                <span class="star"></span><!--
+                                 --><span class="star active"></span><!--
+                                 --><span class="star active"></span><!--
+                                 --><span class="star active"></span><!--
+                                 --><span class="star active"></span>
                             </div>
-                            <div class="product_other_info">
-                                <p><span class="text-semibold">Availability:</span><span class="text-green">In
-                                        Stock</span></p>
-                                <p><span class="text-semibold">Brand:</span>Bata</p>
-                                <p><span class="text-semibold">Category:</span>Clothing</p>
-                                <p><span class="text-semibold">SKU:</span>BE45VGRT</p>
-                            </div>
-                            <div class="price mt-3 mb-3 d-flex align-items-center">
-                                <span class="prev_price ms-0">$5000.00</span>
-                                <span class="org_price ms-2">$4500.00</span>
-                                <div class="disc_tag ms-3">-30%</div>
-                            </div>
-                            <div class="pd_dtails">
-                                <p>
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim exercitationem
-                                    quaerat....
-                                </p>
-                            </div>
-                            <div class="shop_filter border-bottom-0 pb-0">
-                                <div class="size_selector mb-3">
-                                    <h5>Size</h5>
-                                    <div class="d-flex align-items-center">
-                                        <div class="single_size_opt">
-                                            <input type="radio" hidden name="size" class="size_inp" id="size-xs">
-                                            <label for="size-xs">XS</label>
-                                        </div>
-                                        <div class="single_size_opt ms-2">
-                                            <input type="radio" hidden name="size" class="size_inp" id="size-s">
-                                            <label for="size-s">S</label>
-                                        </div>
-                                        <div class="single_size_opt ms-2">
-                                            <input type="radio" hidden name="size" class="size_inp" id="size-m" checked>
-                                            <label for="size-m">M</label>
-                                        </div>
-                                        <div class="single_size_opt ms-2">
-                                            <input type="radio" hidden name="size" class="size_inp" id="size-l">
-                                            <label for="size-l">L</label>
-                                        </div>
-                                        <div class="single_size_opt ms-2">
-                                            <input type="radio" hidden name="size" class="size_inp" id="size-xl">
-                                            <label for="size-xl">XL</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="size_selector color_selector">
-                                    <h5>Color:</h5>
-                                    <div class="d-flex align-items-center">
-                                        <div class="single_size_opt">
-                                            <input type="radio" hidden name="color" class="size_inp" id="color-purple">
-                                            <label for="color-purple" class="bg-color" data-bs-toggle="tooltip"
-                                                   title="Rose Red"></label>
-                                        </div>
-                                        <div class="single_size_opt ms-2">
-                                            <input type="radio" hidden name="color" class="size_inp" id="color-red">
-                                            <label for="color-red" class="bg-white" data-bs-toggle="tooltip"
-                                                   title="White"></label>
-                                        </div>
-                                        <div class="single_size_opt ms-2">
-                                            <input type="radio" hidden name="color" class="size_inp" id="color-green"
-                                                   checked>
-                                            <label for="color-green" class="bg-dark" data-bs-toggle="tooltip"
-                                                   title="Black"></label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="cart_qnty ms-md-auto">
-                                <p>Quantity</p>
-                                <div class="d-flex align-items-center">
-                                    <div class="cart_qnty_btn">
-                                        <i class="las la-minus"></i>
-                                    </div>
-                                    <div class="cart_count">4</div>
-                                    <div class="cart_qnty_btn">
-                                        <i class="las la-plus"></i>
-                                    </div>
-                                </div>
-                            </div>
+                            <a class="reviews" href="#">16 reviews</a>
                         </div>
-                        <div class="product_buttons">
-                            <a href="#" class="default_btn me-sm-3 me-2 px-2 px-lg-4"><i
-                                    class="icon-cart me-2"></i> Add to Cart</a>
-                            <a href="#" class="default_btn second px-3 px-ms-4"><i class="icon-heart me-2"></i>
-                                Wishlist</a>
+                        <div class="product-availability">Availability: <strong>In stock</strong> 21 Item(s)</div>
+                        <div class="product-price">TK:10,000</div>
+                        <hr class="page-divider"/>
+                        <div class="product-text ">
+                            <p>Etiam eu justo ut nisi sollicitudin bibendum. Fusce sed dui ac turpis vulputate tincidunt
+                                vel sed magna. Pellentesque <strong>pretium</strong> mollis metus vel feugiat. Cum
+                                sociis natoque penatibus <strong>et magnis</strong> dis parturient montes, nascetur
+                                ridiculus mus. <strong>Vestibulum</strong> commodo mauris eget sapien posuere, id <a
+                                    href="#">efficitur mi tristique</a>.</p>
+                            <ul>
+                                <li>- Cras tristique neque a mauris volutpat, eget sodales neque elementum.</li>
+                                <li>- Vestibulum iaculis velit sed dolor suscipit pretium.</li>
+                            </ul>
                         </div>
-                        <div class="share_icons footer_icon d-flex">
-                            <a href="#"><i class="lab la-facebook-f"></i></a>
-                            <a href="#"><i class="lab la-twitter"></i></a>
-                            <a href="#"><i class="lab la-instagram"></i></a>
+                        <hr class="page-divider"/>
+                        <h4 class="color-list">Color: <span>Gray</span></h4>
+                        <div class="widget widget-colors">
+                            <ul>
+                                <li>
+                                    <div class="size-list-color">
+                                        <input id="radio-col1a" class="radio-custom" name="sizesb" type="radio">
+                                        <label for="radio-col1a" class="radio-custom-label">
+                                            <span style="background-color: #161618"></span>
+                                        </label>
+                                    </div>
+
+                                </li>
+                                <li>
+                                    <div class="size-list-color">
+                                        <input id="radio-col2b" class="radio-custom" name="sizesb" type="radio">
+                                        <label for="radio-col2b" class="radio-custom-label">
+                                            <span style="background-color: #e74c3c"></span>
+                                        </label>
+                                    </div>
+                                </li>
+                                <li>
+
+                                    <div class="size-list-color">
+                                        <input id="radio-col3c" class="radio-custom" name="sizesb" type="radio">
+                                        <label for="radio-col3c" class="radio-custom-label">
+                                            <span style="background-color: #783ce7"></span>
+                                        </label>
+                                    </div>
+                                </li>
+                                <li>
+
+                                    <div class="size-list-color">
+                                        <input id="radio-col4d" class="radio-custom" name="sizesb" type="radio">
+                                        <label for="radio-col4d" class="radio-custom-label">
+                                            <span style="background-color: #3498db"></span>
+                                        </label>
+                                    </div>
+                                </li>
+                                <li>
+
+                                    <div class="size-list-color">
+                                        <input id="radio-col5e" class="radio-custom" name="sizesb" type="radio">
+                                        <label for="radio-col5e" class="radio-custom-label">
+                                            <span style="background-color: #00a847"></span>
+                                        </label>
+                                    </div>
+                                </li>
+                                <li>
+
+                                    <div class="size-list-color">
+                                        <input id="radio-col6f" class="radio-custom" name="sizesb" type="radio">
+                                        <label for="radio-col6f" class="radio-custom-label">
+                                            <span style="background-color: #3ce7d9"></span>
+                                        </label>
+                                    </div>
+                                </li>
+                                <li>
+
+                                    <div class="size-list-color">
+                                        <input id="radio-col7g" class="radio-custom" name="sizesb" type="radio">
+                                        <label for="radio-col7g" class="radio-custom-label">
+                                            <span style="background-color: #fa17bc"></span>
+                                        </label>
+                                    </div>
+                                </li>
+                                <li>
+
+                                    <div class="size-list-color">
+                                        <input id="radio-col8h" class="radio-custom" name="sizesb" type="radio">
+                                        <label for="radio-col8h" class="radio-custom-label">
+                                            <span style="background-color: #a87e00"></span>
+                                        </label>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
+                        <h4 class="color-list margin-size">Size<sup>*</sup></h4>
+                        <ul class="size-shop">
+                            <li>
+
+                                <div class="size-list">
+                                    <input id="radio-xsxa" class="radio-custom" name="sizesc" type="radio">
+                                    <label for="radio-xsxa" class="radio-custom-label">
+                                        <span>XS</span>
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="size-list">
+                                    <input id="radio-ssa" class="radio-custom" name="sizesc" type="radio">
+                                    <label for="radio-ssa" class="radio-custom-label">
+                                        <span>S</span>
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="size-list">
+                                    <input id="radio-mma" class="radio-custom" name="sizesc" type="radio">
+                                    <label for="radio-mma" class="radio-custom-label">
+                                        <span>M</span>
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="size-list">
+                                    <input id="radio-lla" class="radio-custom" name="sizesc" type="radio">
+                                    <label for="radio-lla" class="radio-custom-label">
+                                        <span>L</span>
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="size-list">
+                                    <input id="radio-xlxla" class="radio-custom" name="sizesc" type="radio">
+                                    <label for="radio-xlxla" class="radio-custom-label">
+                                        <span>XL</span>
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="size-list">
+                                    <input id="radio-xxlxxla" class="radio-custom" name="sizesc" type="radio">
+                                    <label for="radio-xxlxxla" class="radio-custom-label">
+                                        <span>XXL</span>
+                                    </label>
+                                </div>
+                            </li>
+                        </ul>
+                        <hr class="page-divider"/>
+                        <div class="buttons">
+                            <div class="quantity">
+                                <button class="btn"><i class="fa fa-minus"></i></button>
+                                <input class="form-control qty" type="number" step="1" min="1" name="quantity" value="1"
+                                       title="Qty">
+                                <button class="btn"><i class="fa fa-plus"></i></button>
+                            </div>
+                            <button class="btn btn-theme btn-cart btn-icon-left add-to-cart" type="submit"><i
+                                    class="fa fa-shopping-cart"></i>Add to cart
+                            </button>
+                            <button class="btn btn-theme btn-wish-list btn-cart-m"><i
+                                    class="fa-regular fa-heart orange-text"></i></button>
+                            <button class="btn btn-theme btn-compare btn-cart-m"><i class="fa fa-exchange"></i></button>
+                        </div>
+
+                        <hr class="page-divider small"/>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- all js -->
-    <script src="{{ asset('assets/user/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('assets/user/js/jquery-3.5.1.min.js') }}"></script>
-    <script src="{{ asset('assets/user/js/jquery-ui.min.js') }}"></script>
-    <script src="{{ asset('assets/user/js/slick.min.js') }}"></script>
-    <script src="{{ asset('assets/user/js/jquery.nice-select.min.js') }}"></script>
-    <script src="{{ asset('assets/user/js/app.js') }}"></script>
-    @stack('js')
+</div>
+<!--end product details modal-->
+<!-- JS Global -->
+<script src="{{ asset('assets/user/plugins/jquery/jquery-1.11.1.min.js') }}"></script>
+<script src="{{ asset('assets/user/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('assets/user/plugins/bootstrap-select/js/bootstrap-select.min.js') }}"></script>
+<script src="{{ asset('assets/user/plugins/superfish/js/superfish.min.js') }}"></script>
+<script src="{{ asset('assets/user/plugins/prettyphoto/js/jquery.prettyPhoto.js') }}"></script>
+<script src="{{ asset('assets/user/plugins/owl-carousel2/owl.carousel.min.js') }}"></script>
+<script src="{{ asset('assets/user/plugins/jquery.sticky.min.js') }}"></script>
+<script src="{{ asset('assets/user/plugins/jquery.easing.min.js') }}"></script>
+<script src="{{ asset('assets/user/plugins/jquery.smoothscroll.min.js') }}"></script>
+<script src="{{ asset('assets/user/plugins/smooth-scrollbar.min.js') }}"></script>
+<!-- JS Page Level -->
+<script src="{{ asset('assets/user/js/theme.js') }}"></script>
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script src="{{ asset('assets/user/plugins/jquery.cookie.js') }}"></script>
+<!--<![endif]-->
 </body>
-
-
 </html>

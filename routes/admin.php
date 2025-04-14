@@ -60,7 +60,6 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
     });
     //Products
     Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
-    Route::view('get-product-variant', 'admin.products.product_variant')->name('get-product-variant');
     Route::controller(\App\Http\Controllers\Admin\ProductController::class)->group(function () {
         Route::get('get-product-variants/{id}', 'productVariants')->name('get-product-variants');
         Route::get('get-product-variants-data', 'getProductVariantsData')->name('get-product-variants-data');
@@ -82,15 +81,16 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
         Route::put('update-site-settings', 'updateSiteSettings')->name('update-site-settings');
     });
     // Webpage Manage Section
-    Route::controller(\App\Http\Controllers\Admin\SectionController::class)->group(function () {
-        Route::get('sections', 'sectionList')->name('sections');
-        Route::get('add-section', 'addSection')->name('add-section');
-        Route::post('store-section', 'storeSection')->name('store-section');
-        Route::post('sort-section', 'sortSection')->name('sort-section');
-        Route::get('edit-section/{slug}', 'editSection')->name('edit-section');
-        Route::put('update-section/{slug}', 'updateSection')->name('update-section');
-        Route::delete('delete-section/{id}', 'deleteSection')->name('delete-section');
-        Route::put('update-section-status/{id}', 'updateSectionStatus')->name('update-section-status');
+    // Sliders
+    Route::resource('sliders', \App\Http\Controllers\Admin\SliderController::class);
+    Route::controller(\App\Http\Controllers\Admin\SliderController::class)->group(function () {
+        Route::put('update-slider-status/{id}', 'updateSliderStatus')->name('update-slider-status');
+        Route::post('sort-sliders', 'sortSliders')->name('sort-sliders');
+        Route::get('slider-products/{slug}', 'sliderProducts')->name('slider-products');
+        Route::get('slider-wise-products/{slider_id}', 'getSliderWiseProducts')->name('slider-wise-products');
+        Route::post('add-slider-product', 'addSliderProduct')->name('add-slider-product');
+        Route::post('update-slider-product-sorting', 'updateSliderProductSorting')->name('update-slider-product-sorting');
+        Route::delete('delete-slider-product', 'deleteSliderProduct')->name('delete-slider-product');
     });
 
     Route::get('logout', function () {
