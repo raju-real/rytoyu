@@ -39,13 +39,16 @@
                                     <div class="col-md-6 pb-4">
                                         <div class="form-group">
                                             <input type="search" name="search" class="form-control"
-                                                   placeholder="Search by Title/Caption" value="{{ request('search') ?? '' }}">
+                                                   placeholder="Search by Title/Caption"
+                                                   value="{{ request('search') ?? '' }}">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <select name="status" class="form-control">
-                                                <option value="" {{ !isset(request()->status) ? 'selected' : '' }}>Status</option>
+                                                <option value="" {{ !isset(request()->status) ? 'selected' : '' }}>
+                                                    Status
+                                                </option>
                                                 @foreach(getStatus() as $status)
                                                     <option
                                                         value="{{ $status->value }}" {{ request('status') === $status->value ? 'selected' : '' }}>{{ $status->title }}</option>
@@ -69,7 +72,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <x-sort-available />
+                    <x-sort-available/>
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered mb-0 text-nowrap">
                             <thead>
@@ -92,33 +95,40 @@
                                     <td class="handle sorting-serial">{{ $slider->sorting_serial }}</td>
                                     <td class="handle">
                                         @if($slider->image_path != Null && file_exists($slider->image_path))
-                                            <img src="{{ asset($slider->image_path) }}" class="avatar-sm rounded-3 d-block img-50">
+                                            <img src="{{ asset($slider->image_path) }}"
+                                                 class="avatar-sm rounded-3 d-block img-50">
                                         @else
-                                            <img src="{{ asset(ecommerceIcon()) }}" class="avatar-sm rounded-3 d-block img-50">
+                                            <img src="{{ asset(ecommerceIcon()) }}"
+                                                 class="avatar-sm rounded-3 d-block img-50">
                                         @endif
                                     </td>
                                     <td class="handle">
-                                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $slider->title ?? '' }}">
+                                        <span data-bs-toggle="tooltip" data-bs-placement="top"
+                                              title="{{ $slider->title ?? '' }}">
                                             {{ textLimit($slider->title) ?? '' }}
                                         </span>
                                     </td>
                                     <td class="handle">
-                                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $slider->highlighted_title ?? '' }}">
+                                        <span data-bs-toggle="tooltip" data-bs-placement="top"
+                                              title="{{ $slider->highlighted_title ?? '' }}">
                                             {{ textLimit($slider->highlighted_title) ?? '' }}
                                         </span>
                                     </td>
                                     <td class="handle">
-                                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $slider->caption ?? '' }}">
+                                        <span data-bs-toggle="tooltip" data-bs-placement="top"
+                                              title="{{ $slider->caption ?? '' }}">
                                             {{ textLimit($slider->caption) ?? '' }}
                                         </span>
                                     </td>
                                     <td class="handle">
-                                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $slider->highlighted_caption ?? '' }}">
+                                        <span data-bs-toggle="tooltip" data-bs-placement="top"
+                                              title="{{ $slider->highlighted_caption ?? '' }}">
                                             {{ textLimit($slider->highlighted_caption) ?? '' }}
                                         </span>
                                     </td>
                                     <td class="handle">
-                                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $slider->redirect_link ?? '' }}">
+                                        <span data-bs-toggle="tooltip" data-bs-placement="top"
+                                              title="{{ $slider->redirect_link ?? '' }}">
                                             {{ textLimit($slider->redirect_link) ?? 'N/A' }}
                                         </span>
                                     </td>
@@ -127,25 +137,28 @@
                                         <a href="{{ route('admin.slider-products',$slider->id) }}">Products</a>
                                     </td>
                                     <td>
-                                        <input type="checkbox" id="slider-{{ $loop->index + 1 }}" class="slider-status" data-id="{{ $slider->id }}" switch="bool" {{ isActive($slider->status) ? 'checked' : '' }} />
-                                        <label for="slider-{{ $loop->index + 1 }}" data-on-label="Yes" data-off-label="No"></label>
+                                        <input type="checkbox" id="slider-{{ $loop->index + 1 }}" class="slider-status"
+                                               data-id="{{ $slider->id }}"
+                                               switch="bool" {{ isActive($slider->status) ? 'checked' : '' }} />
+                                        <label for="slider-{{ $loop->index + 1 }}" data-on-label="Yes"
+                                               data-off-label="No"></label>
                                     </td>
                                     <td>
                                         <a data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"
                                            href="{{ route('admin.sliders.edit',$slider->id) }}"
                                            class="btn btn-sm btn-soft-success"><i class="fa fa-edit"></i></a>
                                         <a data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"
-                                               class="btn btn-sm btn-soft-danger delete-data"
-                                               data-id="{{ 'delete-slider-'.$slider->id }}"
-                                               href="javascript:void(0);">
-                                                <i class="fa fa-trash"></i>
-                                            </a>
-                                            <form id="delete-slider-{{ $slider->id }}"
-                                                  action="{{ route('admin.sliders.destroy',$slider->id) }}"
-                                                  method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                            </form>
+                                           class="btn btn-sm btn-soft-danger delete-data"
+                                           data-id="{{ 'delete-slider-'.$slider->id }}"
+                                           href="javascript:void(0);">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+                                        <form id="delete-slider-{{ $slider->id }}"
+                                              action="{{ route('admin.sliders.destroy',$slider->id) }}"
+                                              method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form>
                                     </td>
                                 </tr>
                             @empty
@@ -164,5 +177,5 @@
 @endsection
 
 @push('js')
-        <script src="{{ asset('assets/admin/js/custom/slider_lists.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/custom/slider_lists.js') }}"></script>
 @endpush

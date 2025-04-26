@@ -92,6 +92,17 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
         Route::post('update-slider-product-sorting', 'updateSliderProductSorting')->name('update-slider-product-sorting');
         Route::delete('delete-slider-product', 'deleteSliderProduct')->name('delete-slider-product');
     });
+    // Announcements
+    Route::resource('announcements',\App\Http\Controllers\Admin\AnnouncementController::class);
+    // Homepage section Manage
+    Route::controller(\App\Http\Controllers\WebPageManageController::class)->group(function () {
+       // New in section
+        Route::get('new-in-products','newInProducts')->name('new-in-products');
+        Route::get('get-new-in-products','getNewInProducts')->name('get-new-in-products');
+        Route::post('add-new-in-product','addNewInProducts')->name('add-new-in-product');
+        Route::post('update-new-in-product-sorting', 'updateNewInProductSorting')->name('update-new-in-product-sorting');
+        Route::delete('delete-new-in-product', 'deleteNewInProduct')->name('delete-new-in-product');
+    });
 
     Route::get('logout', function () {
         \Illuminate\Support\Facades\Auth::logout();

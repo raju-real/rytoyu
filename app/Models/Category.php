@@ -16,6 +16,11 @@ class Category extends Model
         return CategoryBanner::where('category_id',$this->id)->count();
     }
 
+    public function subcategories()
+    {
+        return $this->hasMany(SubCategory::class,'category_id','id');
+    }
+
     public function banner_images()
     {
         return $this->hasMany(CategoryBanner::class,'category_id','id');

@@ -1,7 +1,10 @@
 <?php
 
 use App\Models\Admin;
+use App\Models\NewInProduct;
+use App\Models\Product;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
@@ -174,35 +177,36 @@ if (!function_exists('showRequestStatus')) {
     }
 }
 
-if(!function_exists('authAdmin')) {
+if (!function_exists('authAdmin')) {
     function authAdmin(): ?\Illuminate\Contracts\Auth\Authenticatable
     {
         return auth()->guard('admin')->user();
     }
 }
 
-if(!function_exists('authAdminType')) {
+if (!function_exists('authAdminType')) {
     function authAdminType()
     {
         return auth()->guard('admin')->user()->type ?? null;
     }
 }
 
-if(!function_exists('authSellerId')) {
+if (!function_exists('authSellerId')) {
     function authSellerId()
     {
         return auth()->guard('admin')->user()->type == 'seller' ? auth()->user()->id : 1;
     }
 }
 
-if(!function_exists('authShopInfo')) {
-    function authShopInfo() {
+if (!function_exists('authShopInfo')) {
+    function authShopInfo()
+    {
         return auth()->guard('admin')->user()->shop;
     }
 }
 
-if(!function_exists('dateFormat')) {
-    function dateFormat($date,$format = 'Y-m-d'): string
+if (!function_exists('dateFormat')) {
+    function dateFormat($date, $format = 'Y-m-d'): string
     {
         return Carbon::parse($date)->format($format);
     }
@@ -289,7 +293,7 @@ if (!function_exists('userAvatar')) {
 }
 
 
-if(!function_exists('firstUpper')) {
+if (!function_exists('firstUpper')) {
     function firstUpper($text): string
     {
         return ucfirst($text);
@@ -359,6 +363,46 @@ if (!function_exists('textLimit')) {
     function textLimit($text = "")
     {
         return Str::limit($text, 20, '...');
+    }
+}
+
+if (!function_exists('numberFormat')) {
+    function numberFormat($number, $format = 2): mixed
+    {
+        return number_format($number,$format);
+    }
+}
+
+// Website helpers
+
+if (!function_exists('megaMenus')) {
+    function megaMenus()
+    {
+        return \App\Models\Category::with([
+            'subcategories' => function ($subcategory) {
+                $subcategory->where('is_mega_menu', 'yes')->active();
+                $subcategory->with([
+                    'sub_subcategories' => function ($sub_subcategory) {
+                        $sub_subcategory->where('is_mega_menu', 'yes')->active()->select('id', 'category_id', 'subcategory_id', 'name', 'slug');
+                    }
+                ]);
+                $subcategory->select('id', 'category_id', 'name', 'slug');
+            }
+        ])->active()->where('is_mega_menu', 'yes')->select('id', 'name', 'slug')->get();
+    }
+}
+
+if (!function_exists('latestAnnouncements')) {
+    function latestAnnouncements()
+    {
+        return \App\Models\Announcement::latest()->get();
+    }
+}
+
+if (!function_exists('activeSliders')) {
+    function activeSliders()
+    {
+        return \App\Models\Slider::active()->sort()->get();
     }
 }
 
@@ -499,7 +543,7 @@ if (!function_exists('subCategoryNameBySlug')) {
 if (!function_exists('colorControl')) {
     function colorControl($style, $colorCode)
     {
-        return $style.': ' . $colorCode;
+        return $style . ': ' . $colorCode;
     }
 }
 
@@ -541,5 +585,56 @@ if (!function_exists('brandSlugById')) {
     }
 }
 
+if (!function_exists('productCategoryNameById')) {
+    function productCategoryNameById($product_id)
+    {
+        $category_id = Product::find($product_id)->category_id;
+        return \App\Models\Category::find($category_id)->name ?? "";
+    }
+}
+
 // Website Section
+if (!function_exists('getNewInProducts')) {
+    function getNewInProducts()
+    {
+        if (\App\Models\NewInProduct::count()) {
+            $product_ids = NewInProduct::sort()
+                ->pluck('product_id')
+                ->toArray();
+            $ids_string = implode(',', $product_ids); // Convert to a comma-separated string
+            return Product::whereIn('id', $product_ids)
+                ->active()
+                ->orderByRaw("FIELD(id, $ids_string)")
+                ->take(16)
+                ->select('id', 'seller_id', 'brand_id', 'product_code', 'name', 'slug', 'thumbnail_path', 'unit_price', 'discount_price')
+                ->get();
+        } else {
+            return Product::active()
+                ->latest()
+                ->inRandomOrder()
+                ->take(16)
+                ->select('id', 'seller_id', 'brand_id', 'product_code', 'name', 'slug', 'thumbnail_path', 'unit_price', 'discount_price')
+                ->get();
+        }
+    }
+}
+
+// Cart section
+
+if(! function_exists('shippingFee')) {
+    function shippingFee()
+    {
+         return 100;
+    }
+}
+
+if(! function_exists('browserId')) {
+    function browserId() {
+         $ip = '';
+        if(isset($_COOKIE['browser_id'])) {
+            $ip = $_COOKIE['browser_id'];
+        }
+        return $ip;
+    }
+}
 

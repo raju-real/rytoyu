@@ -51,25 +51,25 @@
                         </a>
                     </li>
                     <li>
-                        <a href="" class="{{ isSubMenuActive('sections') }}">
+                        <a href="{{ route('admin.announcements.index') }}" class="{{ isSubMenuActive('announcements') }}">
                             <i class="bx bx-chevron-right"></i> Announcements
                         </a>
                     </li>
                     <li>
-                        <a href="" class="{{ isSubMenuActive('sections') }}">
+                        <a href="{{ route('admin.new-in-products') }}" class="{{ isSubMenuActive('new-in-products') }}">
                             <i class="bx bx-chevron-right"></i> New In
                         </a>
                     </li>
-                    <li>
-                        <a href="" class="{{ isSubMenuActive('sections') }}">
-                            <i class="bx bx-chevron-right"></i> Product Types
-                        </a>
-                    </li>
-                    <li>
-                        <a href="" class="{{ isSubMenuActive('sections') }}">
-                            <i class="bx bx-chevron-right"></i> Brands
-                        </a>
-                    </li>
+{{--                    <li>--}}
+{{--                        <a href="" class="{{ isSubMenuActive('sections') }}">--}}
+{{--                            <i class="bx bx-chevron-right"></i> Product Types--}}
+{{--                        </a>--}}
+{{--                    </li>--}}
+{{--                    <li>--}}
+{{--                        <a href="" class="{{ isSubMenuActive('sections') }}">--}}
+{{--                            <i class="bx bx-chevron-right"></i> Brands--}}
+{{--                        </a>--}}
+{{--                    </li>--}}
                     <li>
                         <a href="" class="{{ isSubMenuActive('sections') }}">
                             <i class="bx bx-chevron-right"></i> Latest Offer

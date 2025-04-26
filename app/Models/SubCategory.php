@@ -14,6 +14,11 @@ class SubCategory extends Model
     protected $table = "sub_categories";
     protected $appends = ['total_banner_images'];
 
+    public function sub_subcategories()
+    {
+        return $this->hasMany(SubSubcategory::class,'subcategory_id','id');
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');

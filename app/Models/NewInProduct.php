@@ -6,11 +6,12 @@ use App\Traits\ModelHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SliderProduct extends Model
+class NewInProduct extends Model
 {
     use HasFactory, ModelHelper;
-    protected $table = "slider_products";
-    protected $fillable = ['slider_id','product_id','sorting_serial'];
+    protected $table = 'new_in_products';
+
+    protected $fillable = ['product_id','sorting_serial'];
 
     public function product()
     {

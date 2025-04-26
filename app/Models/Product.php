@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
+use App\Traits\ModelHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, ModelHelper;
 
     protected $table = "products";
-    protected $appends = ['total_variant', 'total_images','seller_shop_name'];
+    protected $appends = ['total_variant','default_variant', 'total_images','seller_shop_name'];
     protected $fillable = ['name', 'unit_price', 'discount_price', 'category_id', 'slug'];
 
     public function seller()
@@ -22,6 +23,11 @@ class Product extends Model
     public function getTotalVariantAttribute()
     {
         return ProductVariant::where('product_id', $this->id)->count();
+    }
+
+    public function getDefaultVariantAttribute()
+    {
+        return ProductVariant::where('product_id',$this->id)->where('is_default',1)->first();
     }
 
     public function getTotalImagesAttribute()

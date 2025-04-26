@@ -1,8 +1,7 @@
 (function ($) {
     "use strict";
     let base_url = AppHelpers.base_url;
-    const sliderId = $('#slider_id').val(); // Ensure the slider ID is available
-    loadProducts(sliderId);
+    loadProducts();
 
     const $searchInput = $('#product-search');
     const $resultsContainer = $('#product-search-results');
@@ -62,18 +61,8 @@
     }
 
     function addProductToSection(productId) {
-        if (!sliderId) {
-            AppHelpers.showAlert(
-                "error",
-                "Error",
-                "Section ID is required!"
-            );
-            return;
-        }
-
-        axios.post(`${base_url}/add-slider-product`, {
-            slider_id: sliderId,
-            product_id: productId,
+        axios.post(`${base_url}/add-new-in-product`, {
+            product_id: productId
         })
             .then(response => {
                 Swal.fire({
@@ -86,7 +75,7 @@
                 // Remove added item
                 $('#item_product_'+productId).remove();
                 // Optionally, refresh the product list or UI to reflect changes
-                loadProducts(sliderId);
+                loadProducts();
             })
             .catch(error => {
                 if (error.response && error.response.data) {
@@ -102,11 +91,11 @@
             });
     }
 
-    function loadProducts(sliderId) {
-        axios.get(`${base_url}/slider-wise-products/${sliderId}`)
+    function loadProducts() {
+        axios.get(`${base_url}/get-new-in-products`)
             .then(response => {
                 const products = response.data; // Extract the products from the response
-                const tableBody = document.querySelector('#slider-products-table tbody');
+                const tableBody = document.querySelector('#new-in-products-table tbody');
                 tableBody.innerHTML = ''; // Clear the existing table content
 
                 if (products.length > 0) {
@@ -128,9 +117,8 @@
                             </td>
                             <td class="w-5">
                                 <a data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"
-                                   class="btn btn-sm btn-soft-danger delete-slider-product"
+                                   class="btn btn-sm btn-soft-danger delete-new-in-product"
                                    data-product-id="${product.product_id}"
-                                   data-slider-id="${product.slider_id}"
                                    href="javascript:void(0);">
                                     <i class="fa fa-trash"></i>
                                 </a>
@@ -145,18 +133,18 @@
                 }
             })
             .catch(error => {
-                console.error('Error loading slider products:', error);
+                console.error('Error loading new-in products:', error);
             });
     }
 
-    $('#slider-products-table tbody').sortable({
+    $('#new-in-products-table tbody').sortable({
         handle: '.handle',
         update: function (event, ui) {
             // passed id to array
             const sortedIds = $(this).sortable('toArray', {attribute: 'data-id'});
-            axios.post(`${base_url}/update-slider-product-sorting`, {ids: sortedIds})
+            axios.post(`${base_url}/update-new-in-product-sorting`, {ids: sortedIds})
                 .then(response => {
-                    $(".sort_slider tr").each(function (index) {
+                    $(".sort_new-in tr").each(function (index) {
                         $(this).find('.sorting-serial').text(index + 1); // Update sorting_serial column
                     });
                 })
@@ -167,25 +155,24 @@
     });
 
     // Event delegation to handle dynamic rows
-    $('#slider-products-table tbody').on('click', '.delete-slider-product', function () {
+    $('#new-in-products-table tbody').on('click', '.delete-new-in-product', function () {
         const deleteButton = $(this); // The clicked button
         const productId = deleteButton.data('product-id'); // Get product ID
-        const sliderId = deleteButton.data('slider-id'); // Get slider ID
 
-        if (productId && sliderId) {
-            deleteSectionProduct(productId, sliderId);
+        if (productId) {
+            deleteSectionProduct(productId);
         }
     });
 
-    // Function to delete slider product
-    function deleteSectionProduct(productId, sliderId) {
-            axios.delete(`${base_url}/delete-slider-product`, {
-                data: {product_id: productId, slider_id: sliderId} // Pass data in the request body
+    // Function to delete new-in product
+    function deleteSectionProduct(productId) {
+            axios.delete(`${base_url}/delete-new-in-product`, {
+                data: {product_id: productId} // Pass data in the request body
             })
                 .then(response => {
                     if (response.data.status === 'success') {
                         //alert('Product deleted successfully!');
-                        loadProducts(sliderId); // Reload slider products after deletion
+                        loadProducts(); // Reload new-in products after deletion
                     } else {
                         alert(response.data.message || 'Failed to delete product!');
                     }
