@@ -74,9 +74,6 @@
                 <div class="top-bar-left">
                     <ul class="list-inline">
                         <li class="hidden-xs"><a href="">About</a></li>
-                        @auth
-                            <li class="hidden-xs"><a href="">My Account</a></li>
-                        @endauth
                         <li class="hidden-xs"><a href="">Contact</a></li>
                         <li class="hidden-xs"><a href="">FAQ</a></li>
                     </ul>
@@ -87,25 +84,31 @@
                 <div class="top-bar-right">
                     <ul class="list-inline">
                         @auth
-                        <li class="icon-user">
-                            <a href="{{ route('register') }}">
-                                <img src="{{ asset('assets/user/img/user.svg') }}" alt=""/>
-                                <span>My Account</span>
-                            </a>
-                        </li>
+                            <li class="icon-user">
+                                <a href="{{ route('register') }}">
+                                    <img src="{{ asset('assets/user/img/user.svg') }}" alt=""/>
+                                    <span>My Account</span>
+                                </a>
+                            </li>
+                            <li class="icon-user">
+                                <a href="{{ route('user-logout') }}">
+                                    <img src="{{ asset('assets/user/img/logout.svg') }}" alt=""/>
+                                    <span>Logout</span>
+                                </a>
+                            </li>
                         @else
-                        <li class="icon-user">
-                            <a href="{{ route('login') }}">
-                                <img src="{{ asset('assets/user/img/user.svg') }}" alt=""/>
-                                <span>Login</span>
-                            </a>
-                        </li>
-                        <li class="icon-form">
-                            <a href="{{ route('register') }}">
-                                <img src="{{ asset('assets/user/img/mem.svg') }}" alt=""/>
-                                <span>Not a Member? <span class="colored">Sign Up</span></span>
-                            </a>
-                        </li>
+                            <li class="icon-user">
+                                <a href="{{ route('login') }}">
+                                    <img src="{{ asset('assets/user/img/user.svg') }}" alt=""/>
+                                    <span>Login</span>
+                                </a>
+                            </li>
+                            <li class="icon-form">
+                                <a href="{{ route('register') }}">
+                                    <img src="{{ asset('assets/user/img/mem.svg') }}" alt=""/>
+                                    <span>Not a Member? <span class="colored">Sign Up</span></span>
+                                </a>
+                            </li>
                         @endauth
                     </ul>
                 </div>

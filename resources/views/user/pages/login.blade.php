@@ -1,5 +1,5 @@
 @extends('user.layouts.app')
-@section('title','Home')
+@section('title','Login')
 @push('css') @endpush
 
 @section('content')
@@ -21,6 +21,7 @@
         <div class="container">
             <section class="login-regis-area">
                 <div class="login-regis-area-inner">
+                    <x-alert-message />
                     <form action="{{ route('user-login') }}" class="form-login pa-login" method="POST">
                         @csrf
                         <div class="row">
@@ -29,10 +30,10 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group field-all">
-                                    <label>Mobile</label>
+                                    <label>Email or Mobile</label>
                                     <div class="input-group">
                                         <div class="input-group-addon"><i class="fa-regular fa-mobile-phone"></i></div>
-                                        <input name="mobile" type="text" class="form-control" id="mobile" placeholder="Mobile">
+                                        <input name="email_or_mobile" type="text" class="form-control" id="email_or_mobile" placeholder="Email or Mobile">
                                     </div>
                                     @error('mobile')
                                             <span class="text-danger">{{ $message }}</span>
@@ -44,7 +45,7 @@
                                     <label>Password</label>
                                     <div class="input-group">
                                         <div class="input-group-addon"><i class="fa-regular fa-passport"></i></div>
-                                        <input type="password" class="form-control" id="password" placeholder="Password">
+                                        <input type="password" name="password" class="form-control" id="password" placeholder="Password">
                                         <span class="span-view"><i class="fa-regular fa-eye-slash"></i></span>
                                     </div>
                                      @error('password')

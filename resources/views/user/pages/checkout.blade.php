@@ -28,10 +28,15 @@
     <!-- PAGE -->
     <section class="page-section color">
         <div class="container">
-            <h3 class="block-title alt item-row"><label class="che-lab"><input type="checkbox">Select All (2
-                    item(s)) </label>
-
-                <label class="de-item"> <i class="fas fa-trash-alt"></i>Delete</label>
+            <h3 class="block-title alt item-row">
+                <label class="che-lab">
+                    <input type="checkbox" id="select-all"> Select All ({{ count($cart_items['items']) }} item(s))
+                </label>
+                <label class="de-item">
+                    <a href="javascript:void(0);" id="delete-selected" class="disabled">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </a>
+                </label>
             </h3>
 
             <section class="sec-shopping">
@@ -47,55 +52,16 @@
                                 <th>Total</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            @foreach($cart_items['items'] as $item)
-                                <tr>
-                                    <td class="text-center vert-m"><input class="chec-th" type="checkbox" name=""></td>
-                                    <td class="image"><a class="media-link" href="#"><i class="fa fa-plus"></i><img
-                                                src="{{ asset($item['product_thumbnail']) }}" height="100" width="100"
-                                                alt=""/></a></td>
-                                    <td class="quantity">x{{ $item['quantity'] }}</td>
-                                    <td class="description">
-                                        <h4>
-                                            <a href="{{ route('product-details',$item['product_slug']) }}">{{ $item['product_name'] }}</a>
-                                        </h4>
-                                        by {{ productCategoryNameById($item['product_id']) }}
-                                    </td>
-                                    <td class="total">TK:{{ numberFormat($item['order_price']) ?? 0 }} <a href="#"><i
-                                                class="fa fa-close"></i></a></td>
-                                </tr>
-                            @endforeach
+                            <tbody id="cart-items-tbody">
+
                             </tbody>
+
                         </table>
                     </div>
                     <div class="col-md-4">
                         <h3 class="block-title"><span>Shopping cart</span></h3>
-                        <div class="shopping-cart">
-                            <table>
-                                <tr>
-                                    <td>Sub-total:</td>
-                                    <td>TK:{{ numberFormat($cart_items['item_total']) ?? 0 }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Shipping:</td>
-                                    <td>TK:{{ shippingFee() }}</td>
-                                </tr>
-                                <tfoot>
-                                <tr>
-                                    <td>Total:</td>
-                                    <td>TK:{{ $cart_items['total_price'] ?? 0 }}</td>
-                                </tr>
-                                </tfoot>
-                            </table>
-                            <div class="form-group">
-                                <textarea class="form-control" name="order_note"
-                                          placeholder="Send a Message"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <input class="form-control" type="text" placeholder="Enter your coupon code"/>
-                            </div>
-                            <button class="btn btn-theme btn-theme-dark btn-block orange-bg apl-c">Apply Coupon
-                            </button>
+                        <div class="shopping-cart" id="checkout-summery">
+
                         </div>
                     </div>
                 </div>

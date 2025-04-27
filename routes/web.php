@@ -25,17 +25,27 @@ Route::controller(\App\Http\Controllers\HomePageController::class)->group(functi
     Route::post('user-login','userLogin')->name('user-login');
 });
 
+// Cart and Order
 Route::controller(\App\Http\Controllers\CacheCartController::class)->group(function () {
     Route::get('cart-items', 'getCartItems')->name('cart-items');
     Route::get('load-cart-items', 'loadCartItems')->name('load-cart-items');
     Route::post('add-to-cart', 'addToCart')->name('add-to-cart');
     Route::delete('remove-item-from-cart', 'removeFromCart')->name('remove-item-from-cart');
-    Route::get('update-cart-quantity', 'updateCartQuantity')->name('update-cart-quantity');
+    Route::post('update-cart-quantity', 'updateCartQuantity')->name('update-cart-quantity');
     Route::delete('clear-cart', 'clearCart')->name('clear-cart');
     Route::delete('flush-cache', 'flushCache')->name('clear-cart');
     // Checkout and Order
-    Route::get('checkout','checkout')->name('checkout');
-    Route::post('submit-order','submitOrder')->name('submit-order');
+    Route::middleware('auth')->group(function () {
+        Route::get('checkout','checkout')->name('checkout');
+        Route::get('checkout-products','getCheckoutProducts')->name('checkout-products');
+        Route::post('submit-order','submitOrder')->name('submit-order');
+    });
+});
+
+// User Part
+Route::controller(\App\Http\Controllers\User\ProfileController::class)->middleware('auth')->group(function () {
+   Route::get('user-profile','profile')->name('user-profile');
+   Route::get('user-logout','logout')->name('user-logout');
 });
 
 
