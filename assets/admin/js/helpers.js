@@ -7,6 +7,7 @@
     window.AppHelpers = (function () {
         // Set base URL dynamically from a meta tag
         const base_url = $('meta[name="base-url"]').attr('base_url') || window.location.origin;
+        const currentPage = window.location.pathname.split('/').filter(Boolean).pop();
 
         /**
          * Display a SweetAlert notification
@@ -71,6 +72,7 @@
         // Expose public methods
         return {
             base_url: base_url,
+            current_page: currentPage,
             showAlert: showAlert,
             ajaxRequest: ajaxRequest,
             formatInput: formatInput

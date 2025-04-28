@@ -60,11 +60,11 @@
                             <i class="bx bx-chevron-right"></i> New In
                         </a>
                     </li>
-{{--                    <li>--}}
-{{--                        <a href="" class="{{ isSubMenuActive('sections') }}">--}}
-{{--                            <i class="bx bx-chevron-right"></i> Product Types--}}
-{{--                        </a>--}}
-{{--                    </li>--}}
+                    <li>
+                        <a href="" class="{{ isSubMenuActive('sections') }}">
+                            <i class="bx bx-chevron-right"></i> Product Types
+                        </a>
+                    </li>
 {{--                    <li>--}}
 {{--                        <a href="" class="{{ isSubMenuActive('sections') }}">--}}
 {{--                            <i class="bx bx-chevron-right"></i> Brands--}}

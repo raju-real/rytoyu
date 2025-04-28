@@ -106,86 +106,18 @@
             </div>
         </div>
         <div class="edit-list">
+            @foreach(getProductTypes() as $product_type)
             <div class="edit-block">
-                <img src="assets/user/img/edit1.png" alt="img">
+                <img src="{{ asset($product_type->image) }}" alt="img">
                 <div class="edit-details">
-                    <h3>Basics</h3>
+                    <h3>{{ $product_type->name ?? '' }}</h3>
                     <div class="btn-row">
                         <button class="btn btn-shop orange-bg">SHOP WOMEN</button>
                         <button class="btn btn-shop orange-bg">SHOP MEN</button>
                     </div>
                 </div>
             </div>
-            <div class="edit-block">
-                <img src="assets/user/img/edit2.png" alt="img">
-                <div class="edit-details">
-                    <h3>Casual Wear</h3>
-                    <div class="btn-row">
-                        <button class="btn btn-shop orange-bg">SHOP WOMEN</button>
-                        <button class="btn btn-shop orange-bg">SHOP MEN</button>
-                    </div>
-                </div>
-            </div>
-            <div class="edit-block">
-                <img src="assets/user/img/edit3.png" alt="img">
-                <div class="edit-details">
-                    <h3>Office Wear</h3>
-                    <div class="btn-row">
-                        <button class="btn btn-shop orange-bg">SHOP WOMEN</button>
-                        <button class="btn btn-shop orange-bg">SHOP MEN</button>
-                    </div>
-                </div>
-            </div>
-            <div class="edit-block">
-                <img src="assets/user/img/edit4.png" alt="img">
-                <div class="edit-details">
-                    <h3>Traditional</h3>
-                    <div class="btn-row">
-                        <button class="btn btn-shop orange-bg">SHOP WOMEN</button>
-                        <button class="btn btn-shop orange-bg">SHOP MEN</button>
-                    </div>
-                </div>
-            </div>
-            <div class="edit-block">
-                <img src="assets/user/img/edit5.png" alt="img">
-                <div class="edit-details">
-                    <h3>Pants</h3>
-                    <div class="btn-row">
-                        <button class="btn btn-shop orange-bg">SHOP WOMEN</button>
-                        <button class="btn btn-shop orange-bg">SHOP MEN</button>
-                    </div>
-                </div>
-            </div>
-            <div class="edit-block">
-                <img src="assets/user/img/edit6.png" alt="img">
-                <div class="edit-details">
-                    <h3>Footwear</h3>
-                    <div class="btn-row">
-                        <button class="btn btn-shop orange-bg">SHOP WOMEN</button>
-                        <button class="btn btn-shop orange-bg">SHOP MEN</button>
-                    </div>
-                </div>
-            </div>
-            <div class="edit-block">
-                <img src="assets/user/img/edit7.png" alt="img">
-                <div class="edit-details">
-                    <h3>Jewelry</h3>
-                    <div class="btn-row">
-                        <button class="btn btn-shop orange-bg">SHOP WOMEN</button>
-                        <button class="btn btn-shop orange-bg">SHOP MEN</button>
-                    </div>
-                </div>
-            </div>
-            <div class="edit-block">
-                <img src="assets/user/img/edit8.png" alt="img">
-                <div class="edit-details">
-                    <h3>Accessories</h3>
-                    <div class="btn-row">
-                        <button class="btn btn-shop orange-bg">SHOP WOMEN</button>
-                        <button class="btn btn-shop orange-bg">SHOP MEN</button>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </section>
     <!--end edit -->
@@ -197,36 +129,14 @@
                 style.</p>
             <div class="top-products-carousel">
                 <div class="owl-carousel slider-c-custom" id="top-products-carouselb">
+                    @foreach(getBrands() as $brand)
                     <div class="thumbnail no-border no-padding">
                         <div class="media">
-                            <img class="img-sl" src="assets/user/img/b1.png" alt=""/>
+                            <img class="img-sl" src="{{ asset($brand->image) }}" alt=""/>
                         </div>
-                        <img src="assets/user/img/brandl.png" class="brand-logo">
+                        <img src="{{ asset($brand->logo) }}" class="brand-logo">
                     </div>
-                    <div class="thumbnail no-border no-padding">
-                        <div class="media">
-                            <img class="img-sl" src="assets/user/img/b2.png" alt=""/>
-                        </div>
-                        <img src="assets/user/img/brandl1.png" class="brand-logo">
-                    </div>
-                    <div class="thumbnail no-border no-padding">
-                        <div class="media">
-                            <img class="img-sl" src="assets/user/img/b3.png" alt=""/>
-                        </div>
-                        <img src="assets/user/img/brandl2.png" class="brand-logo">
-                    </div>
-                    <div class="thumbnail no-border no-padding">
-                        <div class="media">
-                            <img class="img-sl" src="assets/user/img/b4.png" alt=""/>
-                        </div>
-                        <img src="assets/user/img/brandl4.png" class="brand-logo">
-                    </div>
-                    <div class="thumbnail no-border no-padding">
-                        <div class="media">
-                            <img class="img-sl" src="assets/user/img/b3.png" alt=""/>
-                        </div>
-                        <img src="assets/user/img/brandl1.png" class="brand-logo">
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>

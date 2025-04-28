@@ -619,12 +619,26 @@ if (!function_exists('getNewInProducts')) {
     }
 }
 
+if (!function_exists('getProductTypes')) {
+    function getProductTypes()
+    {
+        return \App\Models\ProductType::active()->select('id', 'name', 'slug', 'icon', 'image')->orderBy('sorting_serial')->get();
+    }
+}
+
+if (!function_exists('getBrands')) {
+    function getBrands()
+    {
+        return \App\Models\Brand::active()->select('id', 'name', 'slug', 'logo', 'image')->orderBy('sorting_serial')->get();
+    }
+}
+
 // Cart section
 
 if(! function_exists('shippingFee')) {
     function shippingFee()
     {
-         return 100;
+         return 200;
     }
 }
 

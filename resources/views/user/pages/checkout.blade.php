@@ -201,5 +201,5 @@
 @endsection
 
 @push('js')
-    <script src="{{ asset('assets/user/js/checkout.js') }}"></script>
+
 @endpush

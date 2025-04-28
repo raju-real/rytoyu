@@ -9,9 +9,15 @@
             </a>
         </td>
         <td class="quantity">
-            <button class="btn btn-sm btn-outline-secondary update-quantity" data-id="{{ $item['item_key'] }}" data-action="decrease">-</button>
-            x{{ $item['quantity'] }}
-            <button class="btn btn-sm btn-outline-secondary update-quantity" data-id="{{ $item['item_key'] }}" data-action="increase">+</button>
+            {{ number_format($item['item_price'],2) }} x {{ $item['quantity'] }}
+            @if($item['quantity'] > 1)
+                <button class="btn btn-sm btn-outline-danger update-quantity" data-id="{{ $item['item_key'] }}"
+                        data-action="decrease">-
+                </button>
+            @endif
+            <button class="btn btn-sm btn-outline-secondary update-quantity" data-id="{{ $item['item_key'] }}"
+                    data-action="increase">+
+            </button>
         </td>
         <td class="description">
             <h4>

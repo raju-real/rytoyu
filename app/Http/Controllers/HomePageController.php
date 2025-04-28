@@ -15,12 +15,6 @@ class HomePageController extends Controller
 {
     public function home()
     {
-//        dd([
-//        'browser_id' => request()->cookie('browser_id'),
-//        'session_id' => request()->session()->getId(),
-//        'cart_key' => request()->cookie('cart_key'),
-////        'cart_items' => cartItems()
-//    ]);
         return view('user.pages.home');
     }
 
@@ -99,6 +93,7 @@ class HomePageController extends Controller
 
     public function userLogin(Request $request)
     {
+        Auth::logout();
         $this->validate($request,[
             'email_or_mobile' => 'required',
             'password' => 'required'

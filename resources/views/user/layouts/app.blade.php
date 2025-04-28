@@ -342,6 +342,7 @@
 <script src="{{ asset('assets/admin/js/axios.js') }}"></script>
 <script src="{{ asset('assets/admin/js/helpers.js') }}"></script>
 <script src="{{ asset('assets/user/js/common.js') }}"></script>
+<script src="{{ asset('assets/user/js/checkout_manage.js') }}"></script>
 @stack('js')
 </body>
 </html>

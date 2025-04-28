@@ -2,17 +2,6 @@
     "use strict";
     let base_url = AppHelpers.base_url;
 
-    loadCartItems();
-
-    /**
-     * Ajax csrf token setup
-     */
-    $.ajaxSetup({
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-        },
-    });
-
     $(document).on("click", ".product-view", function () {
         const productId = $(this).data("product-id");
 
@@ -78,49 +67,5 @@
     function assetUrl(path) {
         return base_url + '/' + path.replace(/^\/+/, '');
     }
-
-    // Trigger for add to cart button
-    $(document).on('click', '.add-t-c-2', addToCart);
-
-    function addToCart(event) {
-        event.preventDefault(); // prevent default form submission if inside a form
-
-        const button = $(event.currentTarget);
-        const productId = button.data('product-id');
-        const colorId = $('.color-radio:checked').val() || null;
-        const sizeId = $('.size-radio:checked').val() || null;
-        const quantity = $('.qty').val() || 1;
-
-        $.ajax({
-            url: base_url + '/add-to-cart',
-            type: 'POST',
-            data: {
-                product_id: productId,
-                color_id: colorId,
-                size_id: sizeId,
-                quantity: quantity
-            },
-            success: function (response) {
-                if (response.status === 'success') {
-                    alert(response.message); // Or use toast/notification
-                    loadCartItems();
-                } else {
-                    alert(response.message);
-                }
-            },
-            error: function (xhr) {
-                alert('Something went wrong!');
-            }
-        });
-    }
-
-    function loadCartItems() {
-        axios.get(base_url + '/load-cart-items').then((response) => {
-            const total = Number(response.data.item_summary.item_total || 0);
-            $('#cart-item-total').text(total.toLocaleString());
-            $('#mini-cart-item').empty().html(response.data.cart_view);
-        });
-    }
-
 
 })(jQuery);

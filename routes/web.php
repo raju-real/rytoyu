@@ -37,9 +37,13 @@ Route::controller(\App\Http\Controllers\CacheCartController::class)->group(funct
     // Checkout and Order
     Route::middleware('auth')->group(function () {
         Route::get('checkout','checkout')->name('checkout');
+        Route::post('apply-coupon','applyCoupon')->name('apply-coupon');
+        Route::get('price-summery','getPriceSummery')->name('price-summery');
+        Route::get('load-price-summery','loadPriceSummery')->name('load-price-summery');
         Route::get('checkout-products','getCheckoutProducts')->name('checkout-products');
         Route::post('submit-order','submitOrder')->name('submit-order');
     });
+
 });
 
 // User Part
