@@ -102,6 +102,9 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
         Route::post('add-new-in-product','addNewInProducts')->name('add-new-in-product');
         Route::post('update-new-in-product-sorting', 'updateNewInProductSorting')->name('update-new-in-product-sorting');
         Route::delete('delete-new-in-product', 'deleteNewInProduct')->name('delete-new-in-product');
+        Route::get('manage-product-types','manageProductType')->name('manage-product-types');
+        Route::get('product-types-category-bound/{product_type_slug}','productTypeCategoryBound')->name('product-types-category-bound');
+        Route::post('bound-category-on-product-type/{type_id}','boundCategoryOnProductType')->name('bound-category-on-product-type');
     });
 
     Route::get('logout', function () {

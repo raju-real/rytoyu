@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('brand_id')->nullable();
             $table->string('product_code')->unique()->nullable();
             $table->string('name',191);
+            $table->fullText('name'); // Used for searchable full text
             $table->string('slug',255)->unique();
             $table->decimal('unit_price', 10, 2)->default(0);
             $table->decimal('discount_price', 10, 2)->default(0);

@@ -162,6 +162,7 @@
                             <thead>
                             <tr>
                                 <th>Sl.no</th>
+                                <th>Type</th>
                                 <th>Thumbnail</th>
                                 <th>Name</th>
                                 <th>Brand</th>
@@ -174,6 +175,7 @@
                             @forelse($products as $product)
                                 <tr>
                                     <td>{{ $loop->index + 1 }}</td>
+                                    <td>{{ $product->type->name ?? '' }}</td>
                                     <td>
                                         @if($product->thumbnail_path != Null && file_exists($product->thumbnail_path))
                                             <img src="{{ asset($product->thumbnail_path) }}"

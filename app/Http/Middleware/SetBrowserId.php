@@ -20,6 +20,9 @@ class SetBrowserId
             // Set price summery key for order
             $priceSummeryKey = "price_summery_" . $browserId;
             Cookie::queue('price_summery_key', $priceSummeryKey, 60 * 24 * 15); // 15 days
+            // Set search param key for keywords
+            $userSearchKey = "user_search_key_" . $browserId;
+            Cookie::queue('user_search_key', $userSearchKey, 60 * 24 * 60); // 60 days
         }
 
         return $next($request);

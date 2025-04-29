@@ -369,7 +369,7 @@ if (!function_exists('textLimit')) {
 if (!function_exists('numberFormat')) {
     function numberFormat($number, $format = 2): mixed
     {
-        return number_format($number,$format);
+        return number_format($number, $format);
     }
 }
 
@@ -633,19 +633,107 @@ if (!function_exists('getBrands')) {
     }
 }
 
-// Cart section
-
-if(! function_exists('shippingFee')) {
-    function shippingFee()
+// Search control and cookie control
+if (!function_exists('trackUserSearchKeyword')) {
+    function trackUserSearchKeyword($searchParam)
     {
-         return 200;
+        $searchParam = trim(strtolower($searchParam));
+        if (!$searchParam) return;
+
+        // Get or generate user search key
+        $searchKey = request()->cookie('user_search_key') ?? request()->cookie('browser_id') ?? \Illuminate\Support\Str::uuid()->toString();
+        cookie()->queue('user_search_key', $searchKey, 60 * 24 * 30);
+
+        // Fetch old keywords
+        $existing = json_decode(\Illuminate\Support\Facades\Cookie::get("search_keywords_{$searchKey}"), true) ?? [];
+
+        // Push new keyword to front if unique
+        if (!in_array($searchParam, $existing)) {
+            array_unshift($existing, $searchParam);
+            $existing = array_slice($existing, 0, 10); // keep max 10
+        }
+
+        // Queue cookie update
+        cookie()->queue(cookie("search_keywords_{$searchKey}", json_encode($existing), 60 * 24 * 30));
     }
 }
 
-if(! function_exists('browserId')) {
-    function browserId() {
-         $ip = '';
-        if(isset($_COOKIE['browser_id'])) {
+if (!function_exists('getUserSearchKeywords')) {
+    function getUserSearchKeywords()
+    {
+        $searchKey = request()->cookie('user_search_key') ?? request()->cookie('browser_id');
+        return json_decode(\Illuminate\Support\Facades\Cookie::get("search_keywords_{$searchKey}"), true) ?? [];
+    }
+}
+
+// actual search results from cookie keywords
+//if (!function_exists('getUserSearchProducts')) {
+//    function getUserSearchProducts()
+//    {
+//        $searchKey = request()->cookie('user_search_key');
+//        if (!$searchKey) return collect(); // fallback empty collection
+//
+//        $keywords = json_decode(request()->cookie("search_keywords_{$searchKey}"), true) ?? [];
+//
+//        // Clean and prepare
+//        $keywords = array_filter($keywords, fn($term) => is_string($term) && trim($term) !== '');
+//        if (empty($keywords)) return collect();
+//
+//        // Convert keywords to a single search string
+//        $searchString = implode(' ', array_map('trim', $keywords));
+//
+//        // Use MATCH ... AGAINST
+//        return Product::whereRaw("MATCH(name) AGAINST (? IN BOOLEAN MODE)", [$searchString])
+//            ->take(16)
+//            ->get();
+//    }
+//}
+
+if (!function_exists('getUserSearchProducts')) {
+    function getUserSearchProducts()
+    {
+        $searchKey = request()->cookie('user_search_key');
+        if (!$searchKey) return Product::inRandomOrder()->take(16)->get();
+        // Fetch the keywords
+        $keywords = json_decode(request()->cookie("search_keywords_{$searchKey}"), true) ?? [];
+        // Clean and prepare
+        $keywords = array_filter($keywords, fn($term) => is_string($term) && trim($term) !== '');
+        if (empty($keywords)) return Product::inRandomOrder()->take(16)->get();
+        // Convert keywords to a single full-text search string
+        $searchString = implode(' ', array_map('trim', $keywords));
+        // Search using full-text
+        $matchedProducts = Product::whereRaw("MATCH(name) AGAINST (? IN BOOLEAN MODE)", [$searchString])
+            ->take(16)
+            ->get();
+        // If fewer than 16, fill with random products excluding the ones already found
+        $remaining = 16 - $matchedProducts->count();
+        if ($remaining > 0) {
+            $excludedIds = $matchedProducts->pluck('id')->toArray();
+            $randomProducts = Product::whereNotIn('id', $excludedIds)
+                ->inRandomOrder()
+                ->take($remaining)
+                ->get();
+            $matchedProducts = $matchedProducts->concat($randomProducts);
+        }
+        return $matchedProducts;
+    }
+}
+
+
+// Cart section
+
+if (!function_exists('shippingFee')) {
+    function shippingFee()
+    {
+        return 200;
+    }
+}
+
+if (!function_exists('browserId')) {
+    function browserId()
+    {
+        $ip = '';
+        if (isset($_COOKIE['browser_id'])) {
             $ip = $_COOKIE['browser_id'];
         }
         return $ip;

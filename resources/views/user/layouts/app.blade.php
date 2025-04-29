@@ -183,8 +183,9 @@
                 <!-- /Logo -->
                 <!-- Header search -->
                 <div class="header-search">
-                    <input class="form-control" type="text" placeholder="Search for products brands and more"/>
-                    <button><i class="fa fa-search"></i></button>
+                    <input id="searchInput" name="search" class="form-control" type="text"
+                           placeholder="Search for products, brands and more"/>
+                    <button id="searchBtn"><i class="fa fa-search"></i></button>
                 </div>
                 <!-- /Header search -->
                 <!-- Header shopping cart -->

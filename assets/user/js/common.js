@@ -2,6 +2,27 @@
     "use strict";
     let base_url = AppHelpers.base_url;
 
+    function performSearch() {
+        let query = $('#searchInput').val().trim();
+        if (query !== '') {
+            window.location.href = base_url+'/search-results?search=' + encodeURIComponent(query);
+        }
+    }
+
+    // Click on button
+    $('#searchBtn').on('click', function (e) {
+        e.preventDefault();
+        performSearch();
+    });
+
+    // Press Enter key in input
+    $('#searchInput').on('keypress', function (e) {
+        if (e.which === 13) { // Enter key
+            e.preventDefault();
+            performSearch();
+        }
+    });
+
     $(document).on("click", ".product-view", function () {
         const productId = $(this).data("product-id");
 

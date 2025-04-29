@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::controller(\App\Http\Controllers\HomePageController::class)->group(function () {
     Route::get('/', 'home')->name('home');
+    Route::get('search-results', 'searchProduct')->name('search-products');
     Route::get('single-product-info/{product_id}', 'singleProductInfo')->name('single-product-info');
     Route::get('product-details/{slug}', 'productDetails')->name('product-details');
 

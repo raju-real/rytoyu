@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\NewInProduct;
+use App\Models\Product;
+use App\Models\ProductType;
+use App\Models\ProductTypeCategory;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -87,4 +91,39 @@ class WebPageManageController extends Controller
             return ['success' => true, 'message' => 'Updated'];
         }
     }
+
+    public function manageProductType()
+    {
+        $product_types = ProductType::active()->sort()->get();
+        return view('admin.sections.manage_product_types', compact('product_types'));
+    }
+
+    public function productTypeCategoryBound($type_slug)
+    {
+        $type = ProductType::whereSlug($type_slug)->firstOrFail();
+        $categories = Category::whereIn('id',  $type->product_category_ids)->select('id', 'name')->get();
+        return view('admin.sections.bound_category_product_types', compact('type', 'categories'));
+    }
+
+    public function boundCategoryOnProductType(Request $request, $type_id)
+    {
+        $category_ids = $request->input('category_ids', []);
+        if (empty($category_ids)) {
+            return redirect()->route('admin.manage-product-types')->with(infoMessage('No categories selected.'));
+        }
+        // Delete existing bindings for the product type
+        ProductTypeCategory::where('product_type_id', $type_id)->delete();
+        // Prepare data for bulk insert
+        $data = collect($category_ids)->map(function ($category_id) use ($type_id) {
+            return [
+                'product_type_id' => $type_id,
+                'category_id' => $category_id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        })->toArray();
+        ProductTypeCategory::insert($data);
+        return redirect()->route('admin.manage-product-types')->with(infoMessage('Categories bound successfully.'));
+    }
+
 }

@@ -15,8 +15,24 @@ class HomePageController extends Controller
 {
     public function home()
     {
+         //return getUserSearchProducts();
         return view('user.pages.home');
     }
+
+    public function searchProduct()
+    {
+        $searchParam = request()->get('search');
+        if (!$searchParam) return redirect()->back();
+
+        // Track search
+        trackUserSearchKeyword($searchParam);
+
+        // Search products
+        return $products = Product::whereRaw("MATCH(name) AGAINST (? IN BOOLEAN MODE)", [$searchParam])->get();
+
+        return view('user.pages.search-result', compact('products', 'searchParam'));
+    }
+
 
     public function singleProductInfo($product_id)
     {
@@ -94,7 +110,7 @@ class HomePageController extends Controller
     public function userLogin(Request $request)
     {
         Auth::logout();
-        $this->validate($request,[
+        $this->validate($request, [
             'email_or_mobile' => 'required',
             'password' => 'required'
         ]);

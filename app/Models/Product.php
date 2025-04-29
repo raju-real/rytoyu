@@ -6,10 +6,18 @@ use App\Traits\ModelHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
 
 class Product extends Model
 {
-    use HasFactory, SoftDeletes, ModelHelper;
+    /**
+     * Searchable
+     * use Laravel\Scout\Searchable;
+     * For searchable I have used this two package
+     * composer require laravel/scout
+     * composer require meilisearch/meilisearch-php http-interop/http-factory-guzzle
+     */
+    use HasFactory, SoftDeletes, ModelHelper, Searchable;
 
     protected $table = "products";
     protected $appends = ['total_variant','default_variant', 'total_images','seller_shop_name'];

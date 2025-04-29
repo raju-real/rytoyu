@@ -61,7 +61,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="" class="{{ isSubMenuActive('sections') }}">
+                        <a href="{{ route('admin.manage-product-types') }}" class="{{ isSubMenuActive('manage-product-types') }}">
                             <i class="bx bx-chevron-right"></i> Product Types
                         </a>
                     </li>
