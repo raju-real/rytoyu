@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
+use App\Models\OrderProduct;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -113,6 +115,7 @@ class CacheCartController extends Controller
             $color = $item['color_id'] ? Color::find($item['color_id']) : null;
             return [
                 'item_key' => $itemKey, // Important: Attach item_key here
+                'variant_id' => $item['variant_id'],
                 'product_id' => $item['product_id'],
                 'product_name' => $item['product_name'],
                 'quantity' => $item['quantity'],
@@ -281,15 +284,106 @@ class CacheCartController extends Controller
             'first_name' => 'required|max:100',
             'last_name' => 'required|max:100',
             'address' => 'required|max:255',
-            'country' => 'nullable|max:100',
+            'district_id' => 'nullable|max:100',
             'city' => 'nullable|max:100',
             'zip_code' => 'required|max:10',
             'email' => 'required|email|max:50',
-            'mobile' => 'required|max:20',
+            'mobile' => 'required|max:11',
             'additional_information' => 'nullable|max:500',
         ]);
+        // Carts information ...
+        $cartItems = $this->getCartItems();
+        $price_summery = $this->getPriceSummery();
+        // Coupon
+        $applied_coupon_code = $price_summery['applied_coupon'] ?? Null;
+        $applied_coupon_discount = $price_summery['coupon_discount'] ?? 0;
+        // Validate coupon and coupon discount here. others failed
+//        if(!empty($applied_coupon_code)) {
+//
+//        }
+        // Price calculation
+        $total_vat = 0;
+        $total_shipping = $price_summery['shipping_fee'];
 
-        // Your order logic here...
+        // save order
+        $order = new Order();
+        $order->order_number = Order::getOrderNumber();
+        $order->invoice = Order::getInvoiceNumber();
+        $order->user_id = Auth::id();
+
+        $total_item_unit_price = Order::getTotalItemUnitPrice($cartItems);
+        $total_item_discount = Order::getTotalItemDiscountPrice($cartItems);
+        $total_item_order_price = Order::getItemOrderPrice($cartItems);
+        $service_charge = 0;
+
+        $order->total_item_unit_price = $total_item_unit_price;
+        $order->total_item_discount = $total_item_discount;
+        $order->total_item_order_price = $total_item_order_price;
+
+        $order->coupon_code = $applied_coupon_code;
+        $order->coupon_discount_amount = $applied_coupon_discount;
+        $order->shipping_fee = $total_shipping;
+        $order->service_charge = 0;
+        $order->total_vat = 0;
+        $order->total_discount = $total_item_discount + $applied_coupon_discount;
+
+        $total_order_price = ($total_item_order_price + $total_shipping + $service_charge) - $applied_coupon_discount;
+        $order->total_order_price = $total_order_price;
+        $order->order_status = 'pending';
+        $order->payment_method = $request->payment_method ?? 'cash-on-delivery';
+        $order->payment_status = 'unpaid';
+        $order->paid_amount = 0;
+        $order->due_amount = $total_order_price;
+
+        $order->first_name = $request->first_name ?? Auth::user()->first_name ?? null;
+        $order->last_name = $request->last_name ?? Auth::user()->last_name ?? null;
+        $order->mobile = $request->mobile ?? Auth::user()->mobile ?? null;
+        $order->email = $request->email ?? Auth::user()->email ?? null;
+        $order->district_id = $request->district_id ?? Auth::user()->district_id ?? null;
+        $order->city_town = $request->city ?? Auth::user()->city ?? null;
+        $order->address = $request->address ?? Auth::user()->delivery_address ?? Auth::user()->home_address ?? null;
+        $order->post_code = $request->post_code ?? Auth::user()->zip_code ?? null;
+        $order->additional_information = $request->additional_information ?? null;
+        $order->save();
+
+        foreach ($cartItems['items'] as $item) {
+            // Carts item info
+            $variant_id = $item['variant_id'];
+            $product_id = $item['product_id'];
+            $variant = ProductVariant::find($variant_id);
+            if (!$variant) {
+                continue;
+            }
+            $quantity =  $item['quantity'];
+            // Price calculation
+            $item_unit_price =    $variant->unit_price;
+            $item_discount_price = $variant->discount_price;
+            $item_order_price = $item_discount_price > 0 ? $item_discount_price : $item_unit_price;
+
+            $item_total_unit_price = $item_unit_price * $quantity;
+            $item_total_discount_price = $item_discount_price * $quantity;
+            $item_total_order_price = $item_order_price * $quantity;
+            // Save order items
+            $order_item = new OrderProduct();
+            $order_item->order_id = $order->id;
+            $order_item->user_id = $order->user_id;
+            $order_item->seller_id = sellerIdByProduct($product_id);
+            $order_item->variant_id = $variant_id;
+            $order_item->product_id = $product_id;
+            $order_item->item_unit_price = $item_unit_price;
+            $order_item->item_discount_price = $item_total_discount_price;
+            $order_item->item_order_price = $item_order_price;
+            $order_item->quantity = $quantity;
+            $order_item->item_total_unit_price = $item_total_unit_price;
+            $order_item->item_total_discount = $item_total_unit_price - $item_discount_price;
+            $order_item->item_total_order_price = $item_total_order_price;
+            $order_item->size = $variant->size_name ?? null;
+            $order_item->color = $variant->color_name ?? null;
+            $order_item->order_status = 'pending';
+            $order_item->save();
+            // Update inventory
+            ProductVariant::find($variant_id)?->decrement('inventory', $quantity);
+        }
 
         return response()->json(['status' => 'success', 'message' => 'Order submitted successfully.']);
     }

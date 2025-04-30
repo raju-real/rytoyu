@@ -23,6 +23,19 @@ class Product extends Model
     protected $appends = ['total_variant','default_variant', 'total_images','seller_shop_name'];
     protected $fillable = ['name', 'unit_price', 'discount_price', 'category_id', 'slug'];
 
+    /**
+     * @return array
+     * php artisan scout:import "App\Models\Product"
+     */
+//    public function toSearchableArray()
+//    {
+//        return [
+//            'id' => $this->id,
+//            'name' => $this->name,
+//            'description' => $this->description,
+//        ];
+//    }
+
     public function seller()
     {
         return $this->belongsTo(Admin::class,'seller_id','id');

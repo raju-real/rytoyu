@@ -198,6 +198,13 @@ if (!function_exists('authSellerId')) {
     }
 }
 
+if (!function_exists('sellerIdByProduct')) {
+    function sellerIdByProduct($product_id)
+    {
+        return Product::find($product_id)->seller_id ?? null;
+    }
+}
+
 if (!function_exists('authShopInfo')) {
     function authShopInfo()
     {

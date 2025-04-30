@@ -174,39 +174,43 @@
             event.preventDefault();
 
             const submitButton = $(this);
-            // const spinTag = "<i class='fa fa-spinner fa-spin me-2 spinner'></i>"; // You commented it earlier
             const buttonText = " Please wait...";
 
+            // Disable button and show loading state
             submitButton
-                .addClass('disabled')      // Add a disabled class
-                .css({'pointer-events': 'none', 'opacity': '0.6'}) // Prevent click and change look
+                .addClass('disabled')
+                .css({'pointer-events': 'none', 'opacity': '0.6'})
                 .html(buttonText);
 
-            const form = $('#order-form');
-            const formData = new FormData(form[0]);
+            const form = $('#order-form')[0];
+            const formData = new FormData(form);
 
-            $.ajax({
-                url: base_url + '/submit-order',
-                method: 'POST',
-                data: formData,
-                dataType: 'json',
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    console.log(response);
-                    // you can redirect or show success
-                },
-                error: function (error) {
-                    if (error.status === 422) {
-                        // handle validation errors
+            const selectedPayment = $('#accordion .panel-collapse.in').prev().find('a').data('value') || 'cash-on-delivery';;
+            formData.append('payment_method', selectedPayment); // If using FormData
+
+            axios.post(base_url + '/submit-order', formData)
+                .then(function (response) {
+                    console.log(response.data);
+                    // Handle success (e.g., redirect or show message)
+
+                    submitButton
+                        .removeClass('disabled')
+                        .css({'pointer-events': '', 'opacity': ''})
+                        .html('Submit Order');
+                })
+                .catch(function (error) {
+                    if (error.response && error.response.status === 422) {
+                        // Handle validation errors
+                        console.log(error.response.data.errors);
                     }
+
                     // Re-enable button on error
                     submitButton
                         .removeClass('disabled')
                         .css({'pointer-events': '', 'opacity': ''})
                         .html('Submit Order');
-                }
-            });
+                });
         });
+
     }
 })(jQuery);

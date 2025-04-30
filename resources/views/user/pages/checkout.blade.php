@@ -85,26 +85,32 @@
                                        placeholder="Last Name">
                             </div>
                         </div>
-                        <div class="col-md-12">
+
+                         <div class="col-md-6">
                             <div class="form-group">
-                                <input name="address" id="address" class="form-control" type="text"
-                                       placeholder="Address">
+                                <input name="email" id="email" class="form-control" type="text" placeholder="Email">
                             </div>
                         </div>
                         <div class="col-md-6">
+                            <div class="form-group">
+                                <input name="mobile" id="mobile" class="form-control" type="text"
+                                       placeholder="Phone Number"></div>
+                        </div>
+
+                        <div class="col-md-4">
                             <div class="form-group selectpicker-wrapper">
-                                <select id="country" name="country" class="form-control sel-bg">
-                                    <option selected="">Bangladesh</option>
+                                <select id="district_id" name="district_id" class="form-control sel-bg">
+                                    <option selected="1">Dhaka</option>
+                                    <option selected="1">Rangpur</option>
                                 </select>
 
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group selectpicker-wrapper">
-                                <select name="city" id="city" class="form-control sel-bg">
-                                    <option selected="">Dhaka</option>
-                                </select>
 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <input name="city" id="city" class="form-control" type="text"
+                                       placeholder="City">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -113,16 +119,15 @@
                                        placeholder="Postcode/ZIP">
                             </div>
                         </div>
-                        <div class="col-md-4">
+
+                         <div class="col-md-12">
                             <div class="form-group">
-                                <input name="email" id="email" class="form-control" type="text" placeholder="Email">
+                                <input name="address" id="address" class="form-control" type="text"
+                                       placeholder="Address">
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <input name="mobile" id="mobile" class="form-control" type="text"
-                                       placeholder="Phone Number"></div>
-                        </div>
+
+
                         <div class="col-md-12">
                             <div class="form-group">
                                 <textarea name="additional_information" id="additional_information" class="form-control"
@@ -144,7 +149,8 @@
                         <div class="panel-heading" role="tab" id="headingTwo">
                             <h4 class="panel-title">
                                 <a class="collapsed" data-toggle="collapse" data-parent="#accordion"
-                                   href="#collapse2" aria-expanded="false" aria-controls="collapseTwo">
+                                   href="#collapse2" aria-expanded="false" aria-controls="collapse2"
+                                   data-value="cash-on-delivery">
                                     <span class="dot"></span> Cash on Delivery
                                 </a>
 
@@ -157,7 +163,8 @@
                         <div class="panel-heading" role="tab" id="headingThree">
                             <h4 class="panel-title">
                                 <a class="collapsed" data-toggle="collapse" data-parent="#accordion"
-                                   href="#collapse3" aria-expanded="false" aria-controls="collapseThree">
+                                   href="#collapse3" aria-expanded="false" aria-controls="collapse3"
+                                   data-value="credit-card">
                                     <span class="dot"></span> Credit Card
                                 </a>
                                 <span class="overflowed pull-right">
@@ -176,7 +183,8 @@
                         <div class="panel-heading" role="tab" id="heading4">
                             <h4 class="panel-title">
                                 <a class="collapsed" data-toggle="collapse" data-parent="#accordion"
-                                   href="#collapse4" aria-expanded="false" aria-controls="collapse4">
+                                   href="#collapse4" aria-expanded="false" aria-controls="collapse4"
+                                   data-value="paypal">
                                     <span class="dot"></span> PayPal
                                 </a>
                                 <span class="overflowed pull-right"><img
