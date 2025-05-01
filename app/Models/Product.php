@@ -24,7 +24,7 @@ class Product extends Model
     protected $fillable = ['name', 'unit_price', 'discount_price', 'category_id', 'slug'];
 
     /**
-     * @return array
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      * php artisan scout:import "App\Models\Product"
      */
 //    public function toSearchableArray()

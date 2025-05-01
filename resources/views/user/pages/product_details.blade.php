@@ -280,5 +280,5 @@
 @endsection
 
 @push('js')
-    <script src="{{ asset('assets/user/js/product-details.js') }}"></script>
+
 @endpush

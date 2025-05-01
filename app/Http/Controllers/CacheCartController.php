@@ -384,7 +384,9 @@ class CacheCartController extends Controller
             // Update inventory
             ProductVariant::find($variant_id)?->decrement('inventory', $quantity);
         }
-
-        return response()->json(['status' => 'success', 'message' => 'Order submitted successfully.']);
+        // Forget old cart and price summery
+        //Cache::forget($this->cartKey);
+        //Cache::forget($this->priceSummeryKey);
+        return response()->json(['status' => 'success', 'message' => 'Your order has been submitted successfully.']);
     }
 }

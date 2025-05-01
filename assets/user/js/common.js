@@ -5,7 +5,7 @@
     function performSearch() {
         let query = $('#searchInput').val().trim();
         if (query !== '') {
-            window.location.href = base_url+'/search-results?search=' + encodeURIComponent(query);
+            window.location.href = base_url + '/search-results?search=' + encodeURIComponent(query);
         }
     }
 
@@ -28,62 +28,44 @@
 
         axios.get(base_url + '/single-product-info/' + productId)
             .then(function (response) {
-                const product = response.data.product;
-                const images = product.images;
-
-                let carouselItems = '';
-                let thumbnails = '';
-
-                images.forEach((image, index) => {
-                    carouselItems += `
-                    <div class="item">
-                        <a class="btn btn-theme btn-theme-transparent btn-zoom" href="${image.image_path}"
-                           data-gal="prettyPhoto"><i class="fa fa-plus"></i></a>
-                        <a href="${image.image_path}" data-gal="prettyPhoto">
-                            <img class="img-responsive" src="${image.image_path}" alt=""/>
-                        </a>
-                    </div>`;
-
-                    thumbnails += `
-                    <div class="col-xs-2 col-sm-2 col-md-3">
-                        <a href="#" onclick="jQuery('.img-carousel').trigger('to.owl.carousel', [${index}, 300]);">
-                            <img src="${image.image_path}" alt=""/>
-                        </a>
-                    </div>`;
-                });
-
-                const productInfo = `
-                <div class="row product-single">
-                    <div class="col-md-6">
-                        <div class="owl-carousel img-carousel img-carousel2">${carouselItems}</div>
-                        <div class="row product-thumbnails">${thumbnails}</div>
-                    </div>
-                    <div class="col-md-6">
-                        <!-- You can dynamically insert product.title, price, etc. here -->
-                        <h2 class="product-title">${product.name}</h2>
-                        <div class="product-price">TK: ${product.price}</div>
-                        <!-- more dynamic content here... -->
-                    </div>
-                </div>`;
-
-                $('#productInfo').html(productInfo);
-
-                // re-init carousel
-                $(".img-carousel").owlCarousel({
+                $('#productInfo').empty().html(response.data.html);
+                // Re-init Owl Carousel
+                $('#productInfo .owl-carousel').owlCarousel({
                     items: 1,
+                    loop: true,
+                    margin: 10,
                     nav: true,
-                    dots: false,
+                    dots: true,
                     autoplay: true,
-                    loop: true
+                    autoplayTimeout: 3000,
+                    navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"]
                 });
-
+                // Re-init PrettyPhoto
+                $('#productInfo a[data-gal="prettyPhoto"]').prettyPhoto({
+                    theme: 'facebook',
+                    social_tools: false
+                });
+                // Show the modal
                 $("#productView").modal("show");
+                // Get selected color name from title
+                const selectedColorName = $('.color-radio:checked')
+                    .siblings('label')
+                    .find('span')
+                    .attr('title') || '—';
+                // Get selected size name from label text
+                const selectedSizeName = $('.size-radio:checked')
+                    .siblings('label')
+                    .text()
+                    .trim() || '—';
+
+                // Update DOM with selected color and size names
+                $('h4.color-list span').text(selectedColorName);
+                $('h4.margin-size span').text(selectedSizeName);
             })
             .catch(function (error) {
                 console.error("Error loading product view:", error);
             });
     });
-
 
     function assetUrl(path) {
         return base_url + '/' + path.replace(/^\/+/, '');

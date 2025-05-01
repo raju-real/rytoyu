@@ -309,7 +309,7 @@
     <div id="to-top" class="to-top"><i class="fa fa-angle-up"></i></div>
 </div>
 <!-- /WRAPPER -->
-<!-- product -datails modal -->
+<!-- product -details modal -->
 <div class="modal" id="productView" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-lg custom-modal" role="document">
         <div class="modal-content">
@@ -343,6 +343,7 @@
 <script src="{{ asset('assets/admin/js/axios.js') }}"></script>
 <script src="{{ asset('assets/admin/js/helpers.js') }}"></script>
 <script src="{{ asset('assets/user/js/common.js') }}"></script>
+{{--<script src="{{ asset('assets/user/js/product-details.js') }}"></script>--}}
 <script src="{{ asset('assets/user/js/checkout_manage.js') }}"></script>
 @stack('js')
 </body>

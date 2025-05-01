@@ -36,16 +36,10 @@ class HomePageController extends Controller
 
     public function singleProductInfo($product_id)
     {
-        $data = Product::active()->findOrFail($product_id);
-        $product['category_name'] = $data->category->name ?? '';
-        $product['subcategory'] = $data->subcategory->name ?? '';
-        $product['sub_subcategory'] = $data->sub_subcategory->name ?? '';
-        $product['brand'] = $data->brand->name ?? '';
-        $product['thumbnail_path'] = $data->thumbnail_path ?? '';
-        $product['images'] = $data->images;
+        $product = Product::active()->findOrFail($product_id);
 
         $html = view('user.pages.single_product_view', compact('product'))->render();
-        return response()->json(['html' => $html, 'product' => $product]);
+        return response()->json(['html' => $html]);
     }
 
     public function productDetails($slug = null)

@@ -18,14 +18,12 @@ Route::controller(\App\Http\Controllers\HomePageController::class)->group(functi
     Route::get('search-results', 'searchProduct')->name('search-products');
     Route::get('single-product-info/{product_id}', 'singleProductInfo')->name('single-product-info');
     Route::get('product-details/{slug}', 'productDetails')->name('product-details');
-
     // Authentication Part
-    Route::get('register','userRegisterPage')->name('register');
-    Route::post('user-register','userRegistration')->name('user-register');
-    Route::get('login','userLoginPage')->name('login');
-    Route::post('user-login','userLogin')->name('user-login');
+    Route::get('register', 'userRegisterPage')->name('register');
+    Route::post('user-register', 'userRegistration')->name('user-register');
+    Route::get('login', 'userLoginPage')->name('login');
+    Route::post('user-login', 'userLogin')->name('user-login');
 });
-
 // Cart and Order
 Route::controller(\App\Http\Controllers\CacheCartController::class)->group(function () {
     Route::get('cart-items', 'getCartItems')->name('cart-items');
@@ -37,20 +35,27 @@ Route::controller(\App\Http\Controllers\CacheCartController::class)->group(funct
     Route::delete('flush-cache', 'flushCache')->name('clear-cart');
     // Checkout and Order
     Route::middleware('auth')->group(function () {
-        Route::get('checkout','checkout')->name('checkout');
-        Route::post('apply-coupon','applyCoupon')->name('apply-coupon');
-        Route::get('price-summery','getPriceSummery')->name('price-summery');
-        Route::get('load-price-summery','loadPriceSummery')->name('load-price-summery');
-        Route::get('checkout-products','getCheckoutProducts')->name('checkout-products');
-        Route::post('submit-order','submitOrder')->name('submit-order');
+        Route::get('checkout', 'checkout')->name('checkout');
+        Route::post('apply-coupon', 'applyCoupon')->name('apply-coupon');
+        Route::get('price-summery', 'getPriceSummery')->name('price-summery');
+        Route::get('load-price-summery', 'loadPriceSummery')->name('load-price-summery');
+        Route::get('checkout-products', 'getCheckoutProducts')->name('checkout-products');
+        Route::post('submit-order', 'submitOrder')->name('submit-order');
+    });
+});
+// User Part
+Route::middleware('auth')->group(function () {
+    Route::controller(\App\Http\Controllers\User\ProfileController::class)->group(function () {
+        Route::get('user-profile', 'profile')->name('user-profile');
+        Route::get('change-password', 'profile')->name('change-password');
+        Route::get('user-logout', 'logout')->name('user-logout');
     });
 
-});
+    Route::controller(\App\Http\Controllers\User\OrderController::class)->group(function () {
+        Route::get('order-list', 'orderList')->name('order-list');
+        Route::get('order-details/{invoice}', 'orderDetails')->name('order-details');
+    });
 
-// User Part
-Route::controller(\App\Http\Controllers\User\ProfileController::class)->middleware('auth')->group(function () {
-   Route::get('user-profile','profile')->name('user-profile');
-   Route::get('user-logout','logout')->name('user-logout');
 });
 
 

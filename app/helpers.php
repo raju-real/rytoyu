@@ -359,6 +359,13 @@ if (!function_exists('isSubMenuActive')) {
     }
 }
 
+if (!function_exists('isActive')) {
+    function isActive(string $segment): string
+    {
+        return request()->segment(1) === $segment ? 'active' : '';
+    }
+}
+
 if (!function_exists('generateVerificationCode')) {
     function generateVerificationCode(): int
     {
