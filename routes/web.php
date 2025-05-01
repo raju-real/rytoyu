@@ -17,6 +17,7 @@ Route::controller(\App\Http\Controllers\HomePageController::class)->group(functi
     Route::get('/', 'home')->name('home');
     Route::get('search-results', 'searchProduct')->name('search-products');
     Route::get('single-product-info/{product_id}', 'singleProductInfo')->name('single-product-info');
+    Route::get('product-lists','products')->name('product-lists');
     Route::get('product-details/{slug}', 'productDetails')->name('product-details');
     // Authentication Part
     Route::get('register', 'userRegisterPage')->name('register');

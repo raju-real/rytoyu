@@ -1,319 +1,404 @@
 @extends('user.layouts.app')
-@section('title','Home')
+@section('title',$heading_title ?? 'All PRODUCTS')
 @push('css') @endpush
 
 @section('content')
-    <!-- PAGE -->
-    <section class="page-section no-padding slider slider-banner">
-        <div class="container full-width">
-            <div class="main-slider">
-                <div class="owl-carousel" id="main-slider">
-                    <!-- Slide item -->
-                    @foreach(activeSliders() as $slider)
-                        <div class="item slide1">
-                            <img class="slide-img" src="{{ asset($slider->image_path) }}" alt=""/>
-                            <div class="caption">
-                                <div class="container">
-                                    <div class="div-table">
-                                        <div class="div-cell">
-                                            <div class="caption-content">
-                                                <h2 class="caption-title">{{ $slider->title ?? '' }}</h2>
-                                                <h3 class="caption-subtitle">{{ $slider->highlighted_title ?? '' }} </h3>
-                                                <h5 class="sale-p">{{ $slider->caption ?? '' }}
-                                                    <label class="orange-text">
-                                                        {{ $slider->highlighted_caption ?? '' }}
-                                                        <span>
-                                                            <img src="{{ asset('assets/user/img/border.png') }}"
-                                                                 alt="img">
-                                                         </span>
-                                                    </label>
-                                                </h5>
-                                                <p class="caption-text">
-                                                    <a class="btn btn-theme"
-                                                       href="#">{{ $slider->button_name ?? '' }}</a>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+   <!-- BREADCRUMBS -->
+            <section class="page-section breadcrumbs">
+               <div class="container">
+                  <div class="page-header">
+                     <h1>{{ $heading_title ?? 'All PRODUCTS' }}</h1>
+                  </div>
+                  <ul class="breadcrumb">
+                     <li><a href="{{ route('home') }}">Home</a></li>
+                     <li class="active">{{ $heading_title ?? 'All PRODUCTS' }}</li>
+                  </ul>
+               </div>
+            </section>
+            <!-- /BREADCRUMBS -->
+            <!-- PAGE WITH SIDEBAR -->
+            <section class="page-section with-sidebar mt-40">
+               <div class="container">
+                  <div class="row">
+                     <!-- SIDEBAR -->
+                     <aside class="col-md-3 sidebar" id="sidebar">
+                        <!-- widget search -->
+                        <div class="widget ">
+                           <div class="widget-search">
+                              <input class="form-control" type="text" placeholder="Search">
+                              <button><i class="fa fa-search"></i></button>
+                           </div>
                         </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-        @if(count(latestAnnouncements()))
-            <div class="notification-offer">
-                <marquee behavior="scroll" direction="right" scrollamount="3">
-                    <ul class="ul-m">
-                        @foreach(latestAnnouncements() as $announcement)
-                            <li>{{ $announcement->title ?? '' }}
-                                <strong>{{ $announcement->highlighted_title ?? '' }}</strong></li>
-                        @endforeach
-                    </ul>
-                </marquee>
-            </div>
-        @endif
-        <div>
-        </div>
-    </section>
-    <!-- /PAGE -->
-    <!-- New in -->
-    <section class="page-section col-md-12 p-0">
-        <div class="container-fluid p-0">
-            <h2 class="section-title"><span>New in</span></h2>
-            <p class="text-center p-destails">Because the best looks don't wait. Discover the latest arrivals.</p>
-            <div class="top-products-carousel">
-                <div class="owl-carousel slider-c-custom" id="top-products-carouselt">
-                    @foreach(getNewInProducts() as $product)
-                        <div class="thumbnail no-border no-padding">
-                            <div class="media">
-                                <img class="img-sl" src="{{ asset($product->thumbnail_path) }}" alt=""/>
-                                <button class="btn orange-bg view-btn product-view"
-                                        data-product-id="{{ $product->id }}"><i
-                                        class="fa-regular fa-eye"></i></button>
-                            </div>
-                            <div class="caption text-center">
-                                <h4 class="caption-title"><a
-                                        href="{{ route('product-details',$product->slug) }}">{{ $product->name ?? '' }}</a>
-                                </h4>
-                                <p class="p-title">{{ $product->brand->name ?? '' }}</p>
-                                @if($product->discount_price > 0)
-                                    <div class="price">
-                                        <ins>TK: {{ $product->discount_price }}</ins>
-                                        <del>TK: {{ $product->unit_price }}</del>
-                                    </div>
-                                @else
-                                    <div class="price">
-                                        <ins>TK: {{ $product->unit_price }}</ins>
-                                    </div>
-                                @endif
-                            </div>
+                        <!-- /widget search -->
+                        <!-- widget shop categories -->
+                        <div class="widget shop-categories mt-10">
+                           <h4 class="widget-title">Categories</h4>
+                           <div class="widget-content">
+                              <ul>
+                                 <li>
+                                    <a href="#" class="orange-text"><strong>MEN</strong></a>
+                                    <ul class="children">
+                                       <li>
+                                          <a href="#">Sweaters & Knits
+                                          <span class="count">12</span>
+                                          </a>
+                                       </li>
+                                       <li>
+                                          <a href="#">Denim
+                                          <span class="count">12</span>
+                                          </a>
+                                       </li>
+                                       <li>
+                                          <a href="#">Pants
+                                          <span class="count">12</span>
+                                          </a>
+                                       </li>
+                                       <li>
+                                          <a href="#">Shorts
+                                          <span class="count">12</span>
+                                          </a>
+                                       </li>
+                                    </ul>
+                                 </li>
+                                 <li>
+                                    <a href="#" class="orange-text"><strong>WOMEN</strong></a>
+                                    <ul class="children">
+                                       <li>
+                                          <a href="#">Sweaters & Knits
+                                          <span class="count">12</span>
+                                          </a>
+                                       </li>
+                                       <li>
+                                          <a href="#">Jackets & Coats
+                                          <span class="count">12</span>
+                                          </a>
+                                       </li>
+                                       <li>
+                                          <a href="#">Denim
+                                          <span class="count">12</span>
+                                          </a>
+                                       </li>
+                                       <li>
+                                          <a href="#">Pants
+                                          <span class="count">12</span>
+                                          </a>
+                                       </li>
+                                       <li>
+                                          <a href="#">Shorts
+                                          <span class="count">12</span>
+                                          </a>
+                                       </li>
+                                    </ul>
+                                 </li>
+                                 <li>
+                                    <a href="#" class="orange-text"><strong>KIDS</strong></a>
+                                    <ul class="children">
+                                       <li>
+                                          <a href="#">Sweaters & Knits
+                                          <span class="count">12</span>
+                                          </a>
+                                       </li>
+                                       <li>
+                                          <a href="#">Jackets & Coats
+                                          <span class="count">12</span>
+                                          </a>
+                                       </li>
+                                       <li>
+                                          <a href="#">Denim
+                                          <span class="count">12</span>
+                                          </a>
+                                       </li>
+                                       <li>
+                                          <a href="#">Pants
+                                          <span class="count">12</span>
+                                          </a>
+                                       </li>
+                                       <li>
+                                          <a href="#">Shorts
+                                          <span class="count">12</span>
+                                          </a>
+                                       </li>
+                                    </ul>
+                                 </li>
+                                 <li>
+                                    <a href="#" class="orange-text"><strong>TOP SELLERS</strong></a>
+                                    <ul class="children">
+                                       <li>
+                                          <a href="#">Sweaters & Knits
+                                          <span class="count">12</span>
+                                          </a>
+                                       </li>
+                                       <li>
+                                          <a href="#">Jackets & Coats
+                                          <span class="count">12</span>
+                                          </a>
+                                       </li>
+                                       <li>
+                                          <a href="#">Denim
+                                          <span class="count">12</span>
+                                          </a>
+                                       </li>
+                                       <li>
+                                          <a href="#">Pants
+                                          <span class="count">12</span>
+                                          </a>
+                                       </li>
+                                       <li>
+                                          <a href="#">Shorts
+                                          <span class="count">12</span>
+                                          </a>
+                                       </li>
+                                    </ul>
+                                 </li>
+                              </ul>
+                           </div>
                         </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- end new in -->
-    <!-- edit  -->
-    <section class="edit-area col-md-12 p-0">
-        <div class="container">
-            <div class="col-md-12 text-center">
-                <h2 class="section-title"><span>Edits</span></h2>
-                <p class="text-center p-destails">Curated collection for every vibe. Find your perfect fit for any
-                    occasion.</p>
-            </div>
-        </div>
-        <div class="edit-list">
-            @foreach(getProductTypes() as $product_type)
-                <div class="edit-block">
-                    <img src="{{ asset($product_type->image) }}" alt="img">
-                    <div class="edit-details">
-                        <h3>{{ $product_type->name ?? '' }}</h3>
-                        <div class="btn-row">
-                            @foreach($product_type->categories as $category)
-                                <button class="btn btn-shop orange-bg">SHOP {{ $category->name ?? '' }}</button>
-                            @endforeach
+                        <!-- /widget shop categories -->
+                        <!-- widget  product filter -->
+                        <div class="widget shop-categories mt-10 p-filter pb-10">
+                           <h4>Filter by price</h4>
+                           <p class="range-filter">
+                              <label for="amount">Price:</label>
+                              TK:
+                              <input class="amount" id="amount_min" type="text">
+                              <span> -</span> TK:
+                              <input class="amount" id="amount_max" type="text">
+                           </p>
+                           <div id="slider-range" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
+                              <div class="ui-slider-range ui-corner-all ui-widget-header"></div>
+                           </div>
                         </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    </section>
-    <!--end edit -->
-    <!--Brands -->
-    <section class="page-section  col-md-12 p-0">
-        <div class="container-fluid p-0">
-            <h2 class="section-title"><span>Brands </span></h2>
-            <p class="text-center p-destails">From timeless classics to trendsetters, explore the brands that define
-                style.</p>
-            <div class="top-products-carousel">
-                <div class="owl-carousel slider-c-custom" id="top-products-carouselb">
-                    @foreach(getBrands() as $brand)
-                        <div class="thumbnail no-border no-padding">
-                            <div class="media">
-                                <img class="img-sl" src="{{ asset($brand->image) }}" alt=""/>
-                            </div>
-                            <img src="{{ asset($brand->logo) }}" class="brand-logo">
+                        <!-- /widget product price -->
+                        <!-- widget  BRAND -->
+                        <div class="widget shop-categories mt-10 p-filter">
+                           <h4>BRAND</h4>
+                           <div class="bran-radio">
+                              <div class="radio">
+                                 <div>
+                                    <input id="radio-1" class="radio-custom" name="radio-group" type="checkbox" checked>
+                                    <label for="radio-1" class="radio-custom-label">Xiaomi</label>
+                                 </div>
+                                 <div>
+                                    <input id="radio-2" class="radio-custom"name="radio-group" type="checkbox">
+                                    <label for="radio-2" class="radio-custom-label">Toshiba</label>
+                                 </div>
+                                 <div>
+                                    <input id="radio-3" class="radio-custom" name="radio-group" type="checkbox">
+                                    <label for="radio-3" class="radio-custom-label">Sonos</label>
+                                 </div>
+                                 <div>
+                                    <input id="radio-4" class="radio-custom" name="radio-group" type="checkbox">
+                                    <label for="radio-4" class="radio-custom-label">TP-LINK Technologies</label>
+                                 </div>
+                              </div>
+                           </div>
                         </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- end Latest offers -->
-    <!-- Latest offers -->
-    <section class="page-section  col-md-12 p-0">
-        <div class="container-fluid p-0">
-            <h2 class="section-title"><span>Latest offers </span></h2>
-            <p class="text-center p-destails">Style steals you can't miss!</p>
-            <div class="top-products-carousel">
-                <div class="owl-carousel slider-c-custom" id="top-products-carousel">
-                    <div class="thumbnail no-border no-padding">
-                        <div class="media">
-                            <img class="img-sl" src="assets/user/img/l1.png" alt=""/>
-                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
-                                    class="fa-regular fa-eye"></i></button>
+                        <!-- /widget BRAND -->
+                        <!-- widget  BRAND -->
+                        <div class="widget shop-categories mt-10 p-filter">
+                           <h4>STOCK STATUS</h4>
+                           <div class="bran-radio">
+                              <div class="radio">
+                                 <div>
+                                    <input id="radio-a" class="radio-custom" name="radio-group" type="radio" >
+                                    <label for="radio-a" class="radio-custom-label">YES</label>
+                                 </div>
+                                 <div>
+                                    <input id="radio-b" class="radio-custom"name="radio-group" type="radio">
+                                    <label for="radio-b" class="radio-custom-label">NO</label>
+                                 </div>
+                              </div>
+                           </div>
                         </div>
-                        <div class="caption text-center">
-                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a>
-                            </h4>
-                            <p class="p-title">Brand Name</p>
-                            <div class="price">
-                                <ins>TK:1,400.00</ins>
-                                <del>TK:1800.00</del>
-                            </div>
+                        <!-- /widget BRAND -->
+                     </aside>
+                     <!-- /SIDEBAR -->
+                     <!-- CONTENT -->
+                     <div class="col-md-9 content">
+                        <div class="main-slider sub">
+                           <div class="owl-carousel" id="main-slider">
+                              <!-- Slide 1 -->
+                              <div class="item slide1 sub">
+                                 <img class="slide-img slide-i-2" src="assets/img/ca.png" alt=""/>
+                              </div>
+                              <!-- /Slide 1 -->
+                              <!-- Slide 2 -->
+                              <div class="item slide2 sub">
+                                 <img class="slide-img slide-i-2" src="assets/img/preview/slider/slide-1-sub.jpg" alt=""/>
+                              </div>
+                              <!-- /Slide 2 -->
+                           </div>
                         </div>
-                    </div>
-                    <div class="thumbnail no-border no-padding">
-                        <div class="media">
-                            <img class="img-sl" src="assets/user/img/l2.png" alt=""/>
-                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
-                                    class="fa-regular fa-eye"></i></button>
+                        <!-- shop-sorting -->
+                        <div class="shop-sorting">
+                           <div class="row">
+                              <div class="col-sm-3 text-left-sm">
+                                 <a class="btn btn-theme btn-theme-transparent btn-theme-sm grid-style" href="#"><i class="fa-solid fa-bars"></i></a>
+{{--                                 <a class="btn btn-theme btn-theme-transparent btn-theme-sm grid-style2" href="#"><i class="fa-solid fa-list"></i></a>--}}
+                              </div>
+                              <div class="col-sm-9">
+                                 <div class="radio price-p">
+                                 <div class="price-block">
+                                    <input id="radio-c" class="radio-custom" name="radio-group" checked type="checkbox" >
+                                    <label for="radio-c" class="radio-custom-label">Less than: 500</label>
+                                 </div>
+                                   <div class="price-block">
+                                    <input id="radio-d" class="radio-custom"name="radio-group" type="checkbox">
+                                    <label for="radio-d" class="radio-custom-label">Less than: 1,500</label>
+                                 </div>
+                                  <div class="price-block">
+                                    <input id="radio-e" class="radio-custom"name="radio-group" type="checkbox">
+                                    <label for="radio-e" class="radio-custom-label">Women</label>
+                                 </div>
+                                  <div class="price-block">
+                                    <input id="radio-f" class="radio-custom"name="radio-group" type="checkbox">
+                                    <label for="radio-f" class="radio-custom-label">Men</label>
+                                 </div>
+                              </div>
+                              </div>
+                           </div>
                         </div>
-                        <div class="caption text-center">
-                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a>
-                            </h4>
-                            <p class="p-title">Brand Name</p>
-                            <div class="price">
-                                <ins>TK:1,400.00</ins>
-                                <del>TK:1800.00</del>
-                            </div>
+                        <!-- /shop-sorting -->
+                        <!-- Products grid -->
+                        <div class="row products grid">
+                           <div class="col-md-4 cate-p">
+                              <div class="thumbnail no-border no-padding">
+                                 <div class="media">
+                                    <img class="img-sl" src="assets/img/s1.png" alt=""/>
+                                    <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i class="fa-regular fa-eye"></i></button>
+                                 </div>
+                                 <div class="caption text-center">
+                                    <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                                    <p class="p-title">Brand Name</p>
+                                    <div class="price"><ins>TK:1,400.00</ins><del>TK:1800.00</del></div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col-md-4 cate-p">
+                              <div class="thumbnail no-border no-padding">
+                                 <div class="media">
+                                    <img class="img-sl" src="assets/img/s1.png" alt=""/>
+                                    <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i class="fa-regular fa-eye"></i></button>
+                                 </div>
+                                 <div class="caption text-center">
+                                    <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                                    <p class="p-title">Brand Name</p>
+                                    <div class="price"><ins>TK:1,400.00</ins><del>TK:1800.00</del></div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col-md-4 cate-p">
+                              <div class="thumbnail no-border no-padding">
+                                 <div class="media">
+                                    <img class="img-sl" src="assets/img/s2.png" alt=""/>
+                                    <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i class="fa-regular fa-eye"></i></button>
+                                 </div>
+                                 <div class="caption text-center">
+                                    <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                                    <p class="p-title">Brand Name</p>
+                                    <div class="price"><ins>TK:1,400.00</ins><del>TK:1800.00</del></div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col-md-4 cate-p">
+                              <div class="thumbnail no-border no-padding">
+                                 <div class="media">
+                                    <img class="img-sl" src="assets/img/s3.png" alt=""/>
+                                    <button class="btn orange-bg view-btn"  data-toggle="modal" data-target="#addcart"><i class="fa-regular fa-eye"></i></button>
+                                 </div>
+                                 <div class="caption text-center">
+                                    <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                                    <p class="p-title">Brand Name</p>
+                                    <div class="price"><ins>TK:1,400.00</ins><del>TK:1800.00</del></div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col-md-4 cate-p">
+                              <div class="thumbnail no-border no-padding">
+                                 <div class="media">
+                                    <img class="img-sl" src="assets/img/s4.png" alt=""/>
+                                    <button class="btn orange-bg view-btn"  data-toggle="modal" data-target="#addcart"><i class="fa-regular fa-eye"></i></button>
+                                 </div>
+                                 <div class="caption text-center">
+                                    <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                                    <p class="p-title">Brand Name</p>
+                                    <div class="price"><ins>TK:1,400.00</ins></div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col-md-4 cate-p">
+                              <div class="thumbnail no-border no-padding">
+                                 <div class="media">
+                                    <img class="img-sl" src="assets/img/s5.png" alt=""/>
+                                    <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i class="fa-regular fa-eye"></i></button>
+                                 </div>
+                                 <div class="caption text-center">
+                                    <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                                    <p class="p-title">Brand Name</p>
+                                    <div class="price"><ins>TK:1,400.00</ins></div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col-md-4 cate-p">
+                              <div class="thumbnail no-border no-padding">
+                                 <div class="media">
+                                    <img class="img-sl" src="assets/img/l1.png" alt=""/>
+                                    <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i class="fa-regular fa-eye"></i></button>
+                                 </div>
+                                 <div class="caption text-center">
+                                    <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                                    <p class="p-title">Brand Name</p>
+                                    <div class="price"><ins>TK:1,400.00</ins></div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col-md-4 cate-p">
+                              <div class="thumbnail no-border no-padding">
+                                 <div class="media">
+                                    <img class="img-sl" src="assets/img/l2.png" alt=""/>
+                                    <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i class="fa-regular fa-eye"></i></button>
+                                 </div>
+                                 <div class="caption text-center">
+                                    <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                                    <p class="p-title">Brand Name</p>
+                                    <div class="price"><ins>TK:1,400.00</ins></div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col-md-4 cate-p">
+                              <div class="thumbnail no-border no-padding">
+                                 <div class="media">
+                                    <img class="img-sl" src="assets/img/l3.png" alt=""/>
+                                    <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i class="fa-regular fa-eye"></i></button>
+                                 </div>
+                                 <div class="caption text-center">
+                                    <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a></h4>
+                                    <p class="p-title">Brand Name</p>
+                                    <div class="price"><ins>TK:1,400.00</ins></div>
+                                 </div>
+                              </div>
+                           </div>
+                           <!-- end Related Products  -->
                         </div>
-                    </div>
-                    <div class="thumbnail no-border no-padding">
-                        <div class="media">
-                            <img class="img-sl" src="assets/user/img/s5.png" alt=""/>
-                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
-                                    class="fa-regular fa-eye"></i></button>
+                        <!-- /Products grid -->
+                        <!-- Pagination -->
+                        <div class="pagination-wrapper text-center">
+                           <ul class="pagination">
+                              <li class=""><a href="#"><i class="fa fa-angle-double-left"></i> </a></li>
+                              <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+                              <li><a href="#">2</a></li>
+                              <li><a href="#">3</a></li>
+                              <li><a href="#">4</a></li>
+                              <li><a href="#"> <i class="fa fa-angle-double-right"></i></a></li>
+                           </ul>
                         </div>
-                        <div class="caption text-center">
-                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a>
-                            </h4>
-                            <p class="p-title">Brand Name</p>
-                            <div class="price">
-                                <ins>TK:1,400.00</ins>
-                                <del>TK:1800.00</del>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="thumbnail no-border no-padding">
-                        <div class="media">
-                            <img class="img-sl" src="assets/user/img/l3.png" alt=""/>
-                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
-                                    class="fa-regular fa-eye"></i></button>
-                        </div>
-                        <div class="caption text-center">
-                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a>
-                            </h4>
-                            <p class="p-title">Brand Name</p>
-                            <div class="price">
-                                <ins>TK:1,400.00</ins>
-                                <del>TK:1800.00</del>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="thumbnail no-border no-padding">
-                        <div class="media">
-                            <img class="img-sl" src="assets/user/img/s3.png" alt=""/>
-                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
-                                    class="fa-regular fa-eye"></i></button>
-                        </div>
-                        <div class="caption text-center">
-                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a>
-                            </h4>
-                            <p class="p-title">Brand Name</p>
-                            <div class="price">
-                                <ins>TK:1,400.00</ins>
-                                <del>TK:1800.00</del>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- end Latest offers -->
-    <!-- Just for you -->
-    <section class="page-section  col-md-12 p-0">
-        <div class="container-fluid p-0">
-            <h2 class="section-title"><span>Just for you  </span></h2>
-            <p class="text-center p-destails">Your wardrobe upgrade starts here.</p>
-            <div class="top-products-carousel">
-                <div class="owl-carousel slider-c-custom" id="top-products-carouselj">
-                    @foreach(getUserSearchProducts() as $product)
-                        <div class="thumbnail no-border no-padding">
-                            <div class="media">
-                                <img class="img-sl" src="{{ asset($product->thumbnail_path) }}" alt=""/>
-                                <button class="btn orange-bg view-btn product-view"
-                                        data-product-id="{{ $product->id }}"><i
-                                        class="fa-regular fa-eye"></i></button>
-                            </div>
-                            <div class="caption text-center">
-                                <h4 class="caption-title"><a
-                                        href="{{ route('product-details',$product->slug) }}">{{ $product->name ?? '' }}</a>
-                                </h4>
-                                <p class="p-title">{{ $product->brand->name ?? '' }}</p>
-                                @if($product->discount_price > 0)
-                                    <div class="price">
-                                        <ins>TK: {{ $product->discount_price }}</ins>
-                                        <del>TK: {{ $product->unit_price }}</del>
-                                    </div>
-                                @else
-                                    <div class="price">
-                                        <ins>TK: {{ $product->unit_price }}</ins>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- end Just for you -->
-    <!-- become a partner -->
-    <section class="offter-block-list">
-        <div class="row m-0">
-            <div class="col-md-4 p-0">
-                <div class="alll-offer-list bg-gray">
-                    <div class="icon-offer"><img src="assets/user/img/off1.svg" alt="icon"></div>
-                    <div class="offer-details">
-                        <p>
-                            <strong>Sing up to receive special offers:</strong>
-                            Unlock exclusive deals and the latest trends.</p>
-                        <button class="btn orange-bg"><span>Join Now</span></button>
-                    </div>
-                    <img class="shape" src="assets/user/img/shape.svg" alt="">
-                </div>
-            </div>
-            <div class="col-md-4 p-0">
-                <div class="alll-offer-list bg-gray">
-                    <div class="icon-offer"><img src="assets/user/img/off2.svg" alt="icon"></div>
-                    <div class="offer-details">
-                        <p>
-                            <strong>Become a partner: </strong>
-                            Grow your brand with us and reach fashion lovers across Bangladesh.
-                        </p>
-                        <button class="btn orange-bg"><span>Apply</span></button>
-                    </div>
-                    <img class="shape" src="assets/user/img/shape.svg" alt="">
-                </div>
-            </div>
-            <div class="col-md-4 p-0">
-                <div class="alll-offer-list bg-gray">
-                    <div class="icon-offer"><img src="assets/user/img/off3.svg" alt="icon"></div>
-                    <div class="offer-details">
-                        <p><strong>Join our team:</strong> Be part of something big-shape the future of fashion with
-                            Rytoyu! </p>
-                        <button class="btn orange-bg"><span>Apply</span></button>
-                    </div>
-                    <img class="shape" src="assets/user/img/shape.svg" alt="">
-                </div>
-            </div>
-        </div>
-    </section>
+                        <!-- /Pagination -->
+                     </div>
+                     <!-- /CONTENT -->
+                  </div>
+               </div>
+            </section>
+            <!-- /PAGE WITH SIDEBAR -->
     <!-- end become a partner -->
     <div class="clearfix"></div>
 @endsection

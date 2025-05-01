@@ -33,6 +33,11 @@ class HomePageController extends Controller
         return view('user.pages.search-result', compact('products', 'searchParam'));
     }
 
+    public function products()
+    {
+        return view('user.pages.products');
+    }
+
 
     public function singleProductInfo($product_id)
     {
