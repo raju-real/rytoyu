@@ -114,14 +114,14 @@
             quantity: quantity
         }).then(function (response) {
             if (response.data.status === 'success') {
-                alert(response.data.message); // Or use toast/notification
+                AppHelpers.showToast("success", response.data.message);
                 loadMiniCartItem();
             } else {
-                alert(response.data.message);
+                AppHelpers.showToast("danger", response.data.message);
             }
         }).catch(function (error) {
             console.error(error);
-            alert('Something went wrong!');
+            AppHelpers.showToast("danger", 'Something went wrong!');
         });
     }
 
@@ -189,7 +189,8 @@
                 },
                 error: function (error) {
                     console.log(error);
-                    alert('Something went wrong!');
+
+                    AppHelpers.showToast('danger', 'Something went wrong!');
                 }
             });
         });
@@ -234,7 +235,7 @@
                 },
                 error: function (error) {
                     console.log(error);
-                    alert('Something went wrong!');
+                    AppHelpers.showToast('danger', 'Something went wrong!');
                 }
             });
         });
@@ -247,7 +248,7 @@
                 })
                 .catch(error => {
                     console.error(error);
-                    alert('Failed to reload cart data.');
+                    AppHelpers.showToast('danger','Failed to reload cart data.');
                 });
         }
 
@@ -258,7 +259,7 @@
                 })
                 .catch(error => {
                     console.error(error);
-                    alert('Failed to reload price summery data data.');
+                    AppHelpers.showToast('danger','Failed to reload price summery data data.');
                 });
         }
 

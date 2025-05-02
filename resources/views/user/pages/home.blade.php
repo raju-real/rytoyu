@@ -29,8 +29,13 @@
                                                     </label>
                                                 </h5>
                                                 <p class="caption-text">
-                                                    <a class="btn btn-theme"
-                                                       href="#">{{ $slider->button_name ?? '' }}</a>
+                                                    @if(isset($slider->redirect_link))
+                                                        <a class="btn btn-theme"
+                                                           href="{{ $slider->redirect_link }}" target="_blank">{{ $slider->button_name ?? '' }}</a>
+                                                    @else
+                                                        <a class="btn btn-theme"
+                                                           href="{{ route('product-lists',['slider' => $slider->slug]) }}">{{ $slider->button_name ?? '' }}</a>
+                                                    @endif
                                                 </p>
                                             </div>
                                         </div>

@@ -22,19 +22,14 @@
     <!-- Theme CSS -->
     <link href="{{ asset('assets/user/css/theme.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/user/css/theme-green-1.css') }}" rel="stylesheet" id="theme-config-link">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
     <!-- Head Libs -->
     <script src="{{ asset('assets/user/plugins/modernizr.custom.js') }}"></script>
     <!--[if lt IE 9]>
     <script src="{{ asset('assets/user/plugins/iesupport/html5shiv.js') }}"></script>
     <script src="{{ asset('assets/user/plugins/iesupport/respond.min.js') }}"></script>
     <![endif]-->
-    {{--    <script>--}}
-    {{--        if (!localStorage.getItem('cart_uid')) {--}}
-    {{--            const uid = crypto.randomUUID();--}}
-    {{--            localStorage.setItem('cart_uid', uid);--}}
-    {{--            document.cookie = "cart_uid=" + uid + "; max-age=" + (60 * 60 * 24 * 15) + "; path=/";--}}
-    {{--        }--}}
-    {{--    </script>--}}
+
 </head>
 <body id="home" class="wide">
 <!-- PRELOADER -->
@@ -184,7 +179,8 @@
                 <!-- Header search -->
                 <div class="header-search">
                     <input id="searchInput" name="search" class="form-control" type="text"
-                           placeholder="Search for products, brands and more"/>
+                           placeholder="Search for products, brands and more"
+                           value="{{ implode(' ', session('search_keywords_' . session('user_search_key'), [])) }}"/>
                     <button id="searchBtn"><i class="fa fa-search"></i></button>
                 </div>
                 <!-- /Header search -->
@@ -339,6 +335,7 @@
 <script src="{{ asset('assets/user/js/theme.js') }}"></script>
 <!--[if (gte IE 9)|!(IE)]><!-->
 <script src="{{ asset('assets/user/plugins/jquery.cookie.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <!--<![endif]-->
 <script src="{{ asset('assets/admin/js/axios.js') }}"></script>
 <script src="{{ asset('assets/admin/js/helpers.js') }}"></script>

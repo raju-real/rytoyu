@@ -647,6 +647,67 @@ if (!function_exists('getBrands')) {
     }
 }
 
+if (!function_exists('getActiveCategories')) {
+    function getActiveCategories()
+    {
+        return \App\Models\Category::active()->sort()->select('id', 'name', 'slug')->get();
+    }
+}
+
+if (!function_exists('getActiveSubCategories')) {
+    function getActiveSubCategories($category_id = null)
+    {
+        $subcategory = \App\Models\SubCategory::query();
+        if(isset($category_id)) {
+            $subcategory->where('category_id',$category_id);
+        }
+        return $subcategory->active()->sort()->select('id', 'name', 'slug')->orderBy('name')->get();
+    }
+}
+
+// Product counts
+if (!function_exists('productCountBySeller')) {
+    function productCountBySeller($seller_id = null)
+    {
+        return Product::where('seller_id',$seller_id)->count() ?? 0;
+    }
+}
+
+if (!function_exists('productCountByType')) {
+    function productCountByType($type_id = null)
+    {
+        return Product::where('product_type_id',$type_id)->count() ?? 0;
+    }
+}
+
+if (!function_exists('productCountByCategory')) {
+    function productCountByCategory($category_id = null)
+    {
+        return Product::where('category_id',$category_id)->count() ?? 0;
+    }
+}
+
+if (!function_exists('productCountBySubCategory')) {
+    function productCountBySubCategory($subcategory_id = null)
+    {
+        return Product::where('subcategory_id',$subcategory_id)->count() ?? 0;
+    }
+}
+
+if (!function_exists('productCountBySubSubCategory')) {
+    function productCountBySubSubCategory($sub_subcategory_id = null)
+    {
+        return Product::where('sub_subcategory_id',$sub_subcategory_id)->count() ?? 0;
+    }
+}
+
+if (!function_exists('productCountByBrand')) {
+    function productCountByBrand($brand_id = null)
+    {
+        return Product::where('brand_id',$brand_id)->count() ?? 0;
+    }
+}
+
 // Search control and cookie control
 if (!function_exists('trackUserSearchKeyword')) {
     function trackUserSearchKeyword($searchParam)
@@ -680,28 +741,7 @@ if (!function_exists('getUserSearchKeywords')) {
     }
 }
 
-// actual search results from cookie keywords
-//if (!function_exists('getUserSearchProducts')) {
-//    function getUserSearchProducts()
-//    {
-//        $searchKey = request()->cookie('user_search_key');
-//        if (!$searchKey) return collect(); // fallback empty collection
-//
-//        $keywords = json_decode(request()->cookie("search_keywords_{$searchKey}"), true) ?? [];
-//
-//        // Clean and prepare
-//        $keywords = array_filter($keywords, fn($term) => is_string($term) && trim($term) !== '');
-//        if (empty($keywords)) return collect();
-//
-//        // Convert keywords to a single search string
-//        $searchString = implode(' ', array_map('trim', $keywords));
-//
-//        // Use MATCH ... AGAINST
-//        return Product::whereRaw("MATCH(name) AGAINST (? IN BOOLEAN MODE)", [$searchString])
-//            ->take(16)
-//            ->get();
-//    }
-//}
+
 
 if (!function_exists('getUserSearchProducts')) {
     function getUserSearchProducts()

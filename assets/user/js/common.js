@@ -5,7 +5,7 @@
     function performSearch() {
         let query = $('#searchInput').val().trim();
         if (query !== '') {
-            window.location.href = base_url + '/search-results?search=' + encodeURIComponent(query);
+            window.location.href = base_url + '/product-lists?search=' + encodeURIComponent(query);
         }
     }
 

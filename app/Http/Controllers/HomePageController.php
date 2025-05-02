@@ -2,7 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Product;
+use App\Models\Slider;
+use App\Models\SliderProduct;
+use App\Models\SubCategory;
+use App\Models\SubSubcategory;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +21,6 @@ class HomePageController extends Controller
 {
     public function home()
     {
-         //return getUserSearchProducts();
         return view('user.pages.home');
     }
 
@@ -23,19 +28,103 @@ class HomePageController extends Controller
     {
         $searchParam = request()->get('search');
         if (!$searchParam) return redirect()->back();
-
         // Track search
         trackUserSearchKeyword($searchParam);
-
         // Search products
-        return $products = Product::whereRaw("MATCH(name) AGAINST (? IN BOOLEAN MODE)", [$searchParam])->get();
-
-        return view('user.pages.search-result', compact('products', 'searchParam'));
+        $products = Product::whereRaw("MATCH(name) AGAINST (? IN BOOLEAN MODE)", [$searchParam])->paginate(30);
+        return view('user.pages.products', compact('products', 'searchParam'));
     }
 
     public function products()
     {
-        return view('user.pages.products');
+        $heading_title = '';
+        $banner_images = [];
+        $data = Product::query();
+        // Slider wise products
+        if (request()->has('slider')) {
+            $slider_slug = request()->get('slider');
+            $slider = Slider::whereSlug($slider_slug)->firstOrFail();
+            $slider_products = SliderProduct::where('slider_id', $slider->id)->pluck('product_id')->toArray();
+            $data->whereIn('id', $slider_products);
+            $heading_title = $slider->title;
+        }
+        // User search
+        if (request()->has('search')) {
+            $searchParam = request()->get('search');
+            if (!$searchParam) return redirect()->back();
+            trackUserSearchKeyword($searchParam); // Track search
+            $data->whereRaw("MATCH(name) AGAINST (? IN BOOLEAN MODE)", [$searchParam]);
+            $heading_title = "Search Results for " . $searchParam;
+            // Search param set on session
+            $searchKey = 'user_search_key_' . request()->cookie('browser_id');
+            session(['user_search_key' => $searchKey]);
+            session(['search_keywords_' . $searchKey => explode(' ', $searchParam)]);
+        }
+        // Searches from page on filterd
+        if (request()->has('search_on')) {
+            $searchParam = request()->get('search_on');
+            if (!$searchParam) return redirect()->back();
+            $data->whereRaw("MATCH(name) AGAINST (? IN BOOLEAN MODE)", [$searchParam]);
+        }
+        // Category wise products
+        if (request()->has('category')) {
+            $category_slug = request()->get('category');
+            $category = Category::whereSlug($category_slug)->firstOrFail();
+            $data->where('category_id', $category->id);
+            $heading_title = $category->name;
+            $banner_images = $category->banner_images->pluck('image')->toArray();
+        }
+
+        // Sub Category wise products
+        if (request()->has('subcategory')) {
+            $subcategory_slug = request()->get('subcategory');
+            $subcategory = SubCategory::whereSlug($subcategory_slug)->firstOrFail();
+            $data->where('subcategory_id', $subcategory->id);
+            $heading_title = $subcategory->name;
+            $banner_images = $subcategory->banner_images->pluck('image')->toArray();
+        }
+
+        // Sub SubCategory wise products
+        if (request()->has('sub_subcategory')) {
+            $sub_subcategory_slug = request()->get('sub_subcategory');
+            $sub_subcategory = SubSubcategory::whereSlug($sub_subcategory_slug)->firstOrFail();
+            $data->where('sub_subcategory_id', $sub_subcategory->id);
+            $heading_title = $sub_subcategory->name;
+            $banner_images = $sub_subcategory->banner_images->pluck('image')->toArray();
+        }
+
+        // Brand wise products
+        if (request()->has('brand')) {
+            $brand_slug = request()->get('brand');
+            $brand = Brand::whereSlug($brand_slug)->firstOrFail();
+            $data->where('brand_id', $brand->id);
+            $heading_title = $brand->name;
+            $banner_images = $brand->banner_images->pluck('image')->toArray();
+        }
+
+        // Amount Max
+        if (request()->has('amount_max')) {
+            $amount_max = request()->get('amount_max');
+            $data->whereRaw('
+            CASE
+                WHEN discount_price > 0 THEN discount_price
+                ELSE unit_price
+            END <= ?', [$amount_max]);
+        }
+
+        // Amount Min
+        if (request()->has('amount_min')) {
+            $amount_min = request()->get('amount_min');
+            $data->whereRaw('
+            CASE
+                WHEN discount_price > 0 THEN discount_price
+                ELSE unit_price
+            END >= ?', [$amount_min]);
+        }
+
+        $products = $data->paginate(30);
+        //return view('user.pages.products', compact('products', 'heading_title', 'banner_images'));
+        return view('user.pages.products', compact('products', 'heading_title', 'banner_images'));
     }
 
 

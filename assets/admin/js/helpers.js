@@ -69,13 +69,45 @@
             return cleanValue.split('').join(separator).slice(0, maxLength); // Format and truncate
         };
 
+        /**
+         * Show toast message
+         * @param type
+         * @param message
+         * @param title
+         * @param position
+         */
+        function showToast(type, message, title = '', position = 'top-right') {
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": true,
+                "progressBar": true,
+                "positionClass": "toast-" + position, // e.g., toast-bottom-left
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": 300,
+                "hideDuration": 1000,
+                "timeOut": 5000,
+                "extendedTimeOut": 1000,
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+
+            // Choose type: success, error, info, warning
+            toastr[type](message, title);
+        }
+
+
         // Expose public methods
         return {
             base_url: base_url,
             current_page: currentPage,
             showAlert: showAlert,
             ajaxRequest: ajaxRequest,
-            formatInput: formatInput
+            formatInput: formatInput,
+            showToast: showToast
         };
     })();
 })(jQuery);
