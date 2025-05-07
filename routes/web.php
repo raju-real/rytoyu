@@ -17,7 +17,7 @@ Route::controller(\App\Http\Controllers\HomePageController::class)->group(functi
     Route::get('/', 'home')->name('home');
     Route::get('search-results', 'searchProduct')->name('search-products');
     Route::get('single-product-info/{product_id}', 'singleProductInfo')->name('single-product-info');
-    Route::get('product-lists','products')->name('product-lists');
+    Route::get('product-lists', 'products')->name('product-lists');
     Route::get('product-details/{slug}', 'productDetails')->name('product-details');
     // Authentication Part
     Route::get('register', 'userRegisterPage')->name('register');
@@ -48,7 +48,8 @@ Route::controller(\App\Http\Controllers\CacheCartController::class)->group(funct
 Route::middleware('auth')->group(function () {
     Route::controller(\App\Http\Controllers\User\ProfileController::class)->group(function () {
         Route::get('user-profile', 'profile')->name('user-profile');
-        Route::get('change-password', 'profile')->name('change-password');
+        Route::view('change-password', 'user.account.change_password')->name('change-password');
+        Route::put('update-password', 'updatePassword')->name('update-password');
         Route::get('user-logout', 'logout')->name('user-logout');
     });
 
@@ -58,5 +59,15 @@ Route::middleware('auth')->group(function () {
     });
 
 });
+
+Route::controller(\App\Http\Controllers\SocialLoginController::class)->group(function () {
+    Route::get('auth/facebook', 'redirectToFacebook')->name('facebook.login');
+    Route::get('auth/facebook/callback', 'facebookCallback')->name('facebook.callback');
+
+    Route::get('auth/google', 'redirectToGoogle')->name('google.login');
+    Route::get('auth/google/callback', 'googleCallback')->name('google.callback');
+});
+
+
 
 

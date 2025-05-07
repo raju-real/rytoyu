@@ -80,7 +80,7 @@
                     <ul class="list-inline">
                         @auth
                             <li class="icon-user">
-                                <a href="{{ route('register') }}">
+                                <a href="{{ route('user-profile') }}">
                                     <img src="{{ asset('assets/user/img/user.svg') }}" alt=""/>
                                     <span>My Account</span>
                                 </a>

@@ -30,6 +30,11 @@ return new class extends Migration
             $table->rememberToken();
             $table->string('image',255)->nullable();
             $table->enum('status',['active','inactive'])->default("active");
+            $table->string('google_id')->nullable();
+            $table->string('facebook_id')->nullable();
+            $table->string('instagram_id')->nullable();
+            $table->boolean('need_change_mobile')->default(0);
+            $table->boolean('need_change_password')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

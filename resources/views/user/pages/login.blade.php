@@ -68,13 +68,13 @@
                     <div class="col-md-12 text-center">
                         <ul class="login-so list-inline">
                             <li>
-                                <a href=""><i class="fa-brands fa-facebook-f"></i></a>
+                                <a href="{{ url('auth/facebook') }}"><i class="fa-brands fa-facebook-f"></i></a>
                             </li>
                             <li>
                                 <a href=""><i class="fa-brands fa-instagram"></i></a>
                             </li>
                             <li>
-                                <a href=""><i class="fa-brands fa-google"></i></a>
+                                <a href="{{ url('auth/google') }}"><i class="fa-brands fa-google"></i></a>
                             </li>
                         </ul>
                     </div>
