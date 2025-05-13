@@ -1,5 +1,5 @@
 @extends('user.layouts.app')
-@section('title','Login')
+@section('title','Profile')
 @push('css') @endpush
 
 @section('content')
@@ -19,6 +19,25 @@
                     <div class="information-title">Your Account Information</div>
                     <div class="details-wrap">
                         <div class="block-title alt"><i class="fa fa-angle-down"></i> Change Your Personal Details</div>
+                        @if(Auth::user()->need_change_password)
+                            <div class="alert alert-success">
+                                <strong>You should change your password. </strong>
+                                <a href="{{ route('change-password') }}" class="alert-link">Click here</a> to change.
+                            </div>
+                        @endif
+                        @if(Auth::user()->need_change_mobile)
+                            <div class="alert alert-success">
+                                <strong>You should change your mobile. </strong>
+                                <a href="{{ route('change-mobile') }}" class="alert-link">Click here</a> to change.
+                            </div>
+                        @endif
+
+                        @if(Auth::user()->mobile_verified_at == null)
+                            <div class="alert alert-success">
+                                <strong>You should verify your mobile. </strong>
+                                <a href="{{ route('verify-user-mobile') }}" class="alert-link">Click here</a> to verify.
+                            </div>
+                        @endif
                         <div class="details-box">
                             <form class="form-delivery" action="#">
                                 <div class="all-form">

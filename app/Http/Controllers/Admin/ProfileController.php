@@ -173,6 +173,7 @@ class ProfileController extends Controller
         // Check if the verification code matches (this is now redundant but can be kept for clarity)
         if ($admin->verification_code == $request->verification_code) {
             $admin->mobile_verified_at = now();
+            $admin->verification_code = null;
             $admin->save();
             return response()->json(['message' => 'Mobile verified successfully!']);
         } else {

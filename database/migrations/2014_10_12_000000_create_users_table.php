@@ -35,6 +35,7 @@ return new class extends Migration
             $table->string('instagram_id')->nullable();
             $table->boolean('need_change_mobile')->default(0);
             $table->boolean('need_change_password')->default(0);
+            $table->string('verification_code',6)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

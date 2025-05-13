@@ -23,46 +23,81 @@
                             @if(Session::has('message'))
                                 <p class="alert alert-info">{{ Session::get('message') }}</p>
                             @endif
-                            <form class="form-delivery" action="{{ route("update-password") }}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <div class="all-form">
-                                    <div class="row">
-                                        <div class="col-md-12 col-sm-4">
-                                            <div class="form-group">
-                                                <input name="current_password" type="password"
-                                                       placeholder="Current Password"
-                                                       class="form-control">
+                            @if(Auth::user()->need_change_password)
+                                <form class="form-delivery" action="{{ route("update-initial-password") }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <div class="all-form">
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-4">
+                                                <div class="form-group">
+                                                    <input name="new_password" type="password"
+                                                           placeholder="New Password"
+                                                           class="form-control">
+                                                </div>
+                                                @error('new_password')
+                                                {!! displayError($message) !!}
+                                                @enderror
                                             </div>
-                                            @error('current_password')
-                                            {!! displayError($message) !!}
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-12 col-sm-4">
-                                            <div class="form-group">
-                                                <input name="new_password" type="password" placeholder="New Password"
-                                                       class="form-control">
+                                            <div class="col-md-12 col-sm-4">
+                                                <div class="form-group">
+                                                    <input name="confirm_password" type="password"
+                                                           placeholder="Confirm Password"
+                                                           class="form-control">
+                                                </div>
+                                                @error('confirm_password')
+                                                {!! displayError($message) !!}
+                                                @enderror
                                             </div>
-                                            @error('new_password')
-                                            {!! displayError($message) !!}
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-12 col-sm-4">
-                                            <div class="form-group">
-                                                <input name="confirm_password" type="password"
-                                                       placeholder="Confirm Password"
-                                                       class="form-control">
+                                            <div class="col-md-12 col-sm-12 text-right">
+                                                <button class="btn btn-theme btn-upa" type="submit"> Update</button>
                                             </div>
-                                            @error('confirm_password')
-                                            {!! displayError($message) !!}
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-12 col-sm-12 text-right">
-                                            <button class="btn btn-theme btn-upa" type="submit"> Update</button>
                                         </div>
                                     </div>
-                                </div>
-                            </form>
+                                </form>
+                            @else
+                                <form class="form-delivery" action="{{ route("update-password") }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <div class="all-form">
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-4">
+                                                <div class="form-group">
+                                                    <input name="current_password" type="password"
+                                                           placeholder="Current Password"
+                                                           class="form-control">
+                                                </div>
+                                                @error('current_password')
+                                                {!! displayError($message) !!}
+                                                @enderror
+                                            </div>
+                                            <div class="col-md-12 col-sm-4">
+                                                <div class="form-group">
+                                                    <input name="new_password" type="password"
+                                                           placeholder="New Password"
+                                                           class="form-control">
+                                                </div>
+                                                @error('new_password')
+                                                {!! displayError($message) !!}
+                                                @enderror
+                                            </div>
+                                            <div class="col-md-12 col-sm-4">
+                                                <div class="form-group">
+                                                    <input name="confirm_password" type="password"
+                                                           placeholder="Confirm Password"
+                                                           class="form-control">
+                                                </div>
+                                                @error('confirm_password')
+                                                {!! displayError($message) !!}
+                                                @enderror
+                                            </div>
+                                            <div class="col-md-12 col-sm-12 text-right">
+                                                <button class="btn btn-theme btn-upa" type="submit"> Update</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            @endif
                         </div>
                     </div>
                 </div>

@@ -116,4 +116,15 @@ class SocialLoginController extends Controller
             dd($e->getMessage());
         }
     }
+
+    public function redirectToInstagram()
+    {
+        return Socialite::driver('facebook')->scopes(['instagram_basic'])->redirect(); // Instagram via Facebook Graph
+    }
+
+    public function instagramCallback()
+    {
+        $user = Socialite::driver('facebook')->stateless()->user(); // Instagram uses Facebook Graph
+        // Handle Instagram login or user data
+    }
 }

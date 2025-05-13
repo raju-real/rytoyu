@@ -50,6 +50,13 @@ Route::middleware('auth')->group(function () {
         Route::get('user-profile', 'profile')->name('user-profile');
         Route::view('change-password', 'user.account.change_password')->name('change-password');
         Route::put('update-password', 'updatePassword')->name('update-password');
+        Route::put('update-initial-password', 'updateInitialPassword')->name('update-initial-password');
+
+        Route::view('change-mobile', 'user.account.change_mobile')->name('change-mobile');
+        Route::put('update-mobile', 'updateMobile')->name('update-mobile');
+        Route::view('verify-user-mobile', 'user.account.verify_mobile')->name('verify-user-mobile');
+        Route::post('send-mobile-verification-code', 'sendVerificationCode')->name('send-mobile-verification-code');
+        Route::post('verify-mobile-verification-code', 'verifyMobileCode')->name('verify-mobile-verification-code');
         Route::get('user-logout', 'logout')->name('user-logout');
     });
 
@@ -66,6 +73,9 @@ Route::controller(\App\Http\Controllers\SocialLoginController::class)->group(fun
 
     Route::get('auth/google', 'redirectToGoogle')->name('google.login');
     Route::get('auth/google/callback', 'googleCallback')->name('google.callback');
+
+    Route::get('auth/instagram', 'redirectToInstagram')->name('instagram.login');
+    Route::get('auth/instagram/callback', 'instagramCallback')->name('instagram.callback');
 });
 
 
