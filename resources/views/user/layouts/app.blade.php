@@ -178,10 +178,10 @@
                 <!-- /Logo -->
                 <!-- Header search -->
                 <div class="header-search">
-                    <input id="searchInput" name="search" class="form-control" type="text"
+                    <input name="search" class="form-control searchInput" type="text"
                            placeholder="Search for products, brands and more"
                            value="{{ implode(' ', session('search_keywords_' . session('user_search_key'), [])) }}"/>
-                    <button id="searchBtn"><i class="fa fa-search"></i></button>
+                    <button class="searchBtn"><i class="fa fa-search"></i></button>
                 </div>
                 <!-- /Header search -->
                 <!-- Header shopping cart -->
@@ -237,9 +237,11 @@
             <div class="container">
                 <div class="col-md-12 text-center border-b">
                     <div class="form-list-search">
-                        <input type="text" name="" placeholder="Search for products brands and more"
-                               class="form-control">
-                        <button class="btn orange-bg">SERACH<i class="fa-solid fa-magnifying-glass"></i></button>
+                        <input type="text" name="search" placeholder="Search for products brands and more"
+                               class="form-control searchInput" value="{{ implode(' ', session('search_keywords_' . session('user_search_key'), [])) }}">
+                        <button class="btn orange-bg searchBtn">SERACH<i class="fa-solid fa-magnifying-glass"></i></button>
+
+
                     </div>
                 </div>
                 <div class="col-md-12">

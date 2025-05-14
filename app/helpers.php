@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Admin;
+use App\Models\LatestOfferProduct;
 use App\Models\NewInProduct;
 use App\Models\Product;
 use Carbon\Carbon;
@@ -609,28 +610,100 @@ if (!function_exists('productCategoryNameById')) {
 
 // Website Section
 if (!function_exists('getNewInProducts')) {
+
     function getNewInProducts()
     {
-        if (\App\Models\NewInProduct::count()) {
-            $product_ids = NewInProduct::sort()
-                ->pluck('product_id')
-                ->toArray();
-            $ids_string = implode(',', $product_ids); // Convert to a comma-separated string
-            return Product::whereIn('id', $product_ids)
+        $limit = 16;
+        $product_ids = NewInProduct::sort()->pluck('product_id')->toArray();
+
+        $newInProducts = collect();
+        if (!empty($product_ids)) {
+            $ids_string = implode(',', $product_ids);
+            $newInProducts = Product::whereIn('id', $product_ids)
                 ->active()
                 ->orderByRaw("FIELD(id, $ids_string)")
-                ->take(16)
-                ->select('id', 'seller_id', 'brand_id', 'product_code', 'name', 'slug', 'thumbnail_path', 'unit_price', 'discount_price')
-                ->get();
-        } else {
-            return Product::active()
-                ->latest()
-                ->inRandomOrder()
-                ->take(16)
                 ->select('id', 'seller_id', 'brand_id', 'product_code', 'name', 'slug', 'thumbnail_path', 'unit_price', 'discount_price')
                 ->get();
         }
+
+        $remaining = $limit - $newInProducts->count();
+
+        // If less than 16, fetch latest active products (excluding already fetched IDs)
+        if ($remaining > 0) {
+            $extraProducts = Product::active()
+                ->whereNotIn('id', $product_ids)
+                ->latest()
+                ->take($remaining)
+                ->select('id', 'seller_id', 'brand_id', 'product_code', 'name', 'slug', 'thumbnail_path', 'unit_price', 'discount_price')
+                ->get();
+
+            // Merge NewIn products with the extra latest products
+            $newInProducts = $newInProducts->merge($extraProducts);
+        }
+
+        return $newInProducts;
     }
+
+//    function getNewInProducts()
+//    {
+//        if (\App\Models\NewInProduct::count()) {
+//            $product_ids = NewInProduct::sort()
+//                ->pluck('product_id')
+//                ->toArray();
+//            $ids_string = implode(',', $product_ids); // Convert to a comma-separated string
+//            return Product::whereIn('id', $product_ids)
+//                ->active()
+//                ->orderByRaw("FIELD(id, $ids_string)")
+//                ->take(16)
+//                ->select('id', 'seller_id', 'brand_id', 'product_code', 'name', 'slug', 'thumbnail_path', 'unit_price', 'discount_price')
+//                ->get();
+//        } else {
+//            return Product::active()
+//                ->latest()
+//                ->inRandomOrder()
+//                ->take(16)
+//                ->select('id', 'seller_id', 'brand_id', 'product_code', 'name', 'slug', 'thumbnail_path', 'unit_price', 'discount_price')
+//                ->get();
+//        }
+//    }
+}
+
+if (!function_exists('getLatestOfferProducts')) {
+    function getLatestOfferProducts()
+    {
+        $limit = 16;
+        $product_ids = LatestOfferProduct::sort()->pluck('product_id')->toArray();
+
+        $offerProducts = collect();
+        if (!empty($product_ids)) {
+            $ids_string = implode(',', $product_ids);
+            $offerProducts = Product::whereIn('id', $product_ids)
+                ->active()
+                ->where('discount_price', '>', 0)
+                ->orderByRaw("FIELD(id, $ids_string)")
+                ->select('id', 'seller_id', 'brand_id', 'product_code', 'name', 'slug', 'thumbnail_path', 'unit_price', 'discount_price')
+                ->get();
+        }
+
+        $remaining = $limit - $offerProducts->count();
+
+        // If less than 16, fetch latest active products with discount_price > 0 (excluding already fetched IDs)
+        if ($remaining > 0) {
+            $extraProducts = Product::active()
+                ->where('discount_price', '>', 0)
+                ->whereNotIn('id', $product_ids)
+                ->latest()
+                ->take($remaining)
+                ->select('id', 'seller_id', 'brand_id', 'product_code', 'name', 'slug', 'thumbnail_path', 'unit_price', 'discount_price')
+                ->get();
+
+            // Merge offer products with the extra latest discounted products
+            $offerProducts = $offerProducts->merge($extraProducts);
+        }
+
+        return $offerProducts;
+    }
+
 }
 
 if (!function_exists('getProductTypes')) {
@@ -658,8 +731,8 @@ if (!function_exists('getActiveSubCategories')) {
     function getActiveSubCategories($category_id = null)
     {
         $subcategory = \App\Models\SubCategory::query();
-        if(isset($category_id)) {
-            $subcategory->where('category_id',$category_id);
+        if (isset($category_id)) {
+            $subcategory->where('category_id', $category_id);
         }
         return $subcategory->active()->sort()->select('id', 'name', 'slug')->orderBy('name')->get();
     }
@@ -669,42 +742,42 @@ if (!function_exists('getActiveSubCategories')) {
 if (!function_exists('productCountBySeller')) {
     function productCountBySeller($seller_id = null)
     {
-        return Product::where('seller_id',$seller_id)->count() ?? 0;
+        return Product::where('seller_id', $seller_id)->count() ?? 0;
     }
 }
 
 if (!function_exists('productCountByType')) {
     function productCountByType($type_id = null)
     {
-        return Product::where('product_type_id',$type_id)->count() ?? 0;
+        return Product::where('product_type_id', $type_id)->count() ?? 0;
     }
 }
 
 if (!function_exists('productCountByCategory')) {
     function productCountByCategory($category_id = null)
     {
-        return Product::where('category_id',$category_id)->count() ?? 0;
+        return Product::where('category_id', $category_id)->count() ?? 0;
     }
 }
 
 if (!function_exists('productCountBySubCategory')) {
     function productCountBySubCategory($subcategory_id = null)
     {
-        return Product::where('subcategory_id',$subcategory_id)->count() ?? 0;
+        return Product::where('subcategory_id', $subcategory_id)->count() ?? 0;
     }
 }
 
 if (!function_exists('productCountBySubSubCategory')) {
     function productCountBySubSubCategory($sub_subcategory_id = null)
     {
-        return Product::where('sub_subcategory_id',$sub_subcategory_id)->count() ?? 0;
+        return Product::where('sub_subcategory_id', $sub_subcategory_id)->count() ?? 0;
     }
 }
 
 if (!function_exists('productCountByBrand')) {
     function productCountByBrand($brand_id = null)
     {
-        return Product::where('brand_id',$brand_id)->count() ?? 0;
+        return Product::where('brand_id', $brand_id)->count() ?? 0;
     }
 }
 
@@ -740,7 +813,6 @@ if (!function_exists('getUserSearchKeywords')) {
         return json_decode(\Illuminate\Support\Facades\Cookie::get("search_keywords_{$searchKey}"), true) ?? [];
     }
 }
-
 
 
 if (!function_exists('getUserSearchProducts')) {

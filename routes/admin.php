@@ -105,6 +105,12 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
         Route::get('manage-product-types','manageProductType')->name('manage-product-types');
         Route::get('product-types-category-bound/{product_type_slug}','productTypeCategoryBound')->name('product-types-category-bound');
         Route::post('bound-category-on-product-type/{type_id}','boundCategoryOnProductType')->name('bound-category-on-product-type');
+        Route::get('latest-offers','latestOffers')->name('latest-offers');
+        Route::get('get-latest-offer-products','getLatestOfferProducts')->name('get-latest-offer-products');
+        Route::get('search-own-discount-products', 'searchLatestOfferProduct')->name('search-own-discount-products');
+        Route::post('add-latest-offer-product','addLatestOfferProducts')->name('add-latest-offer-product');
+        Route::post('update-latest-offer-product-sorting', 'updateLatestOfferProductSorting')->name('update-latest-offer-product-sorting');
+        Route::delete('delete-latest-offer-product', 'deleteLatestOfferProduct')->name('delete-latest-offer-product');
     });
 
     Route::get('logout', function () {

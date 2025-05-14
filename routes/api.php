@@ -51,7 +51,6 @@ Route::get('search-products', function () {
     return response()->json(['products' => $products]);
 })->name('search-products');
 
-
 Route::get('product-variant-info', function () {
     $query = \App\Models\ProductVariant::query();
 

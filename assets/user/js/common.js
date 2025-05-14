@@ -2,26 +2,46 @@
     "use strict";
     let base_url = AppHelpers.base_url;
 
-    function performSearch() {
-        let query = $('#searchInput').val().trim();
+    // On click of search button
+    $('.searchBtn').on('click', function (e) {
+        e.preventDefault();
+        const relatedInput = $(this).closest('.search-container').find('.searchInput');
+        performSearch(relatedInput);
+    });
+
+    // On Enter key press inside search input
+    $('.searchInput').on('keypress', function (e) {
+        if (e.which === 13) { // Enter key
+            e.preventDefault();
+            performSearch(this);
+        }
+    });
+
+    function performSearch(inputElement) {
+        let query = $(inputElement).val().trim();
+
         if (query !== '') {
-            window.location.href = base_url + '/product-lists?search=' + encodeURIComponent(query);
+            const url = new URL(base_url + '/product-lists'); // Base URL
+            url.searchParams.set('search', query); // Set search param
+            window.location.href = url.toString(); // Redirect to URL
         }
     }
 
-    // Click on button
-    $('#searchBtn').on('click', function (e) {
-        e.preventDefault();
-        performSearch();
+
+    $(document).on("click", '.product-type-btn', function () {
+        const typeSlug = $(this).data('type');     // type slug
+        const categorySlug = $(this).data('slug'); // category slug
+        const url = new URL(base_url + '/product-lists'); // Base URL
+
+        if (typeSlug) {
+            url.searchParams.set('type', typeSlug); // Set type param
+        }
+        if (categorySlug) {
+            url.searchParams.set('category', categorySlug); // Set category param
+        }
+        window.location.href = url.toString(); // Redirect to URL
     });
 
-    // Press Enter key in input
-    $('#searchInput').on('keypress', function (e) {
-        if (e.which === 13) { // Enter key
-            e.preventDefault();
-            performSearch();
-        }
-    });
 
     $(document).on("click", ".product-view", function () {
         const productId = $(this).data("product-id");

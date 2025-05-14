@@ -31,7 +31,8 @@
                                                 <p class="caption-text">
                                                     @if(isset($slider->redirect_link))
                                                         <a class="btn btn-theme"
-                                                           href="{{ $slider->redirect_link }}" target="_blank">{{ $slider->button_name ?? '' }}</a>
+                                                           href="{{ $slider->redirect_link }}"
+                                                           target="_blank">{{ $slider->button_name ?? '' }}</a>
                                                     @else
                                                         <a class="btn btn-theme"
                                                            href="{{ route('product-lists',['slider' => $slider->slug]) }}">{{ $slider->button_name ?? '' }}</a>
@@ -118,7 +119,7 @@
                         <h3>{{ $product_type->name ?? '' }}</h3>
                         <div class="btn-row">
                             @foreach($product_type->categories as $category)
-                                <button class="btn btn-shop orange-bg">SHOP {{ $category->name ?? '' }}</button>
+                                <button class="btn btn-shop orange-bg product-type-btn" data-type="{{ $product_type->slug }}" data-slug="{{ categorySlugById($category->id) }}">SHOP {{ $category->name ?? '' }}</button>
                             @endforeach
                         </div>
                     </div>
@@ -155,86 +156,32 @@
             <p class="text-center p-destails">Style steals you can't miss!</p>
             <div class="top-products-carousel">
                 <div class="owl-carousel slider-c-custom" id="top-products-carousel">
-                    <div class="thumbnail no-border no-padding">
-                        <div class="media">
-                            <img class="img-sl" src="assets/user/img/l1.png" alt=""/>
-                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
-                                    class="fa-regular fa-eye"></i></button>
-                        </div>
-                        <div class="caption text-center">
-                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a>
-                            </h4>
-                            <p class="p-title">Brand Name</p>
-                            <div class="price">
-                                <ins>TK:1,400.00</ins>
-                                <del>TK:1800.00</del>
+                    @foreach(getLatestOfferProducts() as $product)
+                        <div class="thumbnail no-border no-padding">
+                            <div class="media">
+                                <img class="img-sl" src="{{ asset($product->thumbnail_path) }}" alt=""/>
+                                <button class="btn orange-bg view-btn product-view"
+                                        data-product-id="{{ $product->id }}"><i
+                                        class="fa-regular fa-eye"></i></button>
+                            </div>
+                            <div class="caption text-center">
+                                <h4 class="caption-title"><a
+                                        href="{{ route('product-details',$product->slug) }}">{{ $product->name ?? '' }}</a>
+                                </h4>
+                                <p class="p-title">{{ $product->brand->name ?? '' }}</p>
+                                @if($product->discount_price > 0)
+                                    <div class="price">
+                                        <ins>TK: {{ $product->discount_price }}</ins>
+                                        <del>TK: {{ $product->unit_price }}</del>
+                                    </div>
+                                @else
+                                    <div class="price">
+                                        <ins>TK: {{ $product->unit_price }}</ins>
+                                    </div>
+                                @endif
                             </div>
                         </div>
-                    </div>
-                    <div class="thumbnail no-border no-padding">
-                        <div class="media">
-                            <img class="img-sl" src="assets/user/img/l2.png" alt=""/>
-                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
-                                    class="fa-regular fa-eye"></i></button>
-                        </div>
-                        <div class="caption text-center">
-                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a>
-                            </h4>
-                            <p class="p-title">Brand Name</p>
-                            <div class="price">
-                                <ins>TK:1,400.00</ins>
-                                <del>TK:1800.00</del>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="thumbnail no-border no-padding">
-                        <div class="media">
-                            <img class="img-sl" src="assets/user/img/s5.png" alt=""/>
-                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
-                                    class="fa-regular fa-eye"></i></button>
-                        </div>
-                        <div class="caption text-center">
-                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a>
-                            </h4>
-                            <p class="p-title">Brand Name</p>
-                            <div class="price">
-                                <ins>TK:1,400.00</ins>
-                                <del>TK:1800.00</del>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="thumbnail no-border no-padding">
-                        <div class="media">
-                            <img class="img-sl" src="assets/user/img/l3.png" alt=""/>
-                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
-                                    class="fa-regular fa-eye"></i></button>
-                        </div>
-                        <div class="caption text-center">
-                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a>
-                            </h4>
-                            <p class="p-title">Brand Name</p>
-                            <div class="price">
-                                <ins>TK:1,400.00</ins>
-                                <del>TK:1800.00</del>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="thumbnail no-border no-padding">
-                        <div class="media">
-                            <img class="img-sl" src="assets/user/img/s3.png" alt=""/>
-                            <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
-                                    class="fa-regular fa-eye"></i></button>
-                        </div>
-                        <div class="caption text-center">
-                            <h4 class="caption-title"><a href="product-details.html">Standard Product Header</a>
-                            </h4>
-                            <p class="p-title">Brand Name</p>
-                            <div class="price">
-                                <ins>TK:1,400.00</ins>
-                                <del>TK:1800.00</del>
-                            </div>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>

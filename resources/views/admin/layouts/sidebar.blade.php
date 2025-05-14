@@ -65,21 +65,12 @@
                             <i class="bx bx-chevron-right"></i> Product Types
                         </a>
                     </li>
-{{--                    <li>--}}
-{{--                        <a href="" class="{{ isSubMenuActive('sections') }}">--}}
-{{--                            <i class="bx bx-chevron-right"></i> Brands--}}
-{{--                        </a>--}}
-{{--                    </li>--}}
                     <li>
-                        <a href="" class="{{ isSubMenuActive('sections') }}">
+                        <a href="{{ route('admin.latest-offers') }}" class="{{ isSubMenuActive('latest-offers') }}">
                             <i class="bx bx-chevron-right"></i> Latest Offer
                         </a>
                     </li>
-                    <li>
-                        <a href="" class="{{ isSubMenuActive('sections') }}">
-                            <i class="bx bx-chevron-right"></i> Just For You
-                        </a>
-                    </li>
+
                 </ul>
             </li>
 

@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\LatestOfferProduct;
 use App\Models\NewInProduct;
 use App\Models\Product;
 use App\Models\ProductType;
 use App\Models\ProductTypeCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class WebPageManageController extends Controller
@@ -101,7 +103,7 @@ class WebPageManageController extends Controller
     public function productTypeCategoryBound($type_slug)
     {
         $type = ProductType::whereSlug($type_slug)->firstOrFail();
-        $categories = Category::whereIn('id',  $type->product_category_ids)->select('id', 'name')->get();
+        $categories = Category::whereIn('id', $type->product_category_ids)->select('id', 'name')->get();
         return view('admin.sections.bound_category_product_types', compact('type', 'categories'));
     }
 
@@ -124,6 +126,104 @@ class WebPageManageController extends Controller
         })->toArray();
         ProductTypeCategory::insert($data);
         return redirect()->route('admin.manage-product-types')->with(infoMessage('Categories bound successfully.'));
+    }
+
+    public function latestOffers()
+    {
+        return view('admin.sections.latest_offers');
+    }
+
+    public function getLatestOfferProducts()
+    {
+        $products = LatestOfferProduct::with([
+            'product' => function ($product) {
+                $product->select('id', 'seller_id', 'product_code', 'name', 'thumbnail_path');
+            }
+        ])
+            ->sort()
+            ->where('seller_id', Auth::id())
+            ->get();
+
+        return response()->json($products);
+    }
+
+    public function searchLatestOfferProduct()
+    {
+        $query = request()->get('query');
+        $products = Product::where(function ($q) use ($query) {
+            $q->where('name', 'LIKE', "%{$query}%")
+                ->orWhere('product_code', 'LIKE', "%{$query}%")
+                ->orWhere('product_code', $query);
+        })
+            ->where('seller_id', Auth::id())
+            ->where('discount_price', '>', 0)
+            ->select('id', 'seller_id', 'name', 'product_code', 'thumbnail_path', 'unit_price', 'discount_price')
+            ->get();
+
+
+        return response()->json(['products' => $products]);
+    }
+
+    public function addLatestOfferProducts(Request $request)
+    {
+        $request->validate([
+            'product_id' => [
+                'required',
+                Rule::exists('products', 'id'),
+            ],
+        ]);
+
+        $productId = $request->product_id;
+        $exists = LatestOfferProduct::where('product_id', $productId)->exists();
+        if ($exists) {
+            return response()->json([
+                'status' => 'Error',
+                'message' => 'Product already exists on latest offer sections!',
+            ], 400);
+        }
+        // Get the max sorting serial for the slider
+        $maxSortingSerial = LatestOfferProduct::max('sorting_serial') ?? 0;
+        // Add the product to the slider
+        LatestOfferProduct::create([
+            'seller_id' => Auth::id(),
+            'product_id' => $productId,
+            'sorting_serial' => $maxSortingSerial + 1,
+        ]);
+
+        return response()->json([
+            'status' => 'Success',
+            'message' => 'Product added successfully to the slider!',
+        ]);
+    }
+
+    public function deleteLatestOfferProduct()
+    {
+        $product_id = request()->get('product_id');
+        $deleted = LatestOfferProduct::where('product_id', $product_id)
+            ->delete();
+
+        if ($deleted) {
+            $products = LatestOfferProduct::sort()->get();
+            foreach ($products as $index => $product) {
+                $product->update(['sorting_serial' => $index + 1]);
+            }
+            return response()->json(['status' => 'success', 'message' => 'Product deleted successfully!']);
+        }
+
+        return response()->json(['status' => 'error', 'message' => 'Failed to delete product.'], 500);
+    }
+
+    public function updateLatestOfferProductSorting(Request $request)
+    {
+        if ($request->has('ids')) {
+            $arr = $request->input('ids');
+            foreach ($arr as $sortOrder => $id) {
+                $row = LatestOfferProduct::find($id);
+                $row->sorting_serial = $sortOrder + 1;
+                $row->save();
+            }
+            return ['success' => true, 'message' => 'Updated'];
+        }
     }
 
 }

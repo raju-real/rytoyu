@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductType;
 use App\Models\Slider;
 use App\Models\SliderProduct;
 use App\Models\SubCategory;
@@ -65,6 +66,13 @@ class HomePageController extends Controller
             $searchParam = request()->get('search_on');
             if (!$searchParam) return redirect()->back();
             $data->whereRaw("MATCH(name) AGAINST (? IN BOOLEAN MODE)", [$searchParam]);
+        }
+        // Type wise products
+        if (request()->has('type')) {
+            $type_slug = request()->get('type');
+            $product_type = ProductType::whereSlug($type_slug)->firstOrFail();
+            $data->where('product_type_id', $product_type->id);
+            $heading_title = $product_type->name;
         }
         // Category wise products
         if (request()->has('category')) {
