@@ -2,27 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
-use App\Models\OrderProduct;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\URL;
-use App\Models\Product;
-use App\Models\ProductVariant;
 use App\Models\Size;
 use App\Models\Color;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\OrderProduct;
+use Illuminate\Http\Request;
+use App\Models\ProductVariant;
+use App\Jobs\LogSellerOrderJob;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Contracts\Foundation\Application;
 
 class CacheCartController extends Controller
 {
-    protected string|array $cartKey;
-    protected string|array $priceSummeryKey;
+    protected string $cartKey;
+    protected string $priceSummeryKey;
 
     public function __construct()
     {
@@ -30,12 +31,12 @@ class CacheCartController extends Controller
         $this->priceSummeryKey = $this->getPriceSummeryKey();
     }
 
-    protected function getCartKey(): array|string
+    protected function getCartKey(): string
     {
         return request()->cookie('cart_key') ?? 'default_cart_key';
     }
 
-    protected function getPriceSummeryKey(): array|string
+    protected function getPriceSummeryKey(): string
     {
         return request()->cookie('price_summery_key') ?? 'default_price_summery_key';
     }
@@ -121,10 +122,10 @@ class CacheCartController extends Controller
                 'quantity' => $item['quantity'],
                 'item_price' => $item['item_price'],
                 'order_price' => $item['item_price'] * $item['quantity'],
-                'product_slug' => $product?->slug ?? '',
-                'product_thumbnail' => $product?->thumbnail_path ?? '',
-                'size_name' => $size?->name ?? null,
-                'color_name' => $color?->name ?? null,
+                'product_slug' => $product->slug ?? '',
+                'product_thumbnail' => $product->thumbnail_path ?? '',
+                'size_name' => $size->name ?? null,
+                'color_name' => $color->name ?? null,
             ];
         });
         $itemTotal = $cartItemsArray->sum('order_price');
@@ -156,7 +157,6 @@ class CacheCartController extends Controller
         $item_total_discount = 0;
         $applied_coupon = null;
         $coupon_discount = 0;
-
         // If you have discount logic or applied coupon, you can set here:
         if (session()->has('applied_coupon_code')) {
             $applied_coupon = session('applied_coupon_code');
@@ -304,7 +304,6 @@ class CacheCartController extends Controller
         // Price calculation
         $total_vat = 0;
         $total_shipping = $price_summery['shipping_fee'];
-
         // save order
         $order = new Order();
         $order->order_number = Order::getOrderNumber();
@@ -327,7 +326,7 @@ class CacheCartController extends Controller
         $order->total_vat = 0;
         $order->total_discount = $total_item_discount + $applied_coupon_discount;
 
-        $total_order_price = ($total_item_order_price + $total_shipping + $service_charge) - $applied_coupon_discount;
+        $total_order_price = ($total_item_order_price + $total_shipping + $service_charge + $total_vat) - $applied_coupon_discount;
         $order->total_order_price = $total_order_price;
         $order->order_status = 'pending';
         $order->payment_method = $request->payment_method ?? 'cash-on-delivery';
@@ -382,8 +381,10 @@ class CacheCartController extends Controller
             $order_item->order_status = 'pending';
             $order_item->save();
             // Update inventory
-            ProductVariant::find($variant_id)?->decrement('inventory', $quantity);
+            ProductVariant::find($variant_id)->decrement('inventory', $quantity);
         }
+        // Process Order Logs and notifications
+        LogSellerOrderJob::dispatch($order->id);
         // Forget old cart and price summery
         //Cache::forget($this->cartKey);
         //Cache::forget($this->priceSummeryKey);

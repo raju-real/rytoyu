@@ -29,9 +29,7 @@ class HomePageController extends Controller
     {
         $searchParam = request()->get('search');
         if (!$searchParam) return redirect()->back();
-        // Track search
-        trackUserSearchKeyword($searchParam);
-        // Search products
+        //trackUserSearchKeyword($searchParam);   // Track search
         $products = Product::whereRaw("MATCH(name) AGAINST (? IN BOOLEAN MODE)", [$searchParam])->paginate(30);
         return view('user.pages.products', compact('products', 'searchParam'));
     }
@@ -82,7 +80,6 @@ class HomePageController extends Controller
             $heading_title = $category->name;
             $banner_images = $category->banner_images->pluck('image')->toArray();
         }
-
         // Sub Category wise products
         if (request()->has('subcategory')) {
             $subcategory_slug = request()->get('subcategory');
@@ -91,7 +88,6 @@ class HomePageController extends Controller
             $heading_title = $subcategory->name;
             $banner_images = $subcategory->banner_images->pluck('image')->toArray();
         }
-
         // Sub SubCategory wise products
         if (request()->has('sub_subcategory')) {
             $sub_subcategory_slug = request()->get('sub_subcategory');
@@ -100,7 +96,6 @@ class HomePageController extends Controller
             $heading_title = $sub_subcategory->name;
             $banner_images = $sub_subcategory->banner_images->pluck('image')->toArray();
         }
-
         // Brand wise products
         if (request()->has('brand')) {
             $brand_slug = request()->get('brand');
@@ -109,7 +104,6 @@ class HomePageController extends Controller
             $heading_title = $brand->name;
             $banner_images = $brand->banner_images->pluck('image')->toArray();
         }
-
         // Amount Max
         if (request()->has('amount_max')) {
             $amount_max = request()->get('amount_max');
@@ -119,7 +113,6 @@ class HomePageController extends Controller
                 ELSE unit_price
             END <= ?', [$amount_max]);
         }
-
         // Amount Min
         if (request()->has('amount_min')) {
             $amount_min = request()->get('amount_min');
@@ -129,9 +122,7 @@ class HomePageController extends Controller
                 ELSE unit_price
             END >= ?', [$amount_min]);
         }
-
         $products = $data->paginate(30);
-        //return view('user.pages.products', compact('products', 'heading_title', 'banner_images'));
         return view('user.pages.products', compact('products', 'heading_title', 'banner_images'));
     }
 
@@ -139,7 +130,6 @@ class HomePageController extends Controller
     public function singleProductInfo($product_id)
     {
         $product = Product::active()->findOrFail($product_id);
-
         $html = view('user.pages.single_product_view', compact('product'))->render();
         return response()->json(['html' => $html]);
     }
@@ -147,7 +137,6 @@ class HomePageController extends Controller
     public function productDetails($slug = null)
     {
         $product = Product::whereSlug($slug)->firstOrFail();
-        //return $product;
         $related_products = Product::where('category_id', $product->category_id)->inRandomOrder()->take(16)->get();
         return view('user.pages.product_details', compact('product', 'related_products'));
     }

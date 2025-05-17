@@ -1,6 +1,7 @@
 @extends('user.layouts.app')
-@section('title','Home')
-@push('css') @endpush
+@section('title', 'Home')
+@push('css')
+@endpush
 
 @section('content')
     <!-- PAGE -->
@@ -9,9 +10,9 @@
             <div class="main-slider">
                 <div class="owl-carousel" id="main-slider">
                     <!-- Slide item -->
-                    @foreach(activeSliders() as $slider)
+                    @foreach (activeSliders() as $slider)
                         <div class="item slide1">
-                            <img class="slide-img" src="{{ asset($slider->image_path) }}" alt=""/>
+                            <img class="slide-img" src="{{ asset($slider->image_path) }}" alt="" />
                             <div class="caption">
                                 <div class="container">
                                     <div class="div-table">
@@ -24,18 +25,17 @@
                                                         {{ $slider->highlighted_caption ?? '' }}
                                                         <span>
                                                             <img src="{{ asset('assets/user/img/border.png') }}"
-                                                                 alt="img">
-                                                         </span>
+                                                                alt="img">
+                                                        </span>
                                                     </label>
                                                 </h5>
                                                 <p class="caption-text">
-                                                    @if(isset($slider->redirect_link))
-                                                        <a class="btn btn-theme"
-                                                           href="{{ $slider->redirect_link }}"
-                                                           target="_blank">{{ $slider->button_name ?? '' }}</a>
+                                                    @if (isset($slider->redirect_link))
+                                                        <a class="btn btn-theme" href="{{ $slider->redirect_link }}"
+                                                            target="_blank">{{ $slider->button_name ?? '' }}</a>
                                                     @else
                                                         <a class="btn btn-theme"
-                                                           href="{{ route('product-lists',['slider' => $slider->slug]) }}">{{ $slider->button_name ?? '' }}</a>
+                                                            href="{{ route('product-lists', ['slider' => $slider->slug]) }}">{{ $slider->button_name ?? '' }}</a>
                                                     @endif
                                                 </p>
                                             </div>
@@ -48,13 +48,14 @@
                 </div>
             </div>
         </div>
-        @if(count(latestAnnouncements()))
+        @if (count(latestAnnouncements()))
             <div class="notification-offer">
                 <marquee behavior="scroll" direction="right" scrollamount="3">
                     <ul class="ul-m">
-                        @foreach(latestAnnouncements() as $announcement)
+                        @foreach (latestAnnouncements() as $announcement)
                             <li>{{ $announcement->title ?? '' }}
-                                <strong>{{ $announcement->highlighted_title ?? '' }}</strong></li>
+                                <strong>{{ $announcement->highlighted_title ?? '' }}</strong>
+                            </li>
                         @endforeach
                     </ul>
                 </marquee>
@@ -71,20 +72,19 @@
             <p class="text-center p-destails">Because the best looks don't wait. Discover the latest arrivals.</p>
             <div class="top-products-carousel">
                 <div class="owl-carousel slider-c-custom" id="top-products-carouselt">
-                    @foreach(getNewInProducts() as $product)
+                    @foreach (getNewInProducts() as $product)
                         <div class="thumbnail no-border no-padding">
                             <div class="media">
-                                <img class="img-sl" src="{{ asset($product->thumbnail_path) }}" alt=""/>
+                                <img class="img-sl" src="{{ asset($product->thumbnail_path) }}" alt="" />
                                 <button class="btn orange-bg view-btn product-view"
-                                        data-product-id="{{ $product->id }}"><i
-                                        class="fa-regular fa-eye"></i></button>
+                                    data-product-id="{{ $product->id }}"><i class="fa-regular fa-eye"></i></button>
                             </div>
                             <div class="caption text-center">
                                 <h4 class="caption-title"><a
-                                        href="{{ route('product-details',$product->slug) }}">{{ $product->name ?? '' }}</a>
+                                        href="{{ route('product-details', $product->slug) }}">{{ $product->name ?? '' }}</a>
                                 </h4>
                                 <p class="p-title">{{ $product->brand->name ?? '' }}</p>
-                                @if($product->discount_price > 0)
+                                @if ($product->discount_price > 0)
                                     <div class="price">
                                         <ins>TK: {{ $product->discount_price }}</ins>
                                         <del>TK: {{ $product->unit_price }}</del>
@@ -112,14 +112,17 @@
             </div>
         </div>
         <div class="edit-list">
-            @foreach(getProductTypes() as $product_type)
+            @foreach (getProductTypes() as $product_type)
                 <div class="edit-block">
                     <img src="{{ asset($product_type->image) }}" alt="img">
                     <div class="edit-details">
                         <h3>{{ $product_type->name ?? '' }}</h3>
                         <div class="btn-row">
-                            @foreach($product_type->categories as $category)
-                                <button class="btn btn-shop orange-bg product-type-btn" data-type="{{ $product_type->slug }}" data-slug="{{ categorySlugById($category->id) }}">SHOP {{ $category->name ?? '' }}</button>
+                            @foreach ($product_type->categories as $category)
+                                <button class="btn btn-shop orange-bg product-type-btn"
+                                    data-type="{{ $product_type->slug }}"
+                                    data-slug="{{ categorySlugById($category->id) }}">SHOP
+                                    {{ $category->name ?? '' }}</button>
                             @endforeach
                         </div>
                     </div>
@@ -136,10 +139,10 @@
                 style.</p>
             <div class="top-products-carousel">
                 <div class="owl-carousel slider-c-custom" id="top-products-carouselb">
-                    @foreach(getBrands() as $brand)
+                    @foreach (getBrands() as $brand)
                         <div class="thumbnail no-border no-padding">
                             <div class="media">
-                                <img class="img-sl" src="{{ asset($brand->image) }}" alt=""/>
+                                <img class="img-sl" src="{{ asset($brand->image) }}" alt="" />
                             </div>
                             <img src="{{ asset($brand->logo) }}" class="brand-logo">
                         </div>
@@ -156,20 +159,19 @@
             <p class="text-center p-destails">Style steals you can't miss!</p>
             <div class="top-products-carousel">
                 <div class="owl-carousel slider-c-custom" id="top-products-carousel">
-                    @foreach(getLatestOfferProducts() as $product)
+                    @foreach (getLatestOfferProducts() as $product)
                         <div class="thumbnail no-border no-padding">
                             <div class="media">
-                                <img class="img-sl" src="{{ asset($product->thumbnail_path) }}" alt=""/>
+                                <img class="img-sl" src="{{ asset($product->thumbnail_path) }}" alt="" />
                                 <button class="btn orange-bg view-btn product-view"
-                                        data-product-id="{{ $product->id }}"><i
-                                        class="fa-regular fa-eye"></i></button>
+                                    data-product-id="{{ $product->id }}"><i class="fa-regular fa-eye"></i></button>
                             </div>
                             <div class="caption text-center">
                                 <h4 class="caption-title"><a
-                                        href="{{ route('product-details',$product->slug) }}">{{ $product->name ?? '' }}</a>
+                                        href="{{ route('product-details', $product->slug) }}">{{ $product->name ?? '' }}</a>
                                 </h4>
                                 <p class="p-title">{{ $product->brand->name ?? '' }}</p>
-                                @if($product->discount_price > 0)
+                                @if ($product->discount_price > 0)
                                     <div class="price">
                                         <ins>TK: {{ $product->discount_price }}</ins>
                                         <del>TK: {{ $product->unit_price }}</del>
@@ -190,24 +192,23 @@
     <!-- Just for you -->
     <section class="page-section  col-md-12 p-0">
         <div class="container-fluid p-0">
-            <h2 class="section-title"><span>Just for you  </span></h2>
+            <h2 class="section-title"><span>Just for you </span></h2>
             <p class="text-center p-destails">Your wardrobe upgrade starts here.</p>
             <div class="top-products-carousel">
                 <div class="owl-carousel slider-c-custom" id="top-products-carouselj">
-                    @foreach(getUserSearchProducts() as $product)
+                    @foreach (getUserSearchProducts() as $product)
                         <div class="thumbnail no-border no-padding">
                             <div class="media">
-                                <img class="img-sl" src="{{ asset($product->thumbnail_path) }}" alt=""/>
+                                <img class="img-sl" src="{{ asset($product->thumbnail_path) }}" alt="" />
                                 <button class="btn orange-bg view-btn product-view"
-                                        data-product-id="{{ $product->id }}"><i
-                                        class="fa-regular fa-eye"></i></button>
+                                    data-product-id="{{ $product->id }}"><i class="fa-regular fa-eye"></i></button>
                             </div>
                             <div class="caption text-center">
                                 <h4 class="caption-title"><a
-                                        href="{{ route('product-details',$product->slug) }}">{{ $product->name ?? '' }}</a>
+                                        href="{{ route('product-details', $product->slug) }}">{{ $product->name ?? '' }}</a>
                                 </h4>
                                 <p class="p-title">{{ $product->brand->name ?? '' }}</p>
-                                @if($product->discount_price > 0)
+                                @if ($product->discount_price > 0)
                                     <div class="price">
                                         <ins>TK: {{ $product->discount_price }}</ins>
                                         <del>TK: {{ $product->unit_price }}</del>
@@ -234,7 +235,8 @@
                     <div class="offer-details">
                         <p>
                             <strong>Sing up to receive special offers:</strong>
-                            Unlock exclusive deals and the latest trends.</p>
+                            Unlock exclusive deals and the latest trends.
+                        </p>
                         <button class="btn orange-bg"><span>Join Now</span></button>
                     </div>
                     <img class="shape" src="assets/user/img/shape.svg" alt="">
@@ -270,4 +272,5 @@
     <div class="clearfix"></div>
 @endsection
 
-@push('js') @endpush
+@push('js')
+@endpush
