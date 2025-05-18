@@ -1,19 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
+// Website Manage
 Route::controller(\App\Http\Controllers\HomePageController::class)->group(function () {
+    // Basic Activity
     Route::get('/', 'home')->name('home');
     Route::get('search-results', 'searchProduct')->name('search-products');
     Route::get('single-product-info/{product_id}', 'singleProductInfo')->name('single-product-info');
@@ -46,12 +36,12 @@ Route::controller(\App\Http\Controllers\CacheCartController::class)->group(funct
 });
 // User Part
 Route::middleware('auth')->group(function () {
+    // Manage Profile
     Route::controller(\App\Http\Controllers\User\ProfileController::class)->group(function () {
         Route::get('user-profile', 'profile')->name('user-profile');
         Route::view('change-password', 'user.account.change_password')->name('change-password');
         Route::put('update-password', 'updatePassword')->name('update-password');
         Route::put('update-initial-password', 'updateInitialPassword')->name('update-initial-password');
-
         Route::view('change-mobile', 'user.account.change_mobile')->name('change-mobile');
         Route::put('update-mobile', 'updateMobile')->name('update-mobile');
         Route::view('verify-user-mobile', 'user.account.verify_mobile')->name('verify-user-mobile');
@@ -59,21 +49,22 @@ Route::middleware('auth')->group(function () {
         Route::post('verify-mobile-verification-code', 'verifyMobileCode')->name('verify-mobile-verification-code');
         Route::get('user-logout', 'logout')->name('user-logout');
     });
-
+    // Manage Order
     Route::controller(\App\Http\Controllers\User\OrderController::class)->group(function () {
         Route::get('order-list', 'orderList')->name('order-list');
         Route::get('order-details/{invoice}', 'orderDetails')->name('order-details');
     });
 
 });
-
+// Social Login Part
 Route::controller(\App\Http\Controllers\SocialLoginController::class)->group(function () {
+    // Facebook Login
     Route::get('auth/facebook', 'redirectToFacebook')->name('facebook.login');
     Route::get('auth/facebook/callback', 'facebookCallback')->name('facebook.callback');
-
+    // Google(Gmail) Login
     Route::get('auth/google', 'redirectToGoogle')->name('google.login');
     Route::get('auth/google/callback', 'googleCallback')->name('google.callback');
-
+    // Instagram Login
     Route::get('auth/instagram', 'redirectToInstagram')->name('instagram.login');
     Route::get('auth/instagram/callback', 'instagramCallback')->name('instagram.callback');
 });

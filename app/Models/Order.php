@@ -49,7 +49,7 @@ class Order extends Model
         return $orderInvoice;
     }
 
-    public static function getTotalItemUnitPrice($cartItems): float|int
+    public static function getTotalItemUnitPrice($cartItems)
     {
         $total = 0;
         foreach ($cartItems['items'] as $item) {
@@ -65,7 +65,7 @@ class Order extends Model
         return $total;
     }
 
-    public static function getTotalItemDiscountPrice($cartItems): float|int
+    public static function getTotalItemDiscountPrice($cartItems)
     {
         $total = 0;
         foreach ($cartItems['items'] as $item) {
@@ -81,7 +81,7 @@ class Order extends Model
         return $total;
     }
 
-    public static function getItemOrderPrice($cartItems): float|int
+    public static function getItemOrderPrice($cartItems)
     {
         $total = 0;
         foreach ($cartItems['items'] as $item) {

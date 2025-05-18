@@ -39,6 +39,20 @@
             </ul>
         </li>
         @if(authAdminType() !== 'seller')
+        <li class="{{ isMainMenuActive('manage-orders') }}">
+            <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <i class="bx bx-cart"></i> 
+                <span>Manage Order</span>
+            </a>
+            <ul class="sub-menu" aria-expanded="false">
+                <li>
+                    <a href="{{ route('admin.manage-orders') }}" class="{{ isSubMenuActive('manage-orders') }}">
+                        <i class="bx bx-chevron-right"></i> Order List
+                    </a>
+                </li>
+                
+            </ul>
+        </li>
             <li class="{{ isMainMenuActive('sections') }}">
                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                     <i class="bx bx-layout"></i>

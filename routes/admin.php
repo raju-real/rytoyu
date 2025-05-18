@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,8 +25,9 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
         Route::post('send-verification-code', 'sendVerificationCode')->name('send-verification-code');
         Route::post('verify-code', 'verifyCode')->name('verify-code');
     });
-    //Attributes
+    // Only for admin
     Route::middleware('admin')->group(function () {
+        //Attributes
         Route::resource('product-types', \App\Http\Controllers\Admin\ProductTypeController::class);
         Route::controller(\App\Http\Controllers\Admin\ProductTypeController::class)->group(function () {
             Route::put('update-product-type-status/{id}', 'updateProductTypeStatus')->name('update-product-type-status');
@@ -57,6 +57,34 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
         Route::resource('colors', \App\Http\Controllers\Admin\ColorController::class);
         Route::resource('units', \App\Http\Controllers\Admin\UnitController::class);
         Route::resource('tags', \App\Http\Controllers\Admin\TagController::class);
+        // Settings
+        Route::controller(\App\Http\Controllers\Admin\SettingController::class)->group(function () {
+            Route::get('site-settings', 'siteSettings')->name('site-settings');
+            Route::put('update-site-settings', 'updateSiteSettings')->name('update-site-settings');
+        });
+        // Announcements
+        Route::resource('announcements', \App\Http\Controllers\Admin\AnnouncementController::class);
+        // Sellers
+        Route::resource('sellers', \App\Http\Controllers\Admin\SellerController::class);
+        Route::controller(\App\Http\Controllers\Admin\SellerController::class)->group(function () {
+            Route::put('update-seller-status/{id}', 'updateSellerStatus')->name('update-seller-status');
+            Route::put('update-seller-request-status/{id}', 'updateSellerRequestStatus')->name('update-seller-request-status');
+        });
+        // Sliders
+        Route::resource('sliders', \App\Http\Controllers\Admin\SliderController::class);
+        Route::controller(\App\Http\Controllers\Admin\SliderController::class)->group(function () {
+            Route::put('update-slider-status/{id}', 'updateSliderStatus')->name('update-slider-status');
+            Route::post('sort-sliders', 'sortSliders')->name('sort-sliders');
+            Route::get('slider-products/{slug}', 'sliderProducts')->name('slider-products');
+            Route::get('slider-wise-products/{slider_id}', 'getSliderWiseProducts')->name('slider-wise-products');
+            Route::post('add-slider-product', 'addSliderProduct')->name('add-slider-product');
+            Route::post('update-slider-product-sorting', 'updateSliderProductSorting')->name('update-slider-product-sorting');
+            Route::delete('delete-slider-product', 'deleteSliderProduct')->name('delete-slider-product');
+        });
+        // Order Manage
+        Route::controller(\App\Http\Controllers\Admin\AdminOrderManageController::class)->group(function () {
+            Route::get('manage-orders', 'manageOrders')->name('manage-orders');
+        });
     });
     //Products
     Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
@@ -69,46 +97,21 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
     Route::controller(\App\Http\Controllers\Admin\InventoryController::class)->group(function () {
         Route::get('product-stock-status', 'productStockStatus')->name('product-stock-status');
     });
-    // Sellers
-    Route::resource('sellers', \App\Http\Controllers\Admin\SellerController::class);
-    Route::controller(\App\Http\Controllers\Admin\SellerController::class)->group(function () {
-        Route::put('update-seller-status/{id}', 'updateSellerStatus')->name('update-seller-status');
-        Route::put('update-seller-request-status/{id}', 'updateSellerRequestStatus')->name('update-seller-request-status');
-    });
-    // Settings
-    Route::controller(\App\Http\Controllers\Admin\SettingController::class)->group(function () {
-        Route::get('site-settings', 'siteSettings')->name('site-settings');
-        Route::put('update-site-settings', 'updateSiteSettings')->name('update-site-settings');
-    });
-    // Webpage Manage Section
-    // Sliders
-    Route::resource('sliders', \App\Http\Controllers\Admin\SliderController::class);
-    Route::controller(\App\Http\Controllers\Admin\SliderController::class)->group(function () {
-        Route::put('update-slider-status/{id}', 'updateSliderStatus')->name('update-slider-status');
-        Route::post('sort-sliders', 'sortSliders')->name('sort-sliders');
-        Route::get('slider-products/{slug}', 'sliderProducts')->name('slider-products');
-        Route::get('slider-wise-products/{slider_id}', 'getSliderWiseProducts')->name('slider-wise-products');
-        Route::post('add-slider-product', 'addSliderProduct')->name('add-slider-product');
-        Route::post('update-slider-product-sorting', 'updateSliderProductSorting')->name('update-slider-product-sorting');
-        Route::delete('delete-slider-product', 'deleteSliderProduct')->name('delete-slider-product');
-    });
-    // Announcements
-    Route::resource('announcements',\App\Http\Controllers\Admin\AnnouncementController::class);
     // Homepage section Manage
     Route::controller(\App\Http\Controllers\WebPageManageController::class)->group(function () {
-       // New in section
-        Route::get('new-in-products','newInProducts')->name('new-in-products');
-        Route::get('get-new-in-products','getNewInProducts')->name('get-new-in-products');
-        Route::post('add-new-in-product','addNewInProducts')->name('add-new-in-product');
+        // New in section
+        Route::get('new-in-products', 'newInProducts')->name('new-in-products');
+        Route::get('get-new-in-products', 'getNewInProducts')->name('get-new-in-products');
+        Route::post('add-new-in-product', 'addNewInProducts')->name('add-new-in-product');
         Route::post('update-new-in-product-sorting', 'updateNewInProductSorting')->name('update-new-in-product-sorting');
         Route::delete('delete-new-in-product', 'deleteNewInProduct')->name('delete-new-in-product');
-        Route::get('manage-product-types','manageProductType')->name('manage-product-types');
-        Route::get('product-types-category-bound/{product_type_slug}','productTypeCategoryBound')->name('product-types-category-bound');
-        Route::post('bound-category-on-product-type/{type_id}','boundCategoryOnProductType')->name('bound-category-on-product-type');
-        Route::get('latest-offers','latestOffers')->name('latest-offers');
-        Route::get('get-latest-offer-products','getLatestOfferProducts')->name('get-latest-offer-products');
+        Route::get('manage-product-types', 'manageProductType')->name('manage-product-types');
+        Route::get('product-types-category-bound/{product_type_slug}', 'productTypeCategoryBound')->name('product-types-category-bound');
+        Route::post('bound-category-on-product-type/{type_id}', 'boundCategoryOnProductType')->name('bound-category-on-product-type');
+        Route::get('latest-offers', 'latestOffers')->name('latest-offers');
+        Route::get('get-latest-offer-products', 'getLatestOfferProducts')->name('get-latest-offer-products');
         Route::get('search-own-discount-products', 'searchLatestOfferProduct')->name('search-own-discount-products');
-        Route::post('add-latest-offer-product','addLatestOfferProducts')->name('add-latest-offer-product');
+        Route::post('add-latest-offer-product', 'addLatestOfferProducts')->name('add-latest-offer-product');
         Route::post('update-latest-offer-product-sorting', 'updateLatestOfferProductSorting')->name('update-latest-offer-product-sorting');
         Route::delete('delete-latest-offer-product', 'deleteLatestOfferProduct')->name('delete-latest-offer-product');
     });
