@@ -34,28 +34,30 @@
                     <div id="collapseSearch" class="accordion-collapse collapse {{ request()->query() ? 'show' : '' }}"
                         aria-labelledby="headingSearch" data-bs-parent="#accordionSearch">
                         <div class="accordion-body">
-                            <form method="GET" action="{{ route('admin.sellers.index') }}">
+                            <form method="GET" action="{{ route('admin.manage-orders') }}">
                                 <div class="row">
                                     <div class="col-md-6 pb-4">
                                         <div class="form-group">
                                             <input type="search" name="search" class="form-control"
-                                                placeholder="Search by Name,Email,Mobile"
+                                                placeholder="Search by Order Number,Invoice,Mobile"
                                                 value="{{ request('search') ?? '' }}">
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+
+                                    <div class="col-md-4 pb-4">
                                         <div class="form-group">
-                                            <select name="status" class="form-select">
-                                                <option value="" {{ !isset(request()->status) ? 'selected' : '' }}>
-                                                    Status</option>
-                                                @foreach (getStatus() as $status)
-                                                    <option value="{{ $status->value }}"
-                                                        {{ request('status') === $status->value ? 'selected' : '' }}>
-                                                        {{ $status->title }}</option>
-                                                @endforeach
-                                            </select>
+                                            <div class="input-group">
+                                                <input type="text" name="order_date" class="form-control datepicker"
+                                                    value="{{ request('order_date') ?? '' }}" placeholder="Order Date"
+                                                    autocomplete="off" autofocus readonly>
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="fa fa-calendar"></i> </span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
+
                                     <div class="col-md-2 mt-0">
                                         <button type="submit" class="btn btn-primary">Search</button>
                                     </div>
@@ -73,7 +75,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered mb-0 text-nowrap">
+                        <table class="table table-striped table-bordered mb-0 text-nowrap text-center">
                             <thead>
                                 <tr>
                                     <th>Sl.no</th>
@@ -93,17 +95,15 @@
                                         <td>{{ dateFormat($order->created_at, 'd M, y') }}</td>
                                         <td>{{ $order->order_number ?? '' }}</td>
                                         <td>{{ $order->invoice ?? '' }}</td>
-                                        <td>
-                                            <a type="button" class="btn btn-sm btn-info view-product-variants"
-                                                data-bs-toggle="modal" data-bs-target="#show-order-products"
+                                        <td class="text-center">
+                                            <a type="button" class="btn btn-sm btn-info show-order-products"
                                                 data-id="{{ $order->unique_id }}">
                                                 {{ $order->order_products->count() ?? 0 }}
                                             </a>
                                         </td>
                                         <td>{{ numberFormat($order->total_order_price, 2) }}</td>
-                                        <td>
-                                            <a type="button" class="btn btn-sm btn-info view-product-variants"
-                                                data-bs-toggle="modal" data-bs-target="#show-order-products"
+                                        <td class="text-center">
+                                            <a type="button" class="btn btn-sm btn-primary show-customer-info"
                                                 data-id="{{ $order->unique_id }}">
                                                 <i class="fa fa-eye fa-xl"></i>
                                             </a>
@@ -126,8 +126,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="show-order-products" tabindex="-1" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="show-order-products" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">

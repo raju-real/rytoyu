@@ -11,20 +11,32 @@ class AdminOrderManageController extends Controller
     public function manageOrders()
     {
         $data = Order::query();
-        $createdAt = request()->get('created_at');
+        $createdAt = request()->get('order_date');
         if ($createdAt) {
             $data->whereDate('created_at', $createdAt);
-        } else {
-            $data->whereDate('created_at', now()->toDateString()); // Default to today
-        }
-        // You can now add more filters freely
-        if (request()->has('status')) {
-            $data->where('status', request()->get('status'));
-        }
-        if (request()->has('seller_id')) {
-            $data->where('seller_id', request()->get('seller_id'));
+        } 
+        if ($search = request()->get('search')) {
+            $data->where(function ($query) use ($search) {
+                $query->where('order_number', 'LIKE', "%{$search}%")
+                    ->orWhere('invoice', 'LIKE', "%{$search}%")
+                    ->orWhere('mobile', 'LIKE', "%{$search}%");
+            });
         }
         $orders =  $data->paginate(20);
-        return view('admin.orders.manage_orders',compact('orders'));
+        return view('admin.orders.manage_orders', compact('orders'));
+    }
+
+    public function orderProducts($unique_id)
+    {
+        $order = Order::with([
+            'order_products' => function ($oder_product) {
+                $oder_product->orderBy('seller_id');
+            }
+        ])->whereUniqueId($unique_id)->firstOrFail();
+        $html =  view('admin.orders.order_products', compact('order'))->render();
+        return response()->json([
+            'title' => 'Order ' . $order->order_number . ' Products',
+            'html' => $html
+        ]);
     }
 }

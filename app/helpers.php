@@ -388,6 +388,13 @@ if (!function_exists('numberFormat')) {
     }
 }
 
+if (!function_exists('ucFirst')) {
+    function ucFirst($string = Null): string
+    {
+        return Str::ucfirst($string);
+    }
+}
+
 // Website helpers
 
 if (!function_exists('megaMenus')) {
