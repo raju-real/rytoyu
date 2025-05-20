@@ -3,7 +3,7 @@
     let base_url = AppHelpers.base_url;
 
     $(document).on('click', '.show-order-products', function () {
-        $('#data-view-modal-dialog').addClass('modal-xl');
+        $('#data-view-modal-dialog').addClass('modal-fullscreen');
         $('#data-view-modal').modal('show');
         const tbody = $('#data-view-modal-body'); // Target the tbody element
         const unique_id = $(this).data('id');

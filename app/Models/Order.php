@@ -22,6 +22,12 @@ class Order extends Model
         });
     }
 
+    protected $appends = ['customer_full_name'];
+
+    public function getCustomerFullNameAttribute() {
+        return $this->first_name .' '.$this->last_name;
+    }
+
     public static function getOrderNumber(): string
     {
         $latestOrderNumber = Order::latest('id')->first();

@@ -8,13 +8,6 @@
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                 <h4 class="mb-sm-0 font-size-18">Manage Orders</h4>
-
-                <div class="page-title-right">
-                    <a href="{{ route('admin.sellers.create') }}" class="btn btn-sm btn-primary">
-                        <i class="fa fa-plus-circle"></i> Add New
-                    </a>
-                </div>
-
             </div>
         </div>
     </div>
@@ -82,9 +75,8 @@
                                     <th>Order Date</th>
                                     <th>Order No</th>
                                     <th>Invoice</th>
-                                    <th>Product</th>
+                                    <th>Short Info</th>
                                     <th>Total Amount</th>
-                                    <th>Customer</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -98,16 +90,10 @@
                                         <td class="text-center">
                                             <a type="button" class="btn btn-sm btn-info show-order-products"
                                                 data-id="{{ $order->unique_id }}">
-                                                {{ $order->order_products->count() ?? 0 }}
-                                            </a>
-                                        </td>
-                                        <td>{{ numberFormat($order->total_order_price, 2) }}</td>
-                                        <td class="text-center">
-                                            <a type="button" class="btn btn-sm btn-primary show-customer-info"
-                                                data-id="{{ $order->unique_id }}">
                                                 <i class="fa fa-eye fa-xl"></i>
                                             </a>
                                         </td>
+                                        <td>{{ numberFormat($order->total_order_price, 2) }}</td>
                                         <td>
 
                                         </td>

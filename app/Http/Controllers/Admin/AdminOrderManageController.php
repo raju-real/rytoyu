@@ -35,7 +35,7 @@ class AdminOrderManageController extends Controller
         ])->whereUniqueId($unique_id)->firstOrFail();
         $html =  view('admin.orders.order_products', compact('order'))->render();
         return response()->json([
-            'title' => 'Order ' . $order->order_number . ' Products',
+            'title' => 'Order ' . $order->order_number.' / '.$order->invoice . ' Products',
             'html' => $html
         ]);
     }
