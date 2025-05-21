@@ -162,14 +162,14 @@
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered mb-0 text-start">
-                            <thead>
+                            <thead class="table-light">
                                 <tr>
-                                    <th>Sl.no</th>
+                                    <th class="text-center">Sl.no</th>
                                     <th>Type</th>
                                     <th>Thumbnail</th>
                                     <th>Name</th>
                                     <th>Brand</th>
-                                    <th>Variant & Price</th>
+                                    <th class="text-center">Variant & Price</th>
                                     <th>Active Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -177,7 +177,7 @@
                             <tbody>
                                 @forelse($products as $product)
                                     <tr>
-                                        <td>{{ $loop->index + 1 }}</td>
+                                        <td class="text-center">{{ $loop->index + 1 }}</td>
                                         <td>{{ $product->type->name ?? '' }}</td>
                                         <td>
                                             @if ($product->thumbnail_path != null && file_exists($product->thumbnail_path))
@@ -190,7 +190,7 @@
                                         </td>
                                         <td>{{ $product->name ?? '' }}</td>
                                         <td>{{ $product->brand->name ?? 'N/A' }}</td>
-                                        <td>
+                                        <td class="text-center">
                                             <a type="button" class="btn btn-sm btn-info view-product-variants"
                                                 data-bs-toggle="modal" data-bs-target="#show-product-variants"
                                                 data-id="{{ $product->id }}">

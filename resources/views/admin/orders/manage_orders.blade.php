@@ -68,14 +68,14 @@
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered mb-0 text-nowrap text-center">
-                            <thead>
+                        <table class="table table-striped table-bordered table-md mb-0 text-nowrap text-center">
+                            <thead class="table-light">
                                 <tr>
                                     <th>Sl.no</th>
                                     <th>Order Date</th>
                                     <th>Order No</th>
                                     <th>Invoice</th>
-                                    <th>Short Info</th>
+                                    <th>Order Info</th>
                                     <th>Total Amount</th>
                                     <th>Action</th>
                                 </tr>

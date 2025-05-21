@@ -84,7 +84,7 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
         // Order Manage
         Route::controller(\App\Http\Controllers\Admin\AdminOrderManageController::class)->group(function () {
             Route::get('manage-orders', 'manageOrders')->name('manage-orders');
-            Route::get('order-products/{unique_id}','orderProducts')->name('order-products');
+            Route::get('order-info/{unique_id}','orderProducts')->name('order-info');
         });
     });
     //Products
