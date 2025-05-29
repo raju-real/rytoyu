@@ -271,7 +271,8 @@ class CacheCartController extends Controller
     {
         if (Auth::check()) {
             $cart_items = $this->getCartItems();
-            return view('user.pages.checkout', compact('cart_items'));
+            $user = Auth::user();
+            return view('user.pages.checkout', compact('cart_items','user'));
         } else {
             session()->put('current_url', URL::current());
             return redirect()->route('login');

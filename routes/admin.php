@@ -69,6 +69,7 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
         Route::controller(\App\Http\Controllers\Admin\SellerController::class)->group(function () {
             Route::put('update-seller-status/{id}', 'updateSellerStatus')->name('update-seller-status');
             Route::put('update-seller-request-status/{id}', 'updateSellerRequestStatus')->name('update-seller-request-status');
+            Route::get('show-seller-info/{seller_code}', 'showSellerInfo')->name('show-seller-info');
         });
         // Sliders
         Route::resource('sliders', \App\Http\Controllers\Admin\SliderController::class);
@@ -85,6 +86,7 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
         Route::controller(\App\Http\Controllers\Admin\AdminOrderManageController::class)->group(function () {
             Route::get('manage-orders', 'manageOrders')->name('manage-orders');
             Route::get('order-info/{unique_id}','orderProducts')->name('order-info');
+            Route::get('commission-logs','commissionLogs')->name('commission-logs');
         });
     });
     //Products

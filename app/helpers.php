@@ -114,6 +114,26 @@ if (!function_exists('getStatus')) {
     }
 }
 
+if (!function_exists('getPaymentStatus')) {
+    function getPaymentStatus(): array
+    {
+        return [
+            (object)['value' => 'paid', 'title' => 'Paid'],
+            (object)['value' => 'unpaid', 'title' => 'Un Paid']
+        ];
+    }
+}
+
+if (!function_exists('getPayToList')) {
+    function getPayToList(): array
+    {
+        return [
+            (object)['value' => 'merchant', 'title' => 'Merchant'],
+            (object)['value' => 'seller', 'title' => 'Seller']
+        ];
+    }
+}
+
 if (!function_exists('getConfirmStatus')) {
     function getConfirmStatus(): array
     {

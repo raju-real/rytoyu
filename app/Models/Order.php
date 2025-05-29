@@ -5,11 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Laravel\Scout\Searchable;
 
 class Order extends Model
 {
-    use HasFactory, Searchable;
+    use HasFactory;
 
     protected static function boot()
     {
@@ -22,10 +21,16 @@ class Order extends Model
         });
     }
 
-    protected $appends = ['customer_full_name'];
+    protected $appends = ['customer_full_name', 'seller_count'];
 
-    public function getCustomerFullNameAttribute() {
-        return $this->first_name .' '.$this->last_name;
+    public function getCustomerFullNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
+
+    public function getSellerCountAttribute()
+    {
+        return SellerOrderLog::where('order_id', $this->id)->distinct()->count('seller_id') ?? 0;
     }
 
     public static function getOrderNumber(): string
@@ -81,7 +86,7 @@ class Order extends Model
             if (!$variant) {
                 return 0;
             }
-            $price = $variant->discount_price;
+            $price = $variant->unit_price - $variant->discount_price;
             $quantity = $item['quantity'] ?? 1;
             $total += $price * $quantity;
         }
@@ -106,7 +111,11 @@ class Order extends Model
 
     public function order_products()
     {
-        return $this->hasMany(OrderProduct::class,'order_id','id');
+        return $this->hasMany(OrderProduct::class, 'order_id', 'id');
     }
 
+    public function seller_order_logs()
+    {
+        return $this->hasMany(SellerOrderLog::class, 'order_id', 'id');
+    }
 }

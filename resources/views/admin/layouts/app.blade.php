@@ -300,12 +300,12 @@
         </div>
     </div>
     {{-- Data view modal --}}
-    <div class="modal fade" id="data-view-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="data-view-modal" tabindex="-1" aria-labelledby="dataViewModal"
         aria-hidden="true">
         <div class="modal-dialog" id="data-view-modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title data-view-modal-header" id="exampleModalLabel"></h5>
+                    <h5 class="modal-title data-view-modal-header" id="dataViewModal"></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="data-view-modal-body"></div>

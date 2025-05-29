@@ -50,6 +50,11 @@
                         <i class="bx bx-chevron-right"></i> Order List
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('admin.commission-logs') }}" class="{{ isSubMenuActive('commission-logs') }}">
+                        <i class="bx bx-chevron-right"></i> Commission Logs
+                    </a>
+                </li>
                 
             </ul>
         </li>

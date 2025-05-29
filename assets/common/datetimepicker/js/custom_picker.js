@@ -6,6 +6,7 @@ $(function () {
         // todayHighlight: true,
         // startDate: '2025-01-01',
         // endDate: '2025-12-31'
+        orientation: 'bottom'  // Force it to open below
     });
 
     // $('.datetimepicker1').datetimepicker({

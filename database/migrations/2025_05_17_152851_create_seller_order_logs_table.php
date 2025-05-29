@@ -23,6 +23,7 @@ return new class extends Migration
             $table->double('order_amount')->default(0.00);
             $table->double('commission_rate',8,2)->default(0.00);
             $table->double('total_commission')->default(0.00);
+            $table->enum('pay_to',['seller','merchant'])->default("merchant");
             $table->enum('payment_status',['paid','unpaid'])->default("unpaid");
             $table->timestamps();
             $table->unique(['seller_id', 'order_id', 'order_number', 'invoice']); // To ensure uniqueness

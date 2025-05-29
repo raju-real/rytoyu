@@ -195,6 +195,26 @@ class SellerController extends Controller
         ], 500);
     }
 
+    public function showSellerInfo($seller_code = null)
+    {
+        $seller = Admin::with('shop')
+            ->whereCode($seller_code)
+            ->select('id', 'code', 'name', 'email', 'mobile', 'commission_rate', 'image', 'status')
+            ->firstOrFail();
+
+        // Hide attributes from the related shop
+        if ($seller->relationLoaded('shop') && $seller->shop) {
+            $seller->shop->makeHidden(['created_at', 'updated_at']);
+        }
+
+        $html =  view('admin.seller.seller_info', compact('seller'))->render();
+        return response()->json([
+            'title' => 'Seller Information',
+            'html' => $html
+        ]);
+        
+    }
+
 
     public function destroy($id)
     {
