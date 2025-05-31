@@ -4,8 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Models\SellerOrderLog;
-use Illuminate\Http\Request;
+use niklasravnsborg\LaravelPdf\Facades\Pdf;
 
 class AdminOrderManageController extends Controller
 {
@@ -77,5 +76,21 @@ class AdminOrderManageController extends Controller
         $data->select('id','unique_id','order_number','invoice','total_order_price','created_at');
         $orders =  $data->simplePaginate(20);
         return view('admin.orders.commission_logs', compact('orders'));
+    }
+
+    public function orderInvoice($unique_id) {
+        $order = Order::with([
+            'order_products' => function($order_product) {
+                $order_product->select('order_id','product_id','seller_id','item_order_price','quantity','item_total_order_price','size','color');
+                $order_product->with([
+                    'product' => function($product) {
+                        $product->select('id','product_code','name','thumbnail_path');
+                    }
+                ]);
+            }
+        ])->whereUniqueId($unique_id)->firstOrFail();
+        //return view('pdf.order_invoice', compact('order'));
+        $file = PDF::loadView('pdf.order_invoice', compact('order'));
+        return $file->stream();
     }
 }

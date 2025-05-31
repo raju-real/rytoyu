@@ -29,7 +29,6 @@ class LogSellerOrderJob implements ShouldQueue
     public function handle()
     {
         $order = Order::find($this->orderId);
-        Log::info('order' . $order);
         if (!$order) return; // Return for false order
         // Process log
         $sellerIds = OrderProduct::where('order_id', $order->id)
@@ -61,6 +60,22 @@ class LogSellerOrderJob implements ShouldQueue
                 'payment_status' => 'unpaid'
             ]);
         }
+
+        // Save qr code
+        $qr_data =
+            "Order Details\n" .
+            "-----------------------\n" .
+            "Order No: " . $order->order_number . "\n" .
+            "Invoice No: " . $order->invoice . "\n" .
+            "Order Date: " . $order->created_at->format('d M, Y') . "\n" .
+            "Customer: " . $order->customer_full_name . "\n" .
+            "Mobile: " . $order->mobile . "\n" .
+            "City: " . $order->city_town . "\n" .
+            "Post Code: " . $order->post_code . "\n" .
+            "Address: " . $order->address . "\n" .
+            "Total Amount: " . number_format($order->total_order_price, 2) . " BDT";
+
+        generateQr($qr_data, 'order_' . $order->order_number, 200, 0); // if not saved do it on order model
 
         // Send notification to customer
         // Send notification to seller

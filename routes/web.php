@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\User\SslCommerzPaymentController;
 use Illuminate\Support\Facades\Route;
 // Website Manage
 Route::controller(\App\Http\Controllers\HomePageController::class)->group(function () {
@@ -29,6 +30,8 @@ Route::controller(\App\Http\Controllers\CacheCartController::class)->group(funct
         Route::get('checkout', 'checkout')->name('checkout');
         Route::post('apply-coupon', 'applyCoupon')->name('apply-coupon');
         Route::get('price-summery', 'getPriceSummery')->name('price-summery');
+        Route::get('set-shipping-fee', 'setShippingFee')->name('set-shipping-fee');
+        Route::get('set-payment-method', 'setPaymentMethod')->name('set-payment-method');
         Route::get('load-price-summery', 'loadPriceSummery')->name('load-price-summery');
         Route::get('checkout-products', 'getCheckoutProducts')->name('checkout-products');
         Route::post('submit-order', 'submitOrder')->name('submit-order');
@@ -55,6 +58,13 @@ Route::middleware('auth')->group(function () {
         Route::get('order-details/{invoice}', 'orderDetails')->name('order-details');
     });
 
+    Route::controller(SslCommerzPaymentController::class)->as('sslcommerz.')->group(function () {
+        Route::any('pay-now', 'index')->name('pay-now');
+        Route::any('success', 'success');
+        Route::any('fail', 'fail');
+        Route::any('cancel', 'cancel');
+        Route::any('ipn', 'ipn');
+    });
 });
 // Social Login Part
 Route::controller(\App\Http\Controllers\SocialLoginController::class)->group(function () {
@@ -68,7 +78,3 @@ Route::controller(\App\Http\Controllers\SocialLoginController::class)->group(fun
     Route::get('auth/instagram', 'redirectToInstagram')->name('instagram.login');
     Route::get('auth/instagram/callback', 'instagramCallback')->name('instagram.callback');
 });
-
-
-
-

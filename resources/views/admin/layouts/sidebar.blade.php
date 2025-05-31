@@ -169,7 +169,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="{{ isMainMenuActive('site-settings') }}">
+            <li class="{{ isMainMenuActive('site-settings','delivery-charges') }}">
                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                     <i class="bx bx-cog"></i>
                     <span>Settings</span>
@@ -178,6 +178,11 @@
                     <li>
                         <a href="{{ route('admin.site-settings') }}" class="{{ isSubMenuActive('site-settings') }}">
                             <i class="bx bx-chevron-right"></i> Site Settings
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.delivery-charges.index') }}" class="{{ isSubMenuActive('delivery-charges') }}">
+                            <i class="bx bx-chevron-right"></i> Delivery Charges
                         </a>
                     </li>
                 </ul>

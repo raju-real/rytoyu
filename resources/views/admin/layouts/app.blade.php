@@ -300,8 +300,7 @@
         </div>
     </div>
     {{-- Data view modal --}}
-    <div class="modal fade" id="data-view-modal" tabindex="-1" aria-labelledby="dataViewModal"
-        aria-hidden="true">
+    <div class="modal fade" id="data-view-modal" tabindex="-1" aria-labelledby="dataViewModal" aria-hidden="true">
         <div class="modal-dialog" id="data-view-modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -339,6 +338,7 @@
     // Page wise js
     <script src="{{ asset('assets/admin/js/common.js') }}"></script>
     <script src="{{ asset('assets/admin/js/app.js') }}"></script>
+
     @stack('js')
 </body>
 

@@ -76,14 +76,16 @@
                             <div class="form-group">
                                 <input name="first_name" id="first_name" class="form-control" type="text"
                                     placeholder="First Name" value="{{ $user->first_name ?? '' }}">
-                                <span id="order_first_name_error" class="text-danger font-weight-500 order-error-message"></span>
+                                <span id="order_first_name_error"
+                                    class="text-danger font-weight-500 order-error-message"></span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <input name="last_name" id="last_name" class="form-control" type="text"
                                     placeholder="Last Name" value="{{ $user->last_name ?? '' }}">
-                                <span id="order_last_name_error" class="text-danger font-weight-500 order-error-message"></span>
+                                <span id="order_last_name_error"
+                                    class="text-danger font-weight-500 order-error-message"></span>
                             </div>
                         </div>
 
@@ -104,11 +106,15 @@
 
                         <div class="col-md-4">
                             <div class="form-group selectpicker-wrapper">
-                                <select id="district_id" name="district_id" class="form-control sel-bg">
-                                    <option selected="1">Dhaka</option>
-                                    <option selected="1">Rangpur</option>
+                                <select id="district" name="district" class="form-control sel-bg">
+                                    @foreach (deliveryDistricts() as $district)
+                                        <option value="{{ $district->slug }}"
+                                            {{ $user->district_id == $district->id ? 'selected' : '' }}>
+                                            {{ $district->district_name ?? '' }}</option>
+                                    @endforeach
                                 </select>
-                                <span id="order_district_id_error" class="text-danger font-weight-500 order-error-message"></span>
+                                <span id="order_district_error"
+                                    class="text-danger font-weight-500 order-error-message"></span>
                             </div>
                         </div>
 
@@ -123,7 +129,8 @@
                             <div class="form-group">
                                 <input name="zip_code" id="zip_code" class="form-control" type="text"
                                     placeholder="Postcode/ZIP" value="{{ $user->zip_code ?? '' }}">
-                                <span id="order_zip_code_error" class="text-danger font-weight-500 order-error-message"></span>
+                                <span id="order_zip_code_error"
+                                    class="text-danger font-weight-500 order-error-message"></span>
                             </div>
                         </div>
 
@@ -131,7 +138,8 @@
                             <div class="form-group">
                                 <input name="address" id="address" class="form-control" type="text"
                                     placeholder="Address" value="{{ $user->delivery_address ?? '' }}">
-                                <span id="order_address_error" class="text-danger font-weight-500 order-error-message"></span>
+                                <span id="order_address_error"
+                                    class="text-danger font-weight-500 order-error-message"></span>
                             </div>
                         </div>
 
@@ -170,8 +178,8 @@
                         <div class="panel-heading" role="tab" id="headingThree">
                             <h4 class="panel-title">
                                 <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse3"
-                                    aria-expanded="false" aria-controls="collapse3" data-value="credit-card">
-                                    <span class="dot"></span> Credit Card
+                                    aria-expanded="false" aria-controls="collapse3" data-value="online-payment">
+                                    <span class="dot"></span> Online Payment
                                 </a>
                                 <span class="overflowed pull-right">
                                     <img src="{{ asset('assets/user/img/preview/payments/mastercard-2.jpg') }}"
@@ -190,22 +198,8 @@
                         <div id="collapse3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading3">
                         </div>
                     </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="heading4">
-                            <h4 class="panel-title">
-                                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse4"
-                                    aria-expanded="false" aria-controls="collapse4" data-value="paypal">
-                                    <span class="dot"></span> PayPal
-                                </a>
-                                <span class="overflowed pull-right"><img
-                                        src="{{ asset('assets/user/img/preview/payments/paypal-2.jpg') }}"
-                                        alt="" /></span>
-                            </h4>
-                        </div>
-                        <div id="collapse4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading4">
-                        </div>
-                    </div>
                 </div>
+                <span id="order_payment_method_error" class="text-danger font-weight-500 order-error-message"></span>
             </section>
 
             <div class="clearfix"></div>

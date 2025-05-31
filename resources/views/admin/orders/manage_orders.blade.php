@@ -86,7 +86,9 @@
                                         <td>{{ $loop->index + 1 }}</td>
                                         <td>{{ dateFormat($order->created_at, 'd M, y') }}</td>
                                         <td>{{ $order->order_number ?? '' }}</td>
-                                        <td>{{ $order->invoice ?? '' }}</td>
+                                        <td>
+                                            <a target="_blank" href="{{ route('admin.order-invoice', $order->unique_id) }}">{{ $order->invoice ?? '' }}</a>
+                                        </td>
                                         <td class="text-center">
                                             <a type="button" class="btn btn-sm btn-info show-order-products"
                                                 data-id="{{ $order->unique_id }}">

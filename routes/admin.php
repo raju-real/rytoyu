@@ -1,7 +1,30 @@
 <?php
 
-use App\Http\Controllers\Admin\ProfileController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\Admin\AdminLogin;
+use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\Admin\SizeController;
+use App\Http\Controllers\Admin\UnitController;
+use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\ColorController;
+use App\Http\Controllers\Admin\SellerController;
+use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\WebPageManageController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\InventoryController;
+use App\Http\Controllers\Admin\ProductTypeController;
+use App\Http\Controllers\Admin\SubCategoryController;
+use App\Http\Controllers\Admin\AnnouncementController;
+use App\Http\Controllers\Admin\DeliveryChargeController;
+use App\Http\Controllers\Admin\SubSubcategoryController;
+use App\Http\Controllers\Admin\AdminOrderManageController;
+use App\Models\Order;
 
 /*
 |--------------------------------------------------------------------------
@@ -10,10 +33,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::view('admin', 'admin.admin_login');
-Route::post('admin-login', \App\Http\Controllers\Admin\AdminLogin::class)->name('admin-login');
+Route::post('admin-login', AdminLogin::class)->name('admin-login');
 
 Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
-    Route::controller(\App\Http\Controllers\Admin\DashboardController::class)->group(function () {
+    Route::controller(DashboardController::class)->group(function () {
         Route::get('dashboard', 'dashboard')->name('dashboard');
     });
     Route::controller(ProfileController::class)->group(function () {
@@ -28,52 +51,56 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
     // Only for admin
     Route::middleware('admin')->group(function () {
         //Attributes
-        Route::resource('product-types', \App\Http\Controllers\Admin\ProductTypeController::class);
-        Route::controller(\App\Http\Controllers\Admin\ProductTypeController::class)->group(function () {
+        Route::resource('product-types', ProductTypeController::class);
+        Route::controller(ProductTypeController::class)->group(function () {
             Route::put('update-product-type-status/{id}', 'updateProductTypeStatus')->name('update-product-type-status');
             Route::post('sort-product-types', 'sortProductTypes')->name('sort-product-types');
         });
-        Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
-        Route::controller(\App\Http\Controllers\Admin\CategoryController::class)->group(function () {
+        Route::resource('categories', CategoryController::class);
+        Route::controller(CategoryController::class)->group(function () {
             Route::put('update-category-status/{id}', 'updateCategoryStatus')->name('update-category-status');
             Route::post('sort-categories', 'sortCategories')->name('sort-categories');
         });
-        Route::resource('subcategories', \App\Http\Controllers\Admin\SubCategoryController::class);
-        Route::controller(\App\Http\Controllers\Admin\SubCategoryController::class)->group(function () {
+        Route::resource('subcategories', SubCategoryController::class);
+        Route::controller(SubCategoryController::class)->group(function () {
             Route::put('update-subcategory-status/{id}', 'updateSubCategoryStatus')->name('update-subcategory-status');
             Route::post('sort-subcategories', 'sortSubCategories')->name('sort-subcategories');
         });
-        Route::resource('sub-subcategories', \App\Http\Controllers\Admin\SubSubcategoryController::class);
-        Route::controller(\App\Http\Controllers\Admin\SubSubcategoryController::class)->group(function () {
+        Route::resource('sub-subcategories', SubSubcategoryController::class);
+        Route::controller(SubSubcategoryController::class)->group(function () {
             Route::put('update-sub-subcategory-status/{id}', 'updateSubSubCategoryStatus')->name('update-sub-subcategory-status');
             Route::post('sort-sub-subcategories', 'sortSubSubCategories')->name('sort-sub-subcategories');
         });
-        Route::resource('brands', \App\Http\Controllers\Admin\BrandController::class);
-        Route::controller(\App\Http\Controllers\Admin\BrandController::class)->group(function () {
+        Route::resource('brands', BrandController::class);
+        Route::controller(BrandController::class)->group(function () {
             Route::put('update-brand-status/{id}', 'updateBrandStatus')->name('update-brand-status');
             Route::post('sort-brands', 'sortBrands')->name('sort-brands');
         });
-        Route::resource('sizes', \App\Http\Controllers\Admin\SizeController::class);
-        Route::resource('colors', \App\Http\Controllers\Admin\ColorController::class);
-        Route::resource('units', \App\Http\Controllers\Admin\UnitController::class);
-        Route::resource('tags', \App\Http\Controllers\Admin\TagController::class);
+        Route::resource('sizes', SizeController::class);
+        Route::resource('colors', ColorController::class);
+        Route::resource('units', UnitController::class);
+        Route::resource('tags', TagController::class);
         // Settings
-        Route::controller(\App\Http\Controllers\Admin\SettingController::class)->group(function () {
+        Route::controller(SettingController::class)->group(function () {
             Route::get('site-settings', 'siteSettings')->name('site-settings');
             Route::put('update-site-settings', 'updateSiteSettings')->name('update-site-settings');
+            Route::resource('delivery-charges',DeliveryChargeController::class);
+            Route::controller(DeliveryChargeController::class)->group(function() {
+                Route::put('update-delivery-charge-status/{id}', 'updateDeliveryChargeStatus')->name('update-delivery-charge-status');
+            });
         });
         // Announcements
-        Route::resource('announcements', \App\Http\Controllers\Admin\AnnouncementController::class);
+        Route::resource('announcements', AnnouncementController::class);
         // Sellers
-        Route::resource('sellers', \App\Http\Controllers\Admin\SellerController::class);
-        Route::controller(\App\Http\Controllers\Admin\SellerController::class)->group(function () {
+        Route::resource('sellers', SellerController::class);
+        Route::controller(SellerController::class)->group(function () {
             Route::put('update-seller-status/{id}', 'updateSellerStatus')->name('update-seller-status');
             Route::put('update-seller-request-status/{id}', 'updateSellerRequestStatus')->name('update-seller-request-status');
             Route::get('show-seller-info/{seller_code}', 'showSellerInfo')->name('show-seller-info');
         });
         // Sliders
-        Route::resource('sliders', \App\Http\Controllers\Admin\SliderController::class);
-        Route::controller(\App\Http\Controllers\Admin\SliderController::class)->group(function () {
+        Route::resource('sliders', SliderController::class);
+        Route::controller(SliderController::class)->group(function () {
             Route::put('update-slider-status/{id}', 'updateSliderStatus')->name('update-slider-status');
             Route::post('sort-sliders', 'sortSliders')->name('sort-sliders');
             Route::get('slider-products/{slug}', 'sliderProducts')->name('slider-products');
@@ -83,25 +110,26 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
             Route::delete('delete-slider-product', 'deleteSliderProduct')->name('delete-slider-product');
         });
         // Order Manage
-        Route::controller(\App\Http\Controllers\Admin\AdminOrderManageController::class)->group(function () {
+        Route::controller(AdminOrderManageController::class)->group(function () {
             Route::get('manage-orders', 'manageOrders')->name('manage-orders');
-            Route::get('order-info/{unique_id}','orderProducts')->name('order-info');
-            Route::get('commission-logs','commissionLogs')->name('commission-logs');
+            Route::get('order-info/{unique_id}', 'orderProducts')->name('order-info');
+            Route::get('commission-logs', 'commissionLogs')->name('commission-logs');
+            Route::get('order-invoice/{unique_id}', 'orderInvoice')->name('order-invoice');
         });
     });
     //Products
-    Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
-    Route::controller(\App\Http\Controllers\Admin\ProductController::class)->group(function () {
+    Route::resource('products', ProductController::class);
+    Route::controller(ProductController::class)->group(function () {
         Route::get('get-product-variants/{id}', 'productVariants')->name('get-product-variants');
         Route::get('get-product-variants-data', 'getProductVariantsData')->name('get-product-variants-data');
         Route::put('update-product-status/{id}', 'updateProductStatus')->name('update-product-status');
     });
     //Inventory
-    Route::controller(\App\Http\Controllers\Admin\InventoryController::class)->group(function () {
+    Route::controller(InventoryController::class)->group(function () {
         Route::get('product-stock-status', 'productStockStatus')->name('product-stock-status');
     });
     // Homepage section Manage
-    Route::controller(\App\Http\Controllers\WebPageManageController::class)->group(function () {
+    Route::controller(WebPageManageController::class)->group(function () {
         // New in section
         Route::get('new-in-products', 'newInProducts')->name('new-in-products');
         Route::get('get-new-in-products', 'getNewInProducts')->name('get-new-in-products');
@@ -120,8 +148,27 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
     });
 
     Route::get('logout', function () {
-        \Illuminate\Support\Facades\Auth::logout();
-        \Illuminate\Support\Facades\Session::reflash();
+        Auth::logout();
+        Session::reflash();
         return redirect()->route('home');
     })->name('logout');
+
+    Route::get('bulk-operation', function () {
+        $order = Order::where('order_number','0022')->first();
+        $qr_data =
+            "Order Details\n" .
+            "-----------------------\n" .
+            "Order No: " . $order->order_number . "\n" .
+            "Invoice No: " . $order->invoice . "\n" .
+            "Order Date: " . $order->created_at->format('d M, Y') . "\n" .
+            "Customer: " . $order->customer_full_name . "\n" .
+            "Mobile: " . $order->mobile . "\n" .
+            "City: " . $order->city_town . "\n" .
+            "Post Code: " . $order->post_code . "\n" .
+            "Address: " . $order->address . "\n" .
+            "Total Amount: " . number_format($order->total_order_price, 2) . " BDT";
+        
+        generateQr($qr_data, 'order_' . $order->order_number, 200, 0);
+    });
+
 });

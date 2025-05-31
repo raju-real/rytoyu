@@ -38,7 +38,7 @@ return new class extends Migration
             $table->string('last_name',50)->nullable();
             $table->string('mobile',20)->nullable();
             $table->string('email',50)->nullable();
-            $table->string('district_id')->nullable();
+            $table->integer('district_id')->nullable();
             $table->string('city_town')->nullable();
             $table->text('address')->nullable();
             $table->integer('post_code')->nullable();

@@ -149,9 +149,11 @@
 
     // Only checkout page activity
     if (AppHelpers.current_page === "checkout") {
+        setShippingFee();
         reloadCartTable();
         toggleDeleteButton();
         reloadPriceSummery();
+        setPaymentMethod();
 
         // Delete button enable and disabled
         function toggleDeleteButton() {
@@ -214,7 +216,7 @@
                 },
             });
         });
-
+        // Update cart quantity
         $(document).on("click", ".update-quantity", function () {
             const itemKey = $(this).data("id");
             const action = $(this).data("action");
@@ -234,7 +236,6 @@
                     console.error(error);
                 });
         });
-
         // Remove single item (Cross icon)
         $(document).on("click", ".remove-item", function () {
             const id = $(this).data("id");
@@ -260,6 +261,76 @@
                 },
             });
         });
+        // Set shipping fee
+        $(document).on("change", "#district", function () {
+            setShippingFee();
+        });
+        // Set shipping fee
+        function setShippingFee() {
+            const district = $("#district").val();
+            axios
+                .get(base_url + "/set-shipping-fee?district=" + district)
+                .then((response) => {
+                    if (response.data.status === "error") {
+                        $("#order_district_error").text(response.data.message);
+                    }
+                    reloadPriceSummery();
+                })
+                .catch((error) => {
+                    console.error(error);
+                    AppHelpers.showToast(
+                        "danger",
+                        "Failed to set district."
+                    );
+                });
+        }
+        // Set cash on delivery as default
+        function setPaymentMethod() {
+            const $target = $('#accordion a[data-value="cash-on-delivery"]');
+            const $panel = $target.closest(".panel");
+            // Remove `.selected` from all other options
+            $("#accordion a").removeClass("selected");
+            // Add `.selected` to the current target
+            $target.addClass("selected");
+            // Expand only this panel
+            $(".panel-collapse").collapse("hide"); // Collapse all others first
+            $panel.find(".panel-collapse").collapse("show");
+            setServiceCharge();
+        }
+        // Set payment method
+        $("#accordion a").on("click", function (e) {
+            e.preventDefault();
+            // Remove selected class from all
+            $("#accordion a").removeClass("selected");
+            // Add selected class to the clicked one
+            $(this).addClass("selected");
+            // Collapse all panels and expand the one clicked
+            $(".panel-collapse").collapse("hide");
+            $(this).closest(".panel").find(".panel-collapse").collapse("show");
+            setServiceCharge();
+        });
+
+        function setServiceCharge() {
+            const selected_method = $("#accordion a.selected").data("value") || "cash-on-delivery";
+            $('#order_payment_method_error').empty();
+            
+            axios
+                .get(base_url + "/set-payment-method?payment_method=" + selected_method)
+                .then((response) => {
+                    if (response.data.status === "error") {
+                        $("#order_payment_method_error").addClass('alert alert-danger').text(response.data.message);
+                    } else if(response.data.status === 'success' && response.data.payment_method === 'online-payment') {
+                        $('#order_payment_method_error').text("Extra " + response.data.service_charge + ' Tk will bed added with your total amount.')
+                    }
+                    reloadPriceSummery();
+                })
+                .catch((error) => {
+                    AppHelpers.showToast(
+                        "danger",
+                        "Failed to set payment method."
+                    );
+                });
+        }
 
         // Reload Cart Table Function
         function reloadCartTable() {
@@ -276,7 +347,7 @@
                     );
                 });
         }
-
+        // Reload price summery
         function reloadPriceSummery() {
             axios
                 .get(base_url + "/load-price-summery")
@@ -291,7 +362,7 @@
                     );
                 });
         }
-
+        // Submit order
         $(document).on("click", "#order-submit", function (event) {
             event.preventDefault();
 
@@ -307,13 +378,10 @@
             const form = $("#order-form")[0];
             const formData = new FormData(form);
 
-            const selectedPayment =
-                $("#accordion .panel-collapse.in")
-                    .prev()
-                    .find("a")
-                    .data("value") || "cash-on-delivery";
+            // If using FormData
+            const selectedPayment =  $("#accordion a.selected").data("value") || "cash-on-delivery";
 
-            formData.append("payment_method", selectedPayment); // If using FormData
+            formData.append("payment_method", selectedPayment); 
 
             axios
                 .post(base_url + "/submit-order", formData)
@@ -328,14 +396,14 @@
                 })
                 .catch(function (error) {
                     if (error.response && error.response.status === 422) {
-                        $(".form-control").css("border","solid 1px #E9E9E9"); // Clear previous error styles and messages
+                        $(".form-control").css("border", "solid 1px #E9E9E9"); // Clear previous error styles and messages
                         //$(".order-error-message").empty(); // Remove all input error message
 
                         let errors = error.response.data.errors; // Handle validation errors
                         // General field errors
                         $.each(errors, function (field, messages) {
-                            console.log("field", field, 'message', messages[0]);
-                            $(`#${field}`).css("border","1px solid red");
+                            console.log("field", field, "message", messages[0]);
+                            $(`#${field}`).css("border", "1px solid red");
                             //$(`#order_${field}_error`).text(messages[0]);
                         });
                     }

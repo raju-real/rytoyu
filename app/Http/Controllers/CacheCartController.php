@@ -10,6 +10,7 @@ use App\Models\OrderProduct;
 use Illuminate\Http\Request;
 use App\Models\ProductVariant;
 use App\Jobs\LogSellerOrderJob;
+use App\Models\DeliveryCharge;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\URL;
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Validation\Validator as ValidationValidator;
 
 class CacheCartController extends Controller
 {
@@ -146,6 +148,15 @@ class CacheCartController extends Controller
         ];
     }
 
+    protected function calculatedServiceCharge($order_price)
+    {
+
+        $percentage = 2;
+        return ceil($order_price * ($percentage / 100)); // Round up
+        //return floor($order_price * ($percentage / 100)); // Round down
+        //return intval($order_price * ($percentage / 100)); // Convert to integer (cuts decimals):
+    }
+
     public function getPriceSummery()
     {
         $this->applyCoupon();
@@ -164,11 +175,19 @@ class CacheCartController extends Controller
         }
 
         $total_discount = $item_total_discount + $coupon_discount;
-        $total_order_price = ($total_item_price + $shipping_fee) - $coupon_discount;
+        $total_amount = ($total_item_price + $shipping_fee) - $coupon_discount;
+        if (session()->has('selected_payment_method') && session('selected_payment_method') === 'online-payment') {
+            $service_charge = $this->calculatedServiceCharge($total_amount);
+        } else {
+            $service_charge = 0;
+        }
+
+        $total_order_price = ($total_amount + $shipping_fee + $service_charge) - $coupon_discount;
 
         $price_summary = [
             'total_item_price' => $total_item_price,
             'shipping_fee' => $shipping_fee,
+            'service_charge' => $service_charge,
             'total_order_price' => $total_order_price,
             'item_total_discount' => $item_total_discount,
             'applied_coupon' => $applied_coupon,
@@ -178,6 +197,47 @@ class CacheCartController extends Controller
         // Save into cookie
         cookie()->queue(cookie($price_summery_key, json_encode($price_summary), 60 * 24 * 7)); // 7 days
         return $price_summary;
+    }
+
+    public function setShippingFee()
+    {
+        $validations = Validator::make(request()->all(), [
+            'district' => 'required|exists:delivery_charges,slug'
+        ]);
+        if ($validations->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid District Selected'
+            ]);
+        }
+        $district_slug = request()->get('district') ?? 'dhaka';
+        session()->put('selected_district', $district_slug);
+        return shippingFee();
+    }
+
+    public function setPaymentMethod()
+    {
+        $validations = Validator::make(request()->all(), [
+            'payment_method' => 'required|in:cash-on-delivery,online-payment'
+        ]);
+
+        if ($validations->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid payment method selected',
+                'errors' => $validations->errors()
+            ]);
+        }
+
+        $payment_method = request()->get('payment_method') ?? 'dhaka';
+        session()->put('selected_payment_method', $payment_method);
+        $price_summery = $this->getPriceSummery();
+        return response()->json([
+            'status' => 'success',
+            'payment_method' => $payment_method,
+            'service_charge' => $price_summery['service_charge'],
+            'message' => 'Payment method selected successfully'
+        ]);
     }
 
     public function loadPriceSummery()
@@ -197,13 +257,12 @@ class CacheCartController extends Controller
         session(['applied_coupon_code' => $coupon_code]);
         session(['applied_coupon_discount' => $discount]);
         // Recalculate price summery
-//        $this->getPriceSummery();
-//        return response()->json([
-//            'message' => 'Coupon applied successfully.',
-//            'coupon' => $coupon
-//        ]);
+        //        $this->getPriceSummery();
+        //        return response()->json([
+        //            'message' => 'Coupon applied successfully.',
+        //            'coupon' => $coupon
+        //        ]);
     }
-
 
     public function updateCartQuantity(Request $request): JsonResponse
     {
@@ -229,7 +288,6 @@ class CacheCartController extends Controller
         $this->saveCartItems($cartItems);
         return response()->json(['status' => 'success', 'message' => 'Cart updated successfully.']);
     }
-
 
     public function removeFromCart(Request $request)
     {
@@ -272,7 +330,7 @@ class CacheCartController extends Controller
         if (Auth::check()) {
             $cart_items = $this->getCartItems();
             $user = Auth::user();
-            return view('user.pages.checkout', compact('cart_items','user'));
+            return view('user.pages.checkout', compact('cart_items', 'user'));
         } else {
             session()->put('current_url', URL::current());
             return redirect()->route('login');
@@ -285,7 +343,7 @@ class CacheCartController extends Controller
             'first_name' => 'required|max:100',
             'last_name' => 'required|max:100',
             'address' => 'required|max:255',
-            'district_id' => 'nullable|max:100',
+            'district' => 'required|exists:delivery_charges,slug',
             'city' => 'nullable|max:100',
             'zip_code' => 'required|max:10',
             'email' => 'required|email|max:50',
@@ -299,9 +357,9 @@ class CacheCartController extends Controller
         $applied_coupon_code = $price_summery['applied_coupon'] ?? Null;
         $applied_coupon_discount = $price_summery['coupon_discount'] ?? 0;
         // Validate coupon and coupon discount here. others failed
-//        if(!empty($applied_coupon_code)) {
-//
-//        }
+        //        if(!empty($applied_coupon_code)) {
+        //
+        //        }
         // Price calculation
         $total_vat = 0;
         $total_shipping = $price_summery['shipping_fee'];
@@ -314,7 +372,6 @@ class CacheCartController extends Controller
         $total_item_unit_price = Order::getTotalItemUnitPrice($cartItems);
         $total_item_discount = Order::getTotalItemDiscountPrice($cartItems);
         $total_item_order_price = Order::getItemOrderPrice($cartItems);
-        $service_charge = 0;
 
         $order->total_item_unit_price = $total_item_unit_price;
         $order->total_item_discount = $total_item_discount;
@@ -323,14 +380,23 @@ class CacheCartController extends Controller
         $order->coupon_code = $applied_coupon_code;
         $order->coupon_discount_amount = $applied_coupon_discount;
         $order->shipping_fee = $total_shipping;
-        $order->service_charge = 0;
         $order->total_vat = 0;
         $order->total_discount = $total_item_discount + $applied_coupon_discount;
 
+        // Service charge calculation
+        $order_amount = ($total_item_order_price + $total_shipping + $total_vat) - $applied_coupon_discount;
+
+        $payment_method = session('selected_payment_method') ?? 'cash-on-delivery';
+        $service_charge = 0;
+        if ($payment_method === 'online-payment') {
+            $service_charge = $this->calculatedServiceCharge($order_amount);
+        }
+
         $total_order_price = ($total_item_order_price + $total_shipping + $service_charge + $total_vat) - $applied_coupon_discount;
         $order->total_order_price = $total_order_price;
-        $order->order_status = 'pending';
-        $order->payment_method = $request->payment_method ?? 'cash-on-delivery';
+
+        $order->payment_method = $payment_method ?? 'cash-on-delivery';
+        $order->service_charge = $service_charge;
         $order->payment_status = 'unpaid';
         $order->paid_amount = 0;
         $order->due_amount = $total_order_price;
@@ -339,11 +405,12 @@ class CacheCartController extends Controller
         $order->last_name = $request->last_name ?? Auth::user()->last_name ?? null;
         $order->mobile = $request->mobile ?? Auth::user()->mobile ?? null;
         $order->email = $request->email ?? Auth::user()->email ?? null;
-        $order->district_id = $request->district_id ?? Auth::user()->district_id ?? null;
+        $order->district_id = districtIdBySlug($request->district) ?? Auth::user()->district_id ?? null;
         $order->city_town = $request->city ?? Auth::user()->city ?? null;
         $order->address = $request->address ?? Auth::user()->delivery_address ?? Auth::user()->home_address ?? null;
         $order->post_code = $request->post_code ?? Auth::user()->zip_code ?? null;
         $order->additional_information = $request->additional_information ?? null;
+        $order->order_status = 'pending';
         $order->save();
 
         foreach ($cartItems['items'] as $item) {
@@ -389,6 +456,13 @@ class CacheCartController extends Controller
         // Forget old cart and price summery
         //Cache::forget($this->cartKey);
         //Cache::forget($this->priceSummeryKey);
-        return response()->json(['status' => 'success', 'message' => 'Your order has been submitted successfully.']);
+        //session()->forget('selected_district');
+        //session()->forget('selected_payment_method');
+        //session()->forget('applied_coupon');
+        //session()->forget('applied_coupon_discount');
+        return response()->json([
+            'status' => 'success', 
+            'message' => 'Your order has been submitted successfully.'
+        ]);
     }
 }

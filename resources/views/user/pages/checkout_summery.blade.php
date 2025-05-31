@@ -13,6 +13,12 @@
         <td>TK:{{ numberFormat($price_summery['coupon_discount']) ?? 0 }} (-)</td>
     </tr>
     @endif
+    @if(session('selected_payment_method') === 'online-payment' && !empty($price_summery['service_charge']))
+    <tr>
+        <td>Service Charge:</td>
+        <td>TK:{{ numberFormat($price_summery['service_charge']) ?? 0 }} (+)</td>
+    </tr>
+    @endif
     <tr>
         <td>Shipping:</td>
         <td>TK:{{ numberFormat($price_summery['shipping_fee']) ?? 0 }} (+)</td>

@@ -21,7 +21,7 @@
                             <th class="w-25">Email</th>
                             <td>{{ $order->email ?? '' }}</td>
                             <th class="w-25">District</th>
-                            <td>{{ $order->district->name ?? '' }}</td>
+                            <td>{{ ucFirst($order->district) ?? '' }}</td>
                         </tr>
                         <tr>
                             <th class="w-25">City/Town</th>

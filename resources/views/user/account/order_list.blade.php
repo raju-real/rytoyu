@@ -1,6 +1,7 @@
 @extends('user.layouts.app')
-@section('title','Order List')
-@push('css') @endpush
+@section('title', 'Order List')
+@push('css')
+@endpush
 
 @section('content')
     <section class="page-section">
@@ -17,47 +18,56 @@
                 <!--start main contain of page-->
                 <div class="col-lg-9 col-md-9 col-sm-8">
                     <div class="information-title">Order List</div>
-                    @if(request('message'))
+                    @if (request('message'))
                         <div class="alert alert-success">
                             {{ request('message') }}
+                        </div>
+                    @endif
+                    @if (session()->has('message'))
+                        <div class="alert alert-{{ session()->get('type') }}">
+                            <span class="font-weight-500">{{ session()->get('message') }}</span>
                         </div>
                     @endif
                     <div class="search-product">
                         <span><i class="fas fa-search"></i></span>
                         <input type="text" name="search" value="{{ request('search') ?? '' }}"
-                               placeholder="Search by Invoice, Mobile" id="searchOrder">
+                            placeholder="Search by Invoice, Mobile" id="searchOrder">
                     </div>
 
                     <section class="sec-shopping">
                         <div class="row orders">
                             <div class="col-md-12">
-                                @if(count($orders))
-                                    @foreach($orders as $order)
+                                @if (count($orders))
+                                    @foreach ($orders as $order)
                                         <table class="table table-custom table-order">
                                             <thead>
-                                            <tr>
-                                                <th colspan="3">
-                                                    <div class="brn-span"><i
-                                                            class="fas fa-file-invoice"></i># {{ $order->invoice ?? $order->order_number ?? '' }}
-                                                    </div>
-                                                </th>
-                                                <th><a href="{{ route('order-details',$order->unique_id) }}"
-                                                       class="span-s">Details</a>
-                                                </th>
-                                            </tr>
+                                                <tr>
+                                                    <th colspan="3">
+                                                        <div class="brn-span"><i class="fas fa-file-invoice"></i>#
+                                                            {{ $order->invoice ?? ($order->order_number ?? '') }}
+                                                        </div>
+                                                    </th>
+                                                    <th><a href="{{ route('order-details', $order->unique_id) }}"
+                                                            class="span-s">Details</a>
+                                                        <a href="{{ route('sslcommerz.pay-now', ['unique_id' => $order->unique_id]) }}"
+                                                            class="span-s">Pay Now</a>
+                                                    </th>
+                                                </tr>
                                             </thead>
                                             <tbody>
-                                            <tr>
-                                                <td class="description">
-                                                    <h4>Order Date: {{ dateFormat($order->created_at,'d, M y') }}</h4>
-                                                </td>
-                                                <td class="description">
-                                                    <span><strong>TK: </strong></span>{{ numberFormat($order->total_order_price,2) ?? 0 }}
-                                                </td>
-                                                <td class="description">
-                                                    <span><strong>Items: </strong></span>{{ $order->order_products->count() ?? 0 }}
-                                                </td>
-                                            </tr>
+                                                <tr>
+                                                    <td class="description">
+                                                        <h4>Order Date: {{ dateFormat($order->created_at, 'd, M y') }}</h4>
+                                                    </td>
+                                                    <td class="description">
+                                                        <span><strong>TK:
+                                                            </strong></span>{{ numberFormat($order->total_order_price, 2) ?? 0 }}
+                                                    </td>
+                                                    <td class="description">
+                                                        <span><strong>Items:
+                                                            </strong></span>{{ $order->order_products->count() ?? 0 }}
+                                                    </td>
+                                                </tr>
 
                                             </tbody>
                                         </table>

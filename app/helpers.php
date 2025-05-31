@@ -1,14 +1,22 @@
 <?php
 
-use App\Models\Admin;
-use App\Models\LatestOfferProduct;
-use App\Models\NewInProduct;
-use App\Models\Product;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\File;
+use App\Models\Admin;
+use App\Models\Product;
+use Endroid\QrCode\QrCode;
 use Illuminate\Support\Str;
+use App\Models\NewInProduct;
+use Endroid\QrCode\Logo\Logo;
+use App\Models\DeliveryCharge;
+//use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Label\Label;
+use App\Models\LatestOfferProduct;
+use Endroid\QrCode\Writer\PngWriter;
+use Illuminate\Support\Facades\File;
+use Endroid\QrCode\Encoding\Encoding;
 use Intervention\Image\Facades\Image;
+use Endroid\QrCode\RoundBlockSizeMode;
 
 if (!function_exists('successMessage')) {
     function successMessage(string $type = 'success', string $message = "Information has been saved successfully!"): array
@@ -124,6 +132,16 @@ if (!function_exists('getPaymentStatus')) {
     }
 }
 
+if (!function_exists('paymentMethods')) {
+    function paymentMethods(): array
+    {
+        return [
+            (object)['value' => 'cash-on-delivery', 'title' => 'Cash on Delivery'],
+            (object)['value' => 'online-payment', 'title' => 'Online Payment']
+        ];
+    }
+}
+
 if (!function_exists('getPayToList')) {
     function getPayToList(): array
     {
@@ -149,7 +167,7 @@ if (!function_exists('webSectionFor')) {
     {
         return [
             (object)['value' => 'product', 'title' => 'Product'],
-//            (object)['value' => 'category', 'title' => 'Category'],
+            //            (object)['value' => 'category', 'title' => 'Category'],
             (object)['value' => 'campaign', 'title' => 'Campaign'],
             (object)['value' => 'advertisement', 'title' => 'Advertisement']
         ];
@@ -271,7 +289,6 @@ if (!function_exists('isImage')) {
         return $fileType = $file->getClientMimeType();
         $text = explode('/', $fileType)[0];
         return $text == "image";
-
     }
 }
 
@@ -357,6 +374,47 @@ if (!function_exists('uploadFile')) {
         return $uniqueFileName;
     }
 }
+
+
+/**
+ * Generate and save the QR code image
+ * composer require simplesoftwareio/simple-qrcode
+ * Or
+ * composer require endroid/qr-code:^4.0
+ * Need to install imagic: https://www.youtube.com/watch?v=uPyGhtHpoUQ
+ */
+if (!function_exists('generateQr')) {
+    function generateQr($qr_data, $image_name, $size = 100, $margin = 0, $directory = "assets/files/qr_images")
+    {
+        if (!File::isDirectory($directory)) {
+            File::makeDirectory($directory, 0777, true, true);
+        }
+        $file_path = $directory . '/' . $image_name . '.png';
+
+        // Build QR code with simplesoftwareio/simple-qrcode
+        /** 
+        QrCode::format('png')
+             ->size($size)
+             ->margin($margin)
+             ->generate($qr_data, $file_path);
+         */
+        // Build QR code with endroid/qr-code:^4.0
+        $qrCode = QrCode::create($qr_data)
+            ->setEncoding(new Encoding('UTF-8'))
+            ->setSize($size)
+            ->setMargin($margin)
+            ->setForegroundColor(new Color(0, 0, 0))
+            ->setBackgroundColor(new Color(255, 255, 255));
+
+        $writer = new PngWriter();
+        $logo = Logo::create((siteSettings()['logo']))->setResizeToWidth(50); // Optional logo
+        $result = $writer->write($qrCode, $logo); // Write to file
+        $result->saveToFile($file_path);
+
+    }
+}
+
+
 
 if (!function_exists('segmentOne')) {
     function segmentOne(): ?string
@@ -671,28 +729,28 @@ if (!function_exists('getNewInProducts')) {
         return $newInProducts;
     }
 
-//    function getNewInProducts()
-//    {
-//        if (\App\Models\NewInProduct::count()) {
-//            $product_ids = NewInProduct::sort()
-//                ->pluck('product_id')
-//                ->toArray();
-//            $ids_string = implode(',', $product_ids); // Convert to a comma-separated string
-//            return Product::whereIn('id', $product_ids)
-//                ->active()
-//                ->orderByRaw("FIELD(id, $ids_string)")
-//                ->take(16)
-//                ->select('id', 'seller_id', 'brand_id', 'product_code', 'name', 'slug', 'thumbnail_path', 'unit_price', 'discount_price')
-//                ->get();
-//        } else {
-//            return Product::active()
-//                ->latest()
-//                ->inRandomOrder()
-//                ->take(16)
-//                ->select('id', 'seller_id', 'brand_id', 'product_code', 'name', 'slug', 'thumbnail_path', 'unit_price', 'discount_price')
-//                ->get();
-//        }
-//    }
+    //    function getNewInProducts()
+    //    {
+    //        if (\App\Models\NewInProduct::count()) {
+    //            $product_ids = NewInProduct::sort()
+    //                ->pluck('product_id')
+    //                ->toArray();
+    //            $ids_string = implode(',', $product_ids); // Convert to a comma-separated string
+    //            return Product::whereIn('id', $product_ids)
+    //                ->active()
+    //                ->orderByRaw("FIELD(id, $ids_string)")
+    //                ->take(16)
+    //                ->select('id', 'seller_id', 'brand_id', 'product_code', 'name', 'slug', 'thumbnail_path', 'unit_price', 'discount_price')
+    //                ->get();
+    //        } else {
+    //            return Product::active()
+    //                ->latest()
+    //                ->inRandomOrder()
+    //                ->take(16)
+    //                ->select('id', 'seller_id', 'brand_id', 'product_code', 'name', 'slug', 'thumbnail_path', 'unit_price', 'discount_price')
+    //                ->get();
+    //        }
+    //    }
 }
 
 if (!function_exists('getLatestOfferProducts')) {
@@ -730,7 +788,6 @@ if (!function_exists('getLatestOfferProducts')) {
 
         return $offerProducts;
     }
-
 }
 
 if (!function_exists('getProductTypes')) {
@@ -875,10 +932,26 @@ if (!function_exists('getUserSearchProducts')) {
 
 // Cart section
 
+if(! function_exists('deliveryDistricts')) {
+    function deliveryDistricts() {
+        return DeliveryCharge::where('status','active')->select('id', 'slug','district_name')->orderBy('district_name')->get();
+    }
+}
+
+if(! function_exists('districtIdBySlug')) {
+    function districtIdBySlug($slug) {
+        return DeliveryCharge::whereSlug($slug)->first()->value('id');
+    }
+}
+
 if (!function_exists('shippingFee')) {
     function shippingFee()
     {
-        return 200;
+        if(session()->has('selected_district')) {
+            $district_slug =  session('selected_district');
+            $charge =  DeliveryCharge::whereSlug($district_slug)->firstOrFail(['delivery_charge']);
+            return $charge->delivery_charge;
+        }
     }
 }
 
@@ -892,4 +965,3 @@ if (!function_exists('browserId')) {
         return $ip;
     }
 }
-

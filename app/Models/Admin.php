@@ -13,6 +13,13 @@ class Admin extends Authenticatable
     protected string $guard = 'admin';
     protected $fillable = ['name', 'email', 'mobile', 'password', 'image', 'status', 'last_login_at', 'last_logout_at'];
 
+    public function pushSubscriptions()
+    {
+        return $this->morphMany(\NotificationChannels\WebPush\PushSubscription::class, 'subscribable');
+        // OR if using separate table:
+        // return $this->hasMany(PushSubscription::class, 'admin_id');
+    }
+
     public function scopeAdmin($query)
     {
         return $query->where('type', 'admin');

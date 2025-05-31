@@ -21,7 +21,7 @@ class Order extends Model
         });
     }
 
-    protected $appends = ['customer_full_name', 'seller_count'];
+    protected $appends = ['customer_full_name', 'seller_count',  'payment_method_name', 'qr_image_path'];
 
     public function getCustomerFullNameAttribute()
     {
@@ -31,6 +31,22 @@ class Order extends Model
     public function getSellerCountAttribute()
     {
         return SellerOrderLog::where('order_id', $this->id)->distinct()->count('seller_id') ?? 0;
+    }
+
+    public function getQrImagePathAttribute()
+    {
+        return 'assets/files/qr_images/order_' . $this->order_number . '.png';
+    }
+
+    public function getPaymentMethodNameAttribute()
+    {
+        if ($this->payment_method === 'cash-on-delivery') {
+            return 'Cash on Delivery';
+        } elseif ($this->payment_method === 'online-payment') {
+            return 'Online Payment';
+        } else {
+            return 'Unknown';
+        }
     }
 
     public static function getOrderNumber(): string

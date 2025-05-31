@@ -24,6 +24,7 @@ return new class extends Migration
             $table->boolean('is_default')->default(false);
             $table->integer('inventory')->default(0);
             $table->integer('alert_quantity')->default(0);
+            $table->decimal('weight', 10, 2)->default(0.00);
             $table->timestamps();
             $table->softDeletes();
         });
