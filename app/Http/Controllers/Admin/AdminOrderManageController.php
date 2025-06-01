@@ -41,6 +41,11 @@ class AdminOrderManageController extends Controller
         ]);
     }
 
+    public function orderSummary($unique_id) {
+        $order = Order::whereUniqueId($unique_id)->firstOrFail();
+        return view('admin.orders.order_summary',compact('order'));
+    }
+
     public function commissionLogs()
     {
         $seller = request()->get('seller');
@@ -74,7 +79,7 @@ class AdminOrderManageController extends Controller
             });
         }
         $data->select('id','unique_id','order_number','invoice','total_order_price','created_at');
-        $orders =  $data->simplePaginate(20);
+        $orders =  $data->paginate(20);
         return view('admin.orders.commission_logs', compact('orders'));
     }
 

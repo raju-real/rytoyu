@@ -21,7 +21,7 @@
                             <th class="w-25">Email</th>
                             <td>{{ $order->email ?? '' }}</td>
                             <th class="w-25">District</th>
-                            <td>{{ ucFirst($order->district) ?? '' }}</td>
+                            <td>{{ $order->district->district_name ?? '' }}</td>
                         </tr>
                         <tr>
                             <th class="w-25">City/Town</th>
@@ -42,7 +42,7 @@
     <div class="col-md-6">
         <div class="card mb-4">
             <div class="card-header bg-info text-white">
-                Order Info
+                Price Info
             </div>
             <div class="card-body p-0">
                 <div class="row">

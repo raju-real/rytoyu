@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-@section('title', 'Manage Orders')
+@section('title', 'Commission Logs')
 @push('css')
 @endpush
 
@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0 font-size-18">Manage Orders</h4>
+                <h4 class="mb-sm-0 font-size-18">Commission Logs</h4>
             </div>
         </div>
     </div>
@@ -148,15 +148,15 @@
                                                     {{ $log->seller->shop->mobile ?? ($log->seller->mobile ?? ($log->seller->shop->phone ?? '')) }}
                                                 </strong>
                                             </td>
-                                            <td>{{ dateFormat($log->created_at, 'd M, y') }}</td>
+                                            <td class="align-middle">{{ dateFormat($log->created_at, 'd M, y') }}</td>
 
                                             {{-- Financial Info --}}
-                                            <td>{{ numberFormat($log->order_amount, 2) }}</td>
-                                            <td>{{ $log->commission_rate ?? 0 }} %</td>
-                                            <td>{{ numberFormat($log->total_commission ?? 0, 2) }}</td>
-                                            <td>{{ numberFormat($log->seller_amount ?? 0, 2) }}</td>
-                                            <td>{{ ucFirst($log->pay_to ?? '') }}</td>
-                                            <td>{{ ucFirst($log->payment_status ?? '') }}</td>
+                                            <td class="align-middle">{{ numberFormat($log->order_amount, 2) }}</td>
+                                            <td class="align-middle">{{ $log->commission_rate ?? 0 }} %</td>
+                                            <td class="align-middle">{{ numberFormat($log->total_commission ?? 0, 2) }}</td>
+                                            <td class="align-middle">{{ numberFormat($log->seller_amount ?? 0, 2) }}</td>
+                                            <td class="align-middle">{{ ucFirst($log->pay_to ?? '') }}</td>
+                                            <td class="align-middle">{{ ucFirst($log->payment_status ?? '') }}</td>
                                         </tr>
                                     @endforeach
                                 @empty

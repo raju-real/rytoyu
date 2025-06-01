@@ -134,4 +134,12 @@ class Order extends Model
     {
         return $this->hasMany(SellerOrderLog::class, 'order_id', 'id');
     }
+
+    public function transaction() {
+        return $this->hasOne(Transaction::class,'order_id','id');
+    }
+
+    public function district() {
+        return $this->belongsTo(DeliveryCharge::class,'district_id','id');
+    }
 }

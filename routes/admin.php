@@ -113,6 +113,7 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
         Route::controller(AdminOrderManageController::class)->group(function () {
             Route::get('manage-orders', 'manageOrders')->name('manage-orders');
             Route::get('order-info/{unique_id}', 'orderProducts')->name('order-info');
+            Route::get('order-summary/{unique_id}', 'orderSummary')->name('order-summary');
             Route::get('commission-logs', 'commissionLogs')->name('commission-logs');
             Route::get('order-invoice/{unique_id}', 'orderInvoice')->name('order-invoice');
         });

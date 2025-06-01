@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string('currency_amount')->nullable();
             $table->string('currency_rate')->nullable();
             $table->string('status');
+            $table->string('message')->nullable();
             $table->string('val_id')->nullable();
             $table->string('card_type')->nullable();
             $table->string('card_no')->nullable();

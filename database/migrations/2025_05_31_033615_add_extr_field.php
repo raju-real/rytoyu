@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('delivery_charges', function (Blueprint $table) {
-            $table->string('slug',100)->after('district_name');
+        Schema::table('transactions', function (Blueprint $table) {
+            $table->string('message')->after('status');
         });
     }
 

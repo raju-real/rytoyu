@@ -39,7 +39,7 @@
             </ul>
         </li>
         @if(authAdminType() !== 'seller')
-        <li class="{{ isMainMenuActive('manage-orders') }}">
+        <li class="{{ isMainMenuActive('manage-orders,commission-logs,order-summary') }}">
             <a href="javascript: void(0);" class="has-arrow waves-effect">
                 <i class="bx bx-cart"></i> 
                 <span>Manage Order</span>

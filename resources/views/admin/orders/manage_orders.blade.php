@@ -68,7 +68,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-md mb-0 text-nowrap text-center">
+                        <table class="table table-striped table-bordered table-md mb-0 text-nowrap text-center align-middle">
                             <thead class="table-light">
                                 <tr>
                                     <th>Sl.no</th>
@@ -77,6 +77,7 @@
                                     <th>Invoice</th>
                                     <th>Order Info</th>
                                     <th>Total Amount</th>
+                                    <th>Payment Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -96,8 +97,9 @@
                                             </a>
                                         </td>
                                         <td>{{ numberFormat($order->total_order_price, 2) }}</td>
+                                        <td>{{ ucFirst($order->payment_status) }}</td>
                                         <td>
-
+                                            <a href="{{ route('admin.order-summary',$order->unique_id) }}" class="btn btn-primary btn-sm">Show Details</a>
                                         </td>
                                     </tr>
                                 @empty

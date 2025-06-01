@@ -163,12 +163,12 @@ class SslCommerz
                     ->first()
                     ->toArray();
 
-                $order = Order::where($transaction)->first();
-                $order->payment_status = 'paid';
-                $order->payment_method = 'online-payment';
-                $order->paid_amount    = $amount;
-                $order->due_amount     =  0; 
-                $order->save();
+                Order::where($transaction)->update([
+                    'payment_status' => 'paid',
+                    'payment_method' => 'online-payment',
+                    'paid_amount' => $amount,
+                    'due_amount' => 0,
+                ]);
 
                 return redirect()->route('order-list')->with([
                     'type' => 'success',
@@ -183,7 +183,7 @@ class SslCommerz
                     ->update(['status' => 'FAILED']);
                 return redirect()->route('order-list')->with([
                     'type' => 'danger',
-                    'message' => 'Transaction Failed!'
+                    'message' => 'Transaction Failed!. Your order payment mode is now cash on delivery.'
                 ]);
             }
         } else if ($transaction->status === 'SUCCESS') {
@@ -196,6 +196,146 @@ class SslCommerz
             return redirect()->route('order-list')->with([
                 'type' => 'danger',
                 'message' => 'Something went wrong when transaction making. Contact with merchant.'
+            ]);
+        }
+    }
+
+    public function fail($request)
+    {
+        //dd('fail', $request->all());
+        $tran_id = $request->input('tran_id');
+        $unique_id = $request->input('value_a');
+        if ($request->input('status') === "FAILED") {
+            Transaction::where('transaction_id', $tran_id)
+                ->update(['status' => 'FAILED', 'message' => $request->input('error')]);
+        }
+
+        $transaction = Transaction::where('transaction_id', $tran_id)
+            ->select('transaction_id', 'status', 'currency', 'transaction_amount')->first();
+
+        if ($transaction->status === 'FAILED') {
+            Transaction::where('transaction_id', $tran_id)
+                ->update(['status' => 'FAILED']);
+
+            Order::where('unique_id', $unique_id)->update([
+                'payment_status' => 'unpaid',
+                'payment_method' => 'cash-on-delivery',
+                'paid_amount' => 0,
+                'due_amount' => $request->input('amount'),
+            ]);
+            return redirect()->route('order-list')->with([
+                'type' => 'danger',
+                'message' => 'Transaction Failed!. Your order payment mode is now cash on delivery.'
+            ]);
+        } else if ($transaction->status === 'SUCCESS') {
+            return redirect()->route('order-list')->with([
+                'type' => 'success',
+                'message' => 'Transaction is already Successful!'
+            ]);
+        } else {
+            return redirect()->route('order-list')->with([
+                'type' => 'danger',
+                'message' => 'Transaction Failed!. Your order payment mode is now cash on delivery.'
+            ]);
+        }
+    }
+
+    public function cancel($request)
+    {
+        //dd('cancel',$request->all());
+        $tran_id = $request->input('tran_id');
+        $unique_id = $request->input('value_a');
+        if ($request->input('status') === "CANCELLED") {
+            Transaction::where('transaction_id', $tran_id)
+                ->update(['status' => 'CANCELLED', 'message' => $request->input('error')]);
+        }
+
+        $transaction = Transaction::where('transaction_id', $tran_id)
+            ->select('transaction_id', 'status', 'currency', 'transaction_amount')->first();
+
+        if ($transaction->status === 'CANCELLED') {
+            Order::where('unique_id', $unique_id)->update([
+                'payment_status' => 'unpaid',
+                'payment_method' => 'cash-on-delivery',
+                'paid_amount' => 0,
+                'due_amount' => $request->input('amount'),
+            ]);
+            return redirect()->route('order-list')->with([
+                'type' => 'danger',
+                'message' => 'Transaction Cancelled!. Your order payment mode is now cash on delivery.'
+            ]);
+        } else if ($transaction->status === "SUCCESS") {
+            return redirect()->route('order-list')->with([
+                'type' => 'success',
+                'message' => 'Transaction is already Successful!'
+            ]);
+        } else {
+            return redirect()->route('order-list')->with([
+                'type' => 'danger',
+                'message' => 'Invalid Transaction!. Your order payment mode is now cash on delivery.'
+            ]);
+        }
+    }
+
+    public function ipn($request)
+    {
+        //dd('ipn',$request->all());
+        #Received all the payement information from the gateway
+        #Check transation id is posted or not.
+        if ($request->input('tran_id')) {
+
+            $tran_id = $request->input('tran_id');
+            #Check order status in order tabel against the transaction id or order id.
+            $transaction = Transaction::where('transaction_id', $tran_id)
+                ->select('transaction_id', 'status', 'currency', 'transaction_amount')->first();
+
+            if ($transaction->status === 'PENDING') {
+                $sslc = new SslCommerzNotification();
+                $validation = $sslc->orderValidate($request->all(), $tran_id, $transaction->transaction_amount, $transaction->currency);
+                if ($validation == TRUE) {
+                    /*
+                    That means IPN worked. Here you need to update order status
+                    in order table as Processing or Complete.
+                    Here you can also sent sms or email for successful transaction to customer
+                    */
+                    Transaction::where('transaction_id', $tran_id)
+                        ->update(['status' => 'SUCCESS']);
+
+                    return redirect()->route('order-list')->with([
+                        'type' => 'success',
+                        'message' => 'Transaction is successfully Completed!'
+                    ]);
+                } else {
+                    /*
+                    That means IPN worked, but Transation validation failed.
+                    Here you need to update order status as Failed in order table.
+                    */
+                    Transaction::where('transaction_id', $tran_id)
+                        ->update(['status' => 'FAILED']);
+
+                    return redirect()->route('order-list')->with([
+                        'type' => 'danger',
+                        'message' => 'Transaction Failed!. Your order payment mode is now cash on delivery.'
+                    ]);
+                }
+            } else if ($transaction->status === "SUCCESS") {
+
+                #That means Order status already updated. No need to udate database.
+                return redirect()->route('order-list')->with([
+                    'type' => 'danger',
+                    'message' => 'Transaction Failed!. Your order payment mode is now cash on delivery.'
+                ]);
+            } else {
+                #That means something wrong happened. You can redirect customer to your product page.
+                return redirect()->route('order-list')->with([
+                    'type' => 'danger',
+                    'message' => 'Invalid Transaction!. Your order payment mode is now cash on delivery.'
+                ]);
+            }
+        } else {
+            return redirect()->route('order-list')->with([
+                'type' => 'danger',
+                'message' => 'Invalid Data!. Your order payment mode is now cash on delivery.'
             ]);
         }
     }
