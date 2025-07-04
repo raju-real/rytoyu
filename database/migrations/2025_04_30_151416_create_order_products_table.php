@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('size',50)->nullable();
             $table->string('color',50)->nullable();
             $table->enum('order_status',['pending','canceled','processing','shipped','delivered','returned'])->default('pending');
+            $table->integer('last_updated_by')->nullable();
             $table->timestamps();
         });
     }

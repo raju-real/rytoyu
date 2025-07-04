@@ -392,7 +392,7 @@ if (!function_exists('generateQr')) {
         $file_path = $directory . '/' . $image_name . '.png';
 
         // Build QR code with simplesoftwareio/simple-qrcode
-        /** 
+        /**
         QrCode::format('png')
              ->size($size)
              ->margin($margin)
@@ -434,7 +434,9 @@ if (!function_exists('isMainMenuActive')) {
 if (!function_exists('isSubMenuActive')) {
     function isSubMenuActive(string $fieldName): string
     {
-        return request()->segment(1) == $fieldName ? 'active' : '';
+        $sub_menus = explode(',', $fieldName);
+        return in_array(segmentOne(), $sub_menus) ? 'active mm-active' : '';
+        // return request()->segment(1) == $fieldName ? 'active' : '';
     }
 }
 

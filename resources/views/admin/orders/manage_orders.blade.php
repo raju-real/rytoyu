@@ -19,21 +19,22 @@
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingSearch">
                         <button class="accordion-button {{ request()->query() ? '' : 'collapsed' }}" type="button"
-                            data-bs-toggle="collapse" data-bs-target="#collapseSearch"
-                            aria-expanded="{{ request()->query() ? 'true' : 'false' }}" aria-controls="collapseSearch">
+                                data-bs-toggle="collapse" data-bs-target="#collapseSearch"
+                                aria-expanded="{{ request()->query() ? 'true' : 'false' }}"
+                                aria-controls="collapseSearch">
                             Search
                         </button>
                     </h2>
                     <div id="collapseSearch" class="accordion-collapse collapse {{ request()->query() ? 'show' : '' }}"
-                        aria-labelledby="headingSearch" data-bs-parent="#accordionSearch">
+                         aria-labelledby="headingSearch" data-bs-parent="#accordionSearch">
                         <div class="accordion-body">
                             <form method="GET" action="{{ route('admin.manage-orders') }}">
                                 <div class="row">
                                     <div class="col-md-6 pb-4">
                                         <div class="form-group">
                                             <input type="search" name="search" class="form-control"
-                                                placeholder="Search by Order Number,Invoice,Mobile"
-                                                value="{{ request('search') ?? '' }}">
+                                                   placeholder="Search by Order Number,Invoice,Mobile"
+                                                   value="{{ request('search') ?? '' }}">
                                         </div>
                                     </div>
 
@@ -41,8 +42,9 @@
                                         <div class="form-group">
                                             <div class="input-group">
                                                 <input type="text" name="order_date" class="form-control datepicker"
-                                                    value="{{ request('order_date') ?? '' }}" placeholder="Order Date"
-                                                    autocomplete="off" autofocus readonly>
+                                                       value="{{ request('order_date') ?? '' }}"
+                                                       placeholder="Order Date"
+                                                       autocomplete="off" autofocus readonly>
                                                 <div class="input-group-append">
                                                     <span class="input-group-text">
                                                         <i class="fa fa-calendar"></i> </span>
@@ -68,43 +70,57 @@
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-md mb-0 text-nowrap text-center align-middle">
+                        <table
+                            class="table table-striped table-bordered table-md mb-0 text-nowrap text-center align-middle">
                             <thead class="table-light">
-                                <tr>
-                                    <th>Sl.no</th>
-                                    <th>Order Date</th>
-                                    <th>Order No</th>
-                                    <th>Invoice</th>
-                                    <th>Order Info</th>
-                                    <th>Total Amount</th>
-                                    <th>Payment Status</th>
-                                    <th>Action</th>
-                                </tr>
+                            <tr>
+                                <th>Sl.no</th>
+                                <th>Order Date</th>
+                                <th>Order No</th>
+                                <th>Invoice</th>
+                                <th>Order Info</th>
+                                <th>Total Amount</th>
+                                <th>Payment Status</th>
+                                <th>Action</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                @forelse($orders as $order)
-                                    <tr>
-                                        <td>{{ $loop->index + 1 }}</td>
-                                        <td>{{ dateFormat($order->created_at, 'd M, y') }}</td>
-                                        <td>{{ $order->order_number ?? '' }}</td>
-                                        <td>
-                                            <a target="_blank" href="{{ route('admin.order-invoice', $order->unique_id) }}">{{ $order->invoice ?? '' }}</a>
-                                        </td>
-                                        <td class="text-center">
-                                            <a type="button" class="btn btn-sm btn-info show-order-products"
-                                                data-id="{{ $order->unique_id }}">
-                                                <i class="fa fa-eye fa-xl"></i>
-                                            </a>
-                                        </td>
-                                        <td>{{ numberFormat($order->total_order_price, 2) }}</td>
-                                        <td>{{ ucFirst($order->payment_status) }}</td>
-                                        <td>
-                                            <a href="{{ route('admin.order-summary',$order->unique_id) }}" class="btn btn-primary btn-sm">Show Details</a>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <x-no-data-found></x-no-data-found>
-                                @endforelse
+                            @forelse($orders as $order)
+                                <tr>
+                                    <td>{{ $loop->index + 1 }}</td>
+                                    <td>{{ dateFormat($order->created_at, 'd M, y') }}</td>
+                                    <td>{{ $order->order_number ?? '' }}</td>
+                                    <td>
+                                        <a target="_blank"
+                                           href="{{ route('admin.order-invoice', $order->unique_id) }}">{{ $order->invoice ?? '' }}</a>
+                                    </td>
+                                    <td class="text-center">
+                                        <a type="button" class="btn btn-sm btn-info show-order-products"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-placement="top"
+                                           title="Order Info"
+                                           data-id="{{ $order->unique_id }}">
+                                            <i class="fa fa-eye fa-xl"></i>
+                                        </a>
+                                    </td>
+                                    <td>{{ numberFormat($order->total_order_price, 2) }}</td>
+                                    <td>{{ ucFirst($order->payment_status) }}</td>
+                                    <td>
+                                        <a href="{{ route('admin.order-summary',$order->unique_id) }}"
+                                           class="btn btn-primary btn-sm" data-bs-toggle="tooltip"
+                                           data-bs-placement="top" title="Show Details">
+                                            <i class="fa fa-info-circle"></i>
+                                        </a>
+                                        <a href="{{ route('admin.change-order-status',$order->unique_id) }}"
+                                           class="btn btn-success btn-sm" data-bs-toggle="tooltip"
+                                           data-bs-placement="top" title="Change Status">
+                                            <i class="fa fa-highlighter"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @empty
+                                <x-no-data-found></x-no-data-found>
+                            @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -116,7 +132,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="show-order-products" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="show-order-products" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -128,16 +145,16 @@
                     <div class="table-responsive">
                         <table class="table table-bordered table-md">
                             <thead>
-                                <tr>
-                                    <th>Category</th>
-                                    <th>Sub Category</th>
-                                    <th>Sub subcategory</th>
-                                </tr>
+                            <tr>
+                                <th>Category</th>
+                                <th>Sub Category</th>
+                                <th>Sub subcategory</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <td id="category_name"></td>
-                                <td id="subcategory_name"></td>
-                                <td id="sub_subcategory_name"></td>
+                            <td id="category_name"></td>
+                            <td id="subcategory_name"></td>
+                            <td id="sub_subcategory_name"></td>
                             </tbody>
                         </table>
                         <hr>
@@ -145,16 +162,16 @@
 
                         <table class="table table-bordered table-striped table-md">
                             <thead>
-                                <tr>
-                                    <th>Size</th>
-                                    <th>Color</th>
-                                    <th>Unit Price</th>
-                                    <th>Discount Price</th>
-                                    <th>Inventory</th>
-                                </tr>
+                            <tr>
+                                <th>Size</th>
+                                <th>Color</th>
+                                <th>Unit Price</th>
+                                <th>Discount Price</th>
+                                <th>Inventory</th>
+                            </tr>
                             </thead>
                             <tbody id="product-variants-container">
-                                <!-- Rows will be dynamically appended here -->
+                            <!-- Rows will be dynamically appended here -->
                             </tbody>
                         </table>
                     </div>

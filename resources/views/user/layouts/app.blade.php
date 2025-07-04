@@ -21,6 +21,7 @@
     <link href="{{ asset('assets/user/plugins/animate/animate.min.css') }}" rel="stylesheet">
     <!-- Theme CSS -->
     <link href="{{ asset('assets/user/css/theme.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/user/css/responsive.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/user/css/theme-green-1.css') }}" rel="stylesheet" id="theme-config-link">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
     <!-- Head Libs -->

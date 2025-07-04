@@ -39,14 +39,14 @@
             </ul>
         </li>
         @if(authAdminType() !== 'seller')
-        <li class="{{ isMainMenuActive('manage-orders,commission-logs,order-summary') }}">
+        <li class="{{ isMainMenuActive('manage-orders,commission-logs,order-summary,change-order-status') }}">
             <a href="javascript: void(0);" class="has-arrow waves-effect">
-                <i class="bx bx-cart"></i> 
+                <i class="bx bx-cart"></i>
                 <span>Manage Order</span>
             </a>
             <ul class="sub-menu" aria-expanded="false">
                 <li>
-                    <a href="{{ route('admin.manage-orders') }}" class="{{ isSubMenuActive('manage-orders') }}">
+                    <a href="{{ route('admin.manage-orders') }}" class="{{ isSubMenuActive('manage-orders,order-summary,change-order-status') }}">
                         <i class="bx bx-chevron-right"></i> Order List
                     </a>
                 </li>
@@ -55,7 +55,7 @@
                         <i class="bx bx-chevron-right"></i> Commission Logs
                     </a>
                 </li>
-                
+
             </ul>
         </li>
             <li class="{{ isMainMenuActive('sections') }}">

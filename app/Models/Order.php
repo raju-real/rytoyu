@@ -125,6 +125,20 @@ class Order extends Model
         return $total;
     }
 
+    public static function orderByUniqueId($unique_id = Null)
+    {
+        return Order::with([
+            'order_products' => function($order_product) {
+                $order_product->select('id', 'order_id', 'product_id', 'seller_id', 'item_order_price', 'quantity', 'item_total_order_price', 'size', 'color', 'order_status');
+                $order_product->with([
+                    'product' => function($product) {
+                        $product->select('id', 'product_code', 'name', 'thumbnail_path');
+                    }
+                ]);
+            }
+        ])->whereUniqueId($unique_id)->first();
+    }
+
     public function order_products()
     {
         return $this->hasMany(OrderProduct::class, 'order_id', 'id');

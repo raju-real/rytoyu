@@ -116,6 +116,9 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
             Route::get('order-summary/{unique_id}', 'orderSummary')->name('order-summary');
             Route::get('commission-logs', 'commissionLogs')->name('commission-logs');
             Route::get('order-invoice/{unique_id}', 'orderInvoice')->name('order-invoice');
+            Route::get('change-order-status/{unique_id}', 'changeOrderStatus')->name('change-order-status');
+            Route::get('update-order-status', 'updateOrderStatus')->name('update-order-status');
+            Route::get('update-order-status-all', 'updateOrderStatusAll')->name('update-order-status-all');
         });
     });
     //Products
@@ -168,7 +171,7 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
             "Post Code: " . $order->post_code . "\n" .
             "Address: " . $order->address . "\n" .
             "Total Amount: " . number_format($order->total_order_price, 2) . " BDT";
-        
+
         generateQr($qr_data, 'order_' . $order->order_number, 200, 0);
     });
 

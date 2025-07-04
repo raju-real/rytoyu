@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->string('message')->after('status');
+        Schema::table('order_products', function (Blueprint $table) {
+            $table->integer('last_updated_by')->nullable()->after('order_status');
         });
     }
 
