@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class AdministratorMiddleware
+class AdministratorAdminMiddleware
 {
     /**
      * Handle an incoming request.
@@ -17,7 +17,7 @@ class AdministratorMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::guard('admin')->check() && authAdminType() === 'administrator') {
+        if (Auth::guard('admin')->check() && authAdminType() !== 'seller') {
             return $next($request);
         } else {
             return redirect()->route('admin.permission-denied')->with(dangerMessage('danger','You have no permission to access this activity!'));

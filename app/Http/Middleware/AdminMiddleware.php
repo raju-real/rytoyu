@@ -17,10 +17,10 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && authAdminType() !== 'seller') {
+        if (Auth::guard('admin')->check() && authAdminType() === 'admin') {
             return $next($request);
         } else {
-            return redirect()->route('admin.dashboard')->with(dangerMessage('danger','You have no permission to access this activity!'));
+            return redirect()->route('admin.permission-denied')->with(dangerMessage('danger','You have no permission to access this activity!'));
         }
     }
 }

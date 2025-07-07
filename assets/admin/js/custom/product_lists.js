@@ -25,6 +25,7 @@
                     $('#category_name').empty().text(response.data.category_name);
                     $('#subcategory_name').empty().text(response.data.subcategory_name);
                     $('#sub_subcategory_name').empty().text(response.data.sub_subcategory_name);
+                    $('#brand_name').empty().text(response.data.brand_name);
                     const variants = response.data.variants;
 
                     // Clear tbody content

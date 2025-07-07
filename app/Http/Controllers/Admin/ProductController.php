@@ -22,34 +22,46 @@ class ProductController extends Controller
     public function index()
     {
         $data = Product::query();
-        $data->when(request()->get('seller'),function ($query) {
-           $query->where('seller_id',sellerIdByCode(request()->get('seller')));
+
+        // Seller logic
+        if (authAdminType() === 'seller') {
+            $data->where('seller_id', Auth::id());
+        } elseif (request()->filled('seller')) {
+            $data->where('seller_id', sellerIdByCode(request()->get('seller')));
+        }
+
+        $data->when(request()->get('brand'), function ($query) {
+            $query->where('brand_id', brandIdBySlug(request()->get('brand')));
         });
-        $data->when(request()->get('brand'),function ($query) {
-           $query->where('brand_id',brandIdBySlug(request()->get('brand')));
+
+        $data->when(request()->get('category'), function ($query) {
+            $query->where('category_id', categoryIdBySlug(request()->get('category')));
         });
-        $data->when(request()->get('category'),function ($query) {
-           $query->where('category_id',categoryIdBySlug(request()->get('category')));
+
+        $data->when(request()->get('subcategory'), function ($query) {
+            $query->where('subcategory_id', subCategoryIdBySlug(request()->get('subcategory')));
         });
-        $data->when(request()->get('subcategory'),function ($query) {
-           $query->where('subcategory_id',subCategoryIdBySlug(request()->get('subcategory')));
+
+        $data->when(request()->get('sub_subcategory'), function ($query) {
+            $query->where('sub_subcategory_id', subSubCategoryIdBySlug(request()->get('sub_subcategory')));
         });
-        $data->when(request()->get('subcategory'),function ($query) {
-           $query->where('subcategory_id',subCategoryIdBySlug(request()->get('subcategory')));
-        });
-        $data->when(request()->get('sub_subcategory'),function ($query) {
-           $query->where('sub_subcategory_id',subSubCategoryIdBySlug(request()->get('sub_subcategory')));
-        });
+
         $data->when(request()->get('status'), function ($query) {
             $query->where('status', request()->get('status'));
         });
 
-        if(authAdminType() === 'seller') {
-            $data->where('seller_id',Auth::id());
+        if (request()->filled('stock_less_than')) {
+            $stockLimit = request()->get('stock_less_than');
+            $data->whereHas('variants', function ($query) use ($stockLimit) {
+                $query->where('inventory', '<', $stockLimit);
+            });
         }
+
         $products = $data->latest()->paginate(20);
+
         return view('admin.products.product_list', compact('products'));
     }
+
 
     public function create()
     {
@@ -152,7 +164,7 @@ class ProductController extends Controller
     {
         $validatedData = $request->validated();
         $product = new Product();
-        $product->seller_id = Auth::id();
+        $product->seller_id = authSellerId();
         $product->product_code = $request->product_code;
         $product->name = $request->name;
         $product->slug = Str::slug($validatedData['product_code'] . '-' . $validatedData['name']);
@@ -409,7 +421,7 @@ class ProductController extends Controller
         $defaultVariant = ProductVariant::where('product_id', $product_id)
             ->where('is_default', 1)
             ->first();
-        Product::where('id',$product_id)->update([
+        Product::where('id', $product_id)->update([
             'unit_price' => $defaultVariant->unit_price,
             'discount_price' => $defaultVariant->discount_price
         ]);

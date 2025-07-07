@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Models\OrderProduct;
+use App\Models\SellerOrderLog;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -15,29 +17,32 @@ class AdminOrderManageController extends Controller
     public function manageOrders()
     {
         $data = Order::query();
-        $createdAt = request()->get('order_date');
-        if ($createdAt) {
+        $data->with([
+            'seller_order_logs' => function ($seller_order_log) {
+                $seller_order_log->select('id','seller_id','order_id','order_amount');
+            }
+        ]);
+        if ($createdAt = request()->get('order_date')) { // Use $request->get()
             $data->whereDate('created_at', $createdAt);
         }
-        if ($search = request()->get('search')) {
+
+        if ($search = request()->get('search')) { // Use $request->get()
             $data->where(function ($query) use ($search) {
                 $query->where('order_number', 'LIKE', "%{$search}%")
                     ->orWhere('invoice', 'LIKE', "%{$search}%")
                     ->orWhere('mobile', 'LIKE', "%{$search}%");
             });
         }
-        $data->latest();
-        $orders = $data->paginate(10);
+
+        $orders =  $data->latest()->paginate(10);
+
         return view('admin.orders.manage_orders', compact('orders'));
+
     }
 
     public function orderProducts($unique_id)
     {
-        $order = Order::with([
-            'order_products' => function ($oder_product) {
-                $oder_product->orderBy('seller_id');
-            }
-        ])->whereUniqueId($unique_id)->firstOrFail();
+        $order = Order::orderByUniqueId($unique_id);
         $html = view('admin.orders.order_products', compact('order'))->render();
         return response()->json([
             'title' => 'Order ' . $order->order_number . ' / ' . $order->invoice . ' Products',
@@ -47,7 +52,7 @@ class AdminOrderManageController extends Controller
 
     public function orderSummary($unique_id)
     {
-        $order = Order::with(['order_products'])->whereUniqueId($unique_id)->firstOrFail();
+        $order = Order::orderByUniqueId($unique_id);
         return view('admin.orders.order_summary', compact('order'));
     }
 
@@ -90,17 +95,7 @@ class AdminOrderManageController extends Controller
 
     public function orderInvoice($unique_id)
     {
-        $order = Order::with([
-            'order_products' => function ($order_product) {
-                $order_product->select('order_id', 'product_id', 'seller_id', 'item_order_price', 'quantity', 'item_total_order_price', 'size', 'color');
-                $order_product->with([
-                    'product' => function ($product) {
-                        $product->select('id', 'product_code', 'name', 'thumbnail_path');
-                    }
-                ]);
-            }
-        ])->whereUniqueId($unique_id)->firstOrFail();
-        //return view('pdf.order_invoice', compact('order'));
+        $order = Order::orderByUniqueId($unique_id);
         $file = PDF::loadView('pdf.order_invoice', compact('order'));
         return $file->stream();
     }
@@ -177,7 +172,7 @@ class AdminOrderManageController extends Controller
         ]);
 
         // Update order status by order product status ratio
-        
+
         return back()->with(successMessage('success', 'All Order product status updated to ' . ucfirst(request()->get('order_status')) . '.'));
     }
 

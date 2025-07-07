@@ -33,7 +33,7 @@
                                     <div class="col-md-6 pb-4">
                                         <div class="form-group">
                                             <input type="search" name="search" class="form-control"
-                                                   placeholder="Search by Order Number,Invoice,Mobile"
+                                                   placeholder="Search by Order Number, Invoice, Mobile"
                                                    value="{{ request('search') ?? '' }}">
                                         </div>
                                     </div>
@@ -44,7 +44,7 @@
                                                 <input type="text" name="order_date" class="form-control datepicker"
                                                        value="{{ request('order_date') ?? '' }}"
                                                        placeholder="Order Date"
-                                                       autocomplete="off" autofocus readonly>
+                                                       autocomplete="off" autofocus >
                                                 <div class="input-group-append">
                                                     <span class="input-group-text">
                                                         <i class="fa fa-calendar"></i> </span>
@@ -132,56 +132,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="show-order-products" tabindex="-1" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title product-modal-header" id="exampleModalLabel">Product Variants</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-md">
-                            <thead>
-                            <tr>
-                                <th>Category</th>
-                                <th>Sub Category</th>
-                                <th>Sub subcategory</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <td id="category_name"></td>
-                            <td id="subcategory_name"></td>
-                            <td id="sub_subcategory_name"></td>
-                            </tbody>
-                        </table>
-                        <hr>
-                        <h3>Variants</h3>
-
-                        <table class="table table-bordered table-striped table-md">
-                            <thead>
-                            <tr>
-                                <th>Size</th>
-                                <th>Color</th>
-                                <th>Unit Price</th>
-                                <th>Discount Price</th>
-                                <th>Inventory</th>
-                            </tr>
-                            </thead>
-                            <tbody id="product-variants-container">
-                            <!-- Rows will be dynamically appended here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 
 @push('js')

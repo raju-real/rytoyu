@@ -6,20 +6,7 @@
                 <span>Dashboard</span>
             </a>
         </li>
-        <li class="{{ isMainMenuActive('inventories') }}">
-            <a href="javascript: void(0);" class="has-arrow waves-effect">
-                <i class="bx bx-package"></i>
-                <span>Inventory</span>
-            </a>
-            <ul class="sub-menu" aria-expanded="false">
-                <li>
-                    <a href="{{ route('admin.product-stock-status') }}"
-                       class="{{ isSubMenuActive('product-stock-status') }}">
-                        <i class="bx bx-chevron-right"></i> Product Stock Status
-                    </a>
-                </li>
-            </ul>
-        </li>
+
         <li class="{{ isMainMenuActive('products') }}">
             <a href="javascript: void(0);" class="has-arrow waves-effect">
                 <i class="bx bxl-product-hunt"></i>
@@ -39,25 +26,27 @@
             </ul>
         </li>
         @if(authAdminType() !== 'seller')
-        <li class="{{ isMainMenuActive('manage-orders,commission-logs,order-summary,change-order-status') }}">
-            <a href="javascript: void(0);" class="has-arrow waves-effect">
-                <i class="bx bx-cart"></i>
-                <span>Manage Order</span>
-            </a>
-            <ul class="sub-menu" aria-expanded="false">
-                <li>
-                    <a href="{{ route('admin.manage-orders') }}" class="{{ isSubMenuActive('manage-orders,order-summary,change-order-status') }}">
-                        <i class="bx bx-chevron-right"></i> Order List
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.commission-logs') }}" class="{{ isSubMenuActive('commission-logs') }}">
-                        <i class="bx bx-chevron-right"></i> Commission Logs
-                    </a>
-                </li>
+            <li class="{{ isMainMenuActive('manage-orders,commission-logs,order-summary,change-order-status') }}">
+                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                    <i class="bx bx-cart"></i>
+                    <span>Manage Order</span>
+                </a>
+                <ul class="sub-menu" aria-expanded="false">
+                    <li>
+                        <a href="{{ route('admin.manage-orders') }}"
+                           class="{{ isSubMenuActive('manage-orders,order-summary,change-order-status') }}">
+                            <i class="bx bx-chevron-right"></i> Order List
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.commission-logs') }}" class="{{ isSubMenuActive('commission-logs') }}">
+                            <i class="bx bx-chevron-right"></i> Commission Logs
+                        </a>
+                    </li>
 
-            </ul>
-        </li>
+                </ul>
+            </li>
+
             <li class="{{ isMainMenuActive('sections') }}">
                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                     <i class="bx bx-layout"></i>
@@ -70,7 +59,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.announcements.index') }}" class="{{ isSubMenuActive('announcements') }}">
+                        <a href="{{ route('admin.announcements.index') }}"
+                           class="{{ isSubMenuActive('announcements') }}">
                             <i class="bx bx-chevron-right"></i> Announcements
                         </a>
                     </li>
@@ -80,7 +70,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.manage-product-types') }}" class="{{ isSubMenuActive('manage-product-types') }}">
+                        <a href="{{ route('admin.manage-product-types') }}"
+                           class="{{ isSubMenuActive('manage-product-types') }}">
                             <i class="bx bx-chevron-right"></i> Product Types
                         </a>
                     </li>
@@ -93,7 +84,7 @@
                 </ul>
             </li>
 
-            <li class="{{ isMainMenuActive('categories,subcategories,sub-subcategories,brands,sizes,colors,units,tags') }}">
+            <li class="{{ isMainMenuActive('categories,subcategories,sub-subcategories,brands,sizes,colors,units,tags,product-types') }}">
                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                     <i class="bx bx-list-check"></i>
                     <span>Attributes</span>
@@ -181,7 +172,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.delivery-charges.index') }}" class="{{ isSubMenuActive('delivery-charges') }}">
+                        <a href="{{ route('admin.delivery-charges.index') }}"
+                           class="{{ isSubMenuActive('delivery-charges') }}">
                             <i class="bx bx-chevron-right"></i> Delivery Charges
                         </a>
                     </li>

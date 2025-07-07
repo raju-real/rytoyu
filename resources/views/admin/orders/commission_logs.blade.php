@@ -51,19 +51,19 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group mb-3">
-                                            <select name="pay_to" class="form-select">
-                                                <option value="{{ !isset(request()->pay_to) ? 'selected' : '' }}">
-                                                    Payment To</option>
-                                                @foreach (getPayToList() as $pay_to)
-                                                    <option value="{{ $pay_to->value }}"
-                                                        {{ request('pay_to') === $pay_to->value ? 'selected' : '' }}>
-                                                        {{ $pay_to->title }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
+{{--                                    <div class="col-md-4">--}}
+{{--                                        <div class="form-group mb-3">--}}
+{{--                                            <select name="pay_to" class="form-select">--}}
+{{--                                                <option value="{{ !isset(request()->pay_to) ? 'selected' : '' }}">--}}
+{{--                                                    Payment To</option>--}}
+{{--                                                @foreach (getPayToList() as $pay_to)--}}
+{{--                                                    <option value="{{ $pay_to->value }}"--}}
+{{--                                                        {{ request('pay_to') === $pay_to->value ? 'selected' : '' }}>--}}
+{{--                                                        {{ $pay_to->title }}</option>--}}
+{{--                                                @endforeach--}}
+{{--                                            </select>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
                                     <div class="col-md-4">
                                         <div class="form-group mb-3">
                                             <select name="payment_status" class="form-select">
@@ -120,7 +120,7 @@
                                     <th>C Rate</th>
                                     <th>Commission</th>
                                     <th>Seller Amount</th>
-                                    <th>Pay To</th>
+{{--                                    <th>Pay To</th>--}}
                                     <th>Payment Status</th>
                                 </tr>
                             </thead>
@@ -155,7 +155,7 @@
                                             <td class="align-middle">{{ $log->commission_rate ?? 0 }} %</td>
                                             <td class="align-middle">{{ numberFormat($log->total_commission ?? 0, 2) }}</td>
                                             <td class="align-middle">{{ numberFormat($log->seller_amount ?? 0, 2) }}</td>
-                                            <td class="align-middle">{{ ucFirst($log->pay_to ?? '') }}</td>
+{{--                                            <td class="align-middle">{{ ucFirst($log->pay_to ?? '') }}</td>--}}
                                             <td class="align-middle">{{ ucFirst($log->payment_status ?? '') }}</td>
                                         </tr>
                                     @endforeach

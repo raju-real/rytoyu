@@ -2,14 +2,23 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\SellerScope;
 use App\Traits\ModelHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Scout\Searchable;
 
 class Product extends Model
 {
+    protected static function booted()
+    {
+        // Product::withoutGlobalScope('sellerScope')->get();
+        static::addGlobalScope(new SellerScope);
+    }
+
     /**
      * Searchable
      * use Laravel\Scout\Searchable;

@@ -114,7 +114,7 @@
                                                 Return Order
                                             </a>
                                         @else
-                                            Order Product {{ ucfirst($order_product->order_status) }}
+                                            <span class="text-info font-weight-500">Order Product {{ ucfirst($order_product->order_status) }}</span>
                                         @endif
                                     </td>
                                 </tr>

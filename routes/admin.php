@@ -35,7 +35,13 @@ use App\Models\Order;
 Route::view('admin', 'admin.admin_login');
 Route::post('admin-login', AdminLogin::class)->name('admin-login');
 
+// Group route for administrator, admin and seller
+// ============================================================================
+
 Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
+    // Common for administrator, admin and seller
+    // =========================================================================
+    Route::view('permission-denied', 'admin.permission_denied')->name('permission-denied');
     Route::controller(DashboardController::class)->group(function () {
         Route::get('dashboard', 'dashboard')->name('dashboard');
     });
@@ -48,8 +54,36 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
         Route::post('send-verification-code', 'sendVerificationCode')->name('send-verification-code');
         Route::post('verify-code', 'verifyCode')->name('verify-code');
     });
-    // Only for admin
+
+    //Products
+    Route::resource('products', ProductController::class);
+    Route::controller(ProductController::class)->group(function () {
+        Route::get('get-product-variants/{id}', 'productVariants')->name('get-product-variants');
+        Route::get('get-product-variants-data', 'getProductVariantsData')->name('get-product-variants-data');
+        Route::put('update-product-status/{id}', 'updateProductStatus')->name('update-product-status');
+    });
+    // =========================================================================
+    // End of Group route for administrator, admin and seller
+
+    // Start of only for administrator routes
+    // =========================================================================
+    Route::middleware('administrator')->group(function () {
+        //.......
+    });
+    // =========================================================================
+    // End of only for administrator routes
+
+    // Start of only for admin routes
+    // =========================================================================
     Route::middleware('admin')->group(function () {
+        //.......
+    });
+    // =========================================================================
+    // End of only for administrator routes
+
+    // Start of only for administrator and admin (with permission check)
+    // =========================================================================
+    Route::middleware('administrator_admin')->group(function () {
         //Attributes
         Route::resource('product-types', ProductTypeController::class);
         Route::controller(ProductTypeController::class)->group(function () {
@@ -84,8 +118,8 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
         Route::controller(SettingController::class)->group(function () {
             Route::get('site-settings', 'siteSettings')->name('site-settings');
             Route::put('update-site-settings', 'updateSiteSettings')->name('update-site-settings');
-            Route::resource('delivery-charges',DeliveryChargeController::class);
-            Route::controller(DeliveryChargeController::class)->group(function() {
+            Route::resource('delivery-charges', DeliveryChargeController::class);
+            Route::controller(DeliveryChargeController::class)->group(function () {
                 Route::put('update-delivery-charge-status/{id}', 'updateDeliveryChargeStatus')->name('update-delivery-charge-status');
             });
         });
@@ -120,36 +154,32 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
             Route::get('update-order-status', 'updateOrderStatus')->name('update-order-status');
             Route::get('update-order-status-all', 'updateOrderStatusAll')->name('update-order-status-all');
         });
+        //Inventory
+        Route::controller(InventoryController::class)->group(function () {
+            Route::get('product-stock-status', 'productStockStatus')->name('product-stock-status');
+        });
+        // Homepage section Manage
+        Route::controller(WebPageManageController::class)->group(function () {
+            // New in section
+            Route::get('new-in-products', 'newInProducts')->name('new-in-products');
+            Route::get('get-new-in-products', 'getNewInProducts')->name('get-new-in-products');
+            Route::post('add-new-in-product', 'addNewInProducts')->name('add-new-in-product');
+            Route::post('update-new-in-product-sorting', 'updateNewInProductSorting')->name('update-new-in-product-sorting');
+            Route::delete('delete-new-in-product', 'deleteNewInProduct')->name('delete-new-in-product');
+            Route::get('manage-product-types', 'manageProductType')->name('manage-product-types');
+            Route::get('product-types-category-bound/{product_type_slug}', 'productTypeCategoryBound')->name('product-types-category-bound');
+            Route::post('bound-category-on-product-type/{type_id}', 'boundCategoryOnProductType')->name('bound-category-on-product-type');
+            Route::get('latest-offers', 'latestOffers')->name('latest-offers');
+            Route::get('get-latest-offer-products', 'getLatestOfferProducts')->name('get-latest-offer-products');
+            Route::get('search-own-discount-products', 'searchLatestOfferProduct')->name('search-own-discount-products');
+            Route::post('add-latest-offer-product', 'addLatestOfferProducts')->name('add-latest-offer-product');
+            Route::post('update-latest-offer-product-sorting', 'updateLatestOfferProductSorting')->name('update-latest-offer-product-sorting');
+            Route::delete('delete-latest-offer-product', 'deleteLatestOfferProduct')->name('delete-latest-offer-product');
+        });
     });
-    //Products
-    Route::resource('products', ProductController::class);
-    Route::controller(ProductController::class)->group(function () {
-        Route::get('get-product-variants/{id}', 'productVariants')->name('get-product-variants');
-        Route::get('get-product-variants-data', 'getProductVariantsData')->name('get-product-variants-data');
-        Route::put('update-product-status/{id}', 'updateProductStatus')->name('update-product-status');
-    });
-    //Inventory
-    Route::controller(InventoryController::class)->group(function () {
-        Route::get('product-stock-status', 'productStockStatus')->name('product-stock-status');
-    });
-    // Homepage section Manage
-    Route::controller(WebPageManageController::class)->group(function () {
-        // New in section
-        Route::get('new-in-products', 'newInProducts')->name('new-in-products');
-        Route::get('get-new-in-products', 'getNewInProducts')->name('get-new-in-products');
-        Route::post('add-new-in-product', 'addNewInProducts')->name('add-new-in-product');
-        Route::post('update-new-in-product-sorting', 'updateNewInProductSorting')->name('update-new-in-product-sorting');
-        Route::delete('delete-new-in-product', 'deleteNewInProduct')->name('delete-new-in-product');
-        Route::get('manage-product-types', 'manageProductType')->name('manage-product-types');
-        Route::get('product-types-category-bound/{product_type_slug}', 'productTypeCategoryBound')->name('product-types-category-bound');
-        Route::post('bound-category-on-product-type/{type_id}', 'boundCategoryOnProductType')->name('bound-category-on-product-type');
-        Route::get('latest-offers', 'latestOffers')->name('latest-offers');
-        Route::get('get-latest-offer-products', 'getLatestOfferProducts')->name('get-latest-offer-products');
-        Route::get('search-own-discount-products', 'searchLatestOfferProduct')->name('search-own-discount-products');
-        Route::post('add-latest-offer-product', 'addLatestOfferProducts')->name('add-latest-offer-product');
-        Route::post('update-latest-offer-product-sorting', 'updateLatestOfferProductSorting')->name('update-latest-offer-product-sorting');
-        Route::delete('delete-latest-offer-product', 'deleteLatestOfferProduct')->name('delete-latest-offer-product');
-    });
+    // =========================================================================
+    // End of Group route for administrator and admin (with permission check)
+
 
     Route::get('logout', function () {
         Auth::logout();
@@ -158,7 +188,7 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
     })->name('logout');
 
     Route::get('bulk-operation', function () {
-        $order = Order::where('order_number','0022')->first();
+        $order = Order::where('order_number', '0022')->first();
         $qr_data =
             "Order Details\n" .
             "-----------------------\n" .
@@ -174,5 +204,4 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
 
         generateQr($qr_data, 'order_' . $order->order_number, 200, 0);
     });
-
 });

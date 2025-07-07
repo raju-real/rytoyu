@@ -129,7 +129,7 @@
                                         </strong>
                                     </td>
                                     <td>
-                                        @if ($order_product->product->thumbnail_path && file_exists($order_product->product->thumbnail_path))
+                                        @if ($order_product->product && $order_product->product->thumbnail_path && file_exists($order_product->product->thumbnail_path))
                                             <img src="{{ asset($order_product->product->thumbnail_path) }}"
                                                 class="avatar-sm rounded-3 d-block">
                                         @else

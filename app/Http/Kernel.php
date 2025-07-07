@@ -2,7 +2,10 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AdministratorAdminMiddleware;
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\RestrictSellerProduct;
+use App\Http\Middleware\SellerMiddleware;
 use App\Http\Middleware\UserHasShop;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -67,6 +70,9 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'user_has_shop' => UserHasShop::class,
-        'admin' => AdminMiddleware::class
+        'administrator' => AdminMiddleware::class,
+        'admin' => AdminMiddleware::class,
+        'administrator_admin' => AdministratorAdminMiddleware::class,
+        'seller' => SellerMiddleware::class,
     ];
 }
