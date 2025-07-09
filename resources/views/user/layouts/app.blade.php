@@ -9,8 +9,8 @@
     <title>@yield('title',siteSettings()['company_name'])</title>
     <!-- Favicon -->
     <link rel="apple-touch-icon-precomposed" sizes="144x144"
-          href="{{ asset('assets/user/images/favicon.png') }}">
-    <link rel="shortcut icon" href="{{ asset('assets/user/images/favicon.png') }}">
+          href="{{ asset(siteSettings()['favicon'] ?? ecommerceIcon()) }}">
+    <link rel="shortcut icon" href="{{ asset(siteSettings()['favicon'] ?? ecommerceIcon()) }}">
     <!-- CSS Global -->
     <link href="{{ asset('assets/user/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/user/plugins/bootstrap-select/css/bootstrap-select.min.css') }}" rel="stylesheet">
@@ -69,9 +69,9 @@
             <div class="top-bar-inner">
                 <div class="top-bar-left">
                     <ul class="list-inline">
-                        <li class="hidden-xs"><a href="">About</a></li>
-                        <li class="hidden-xs"><a href="">Contact</a></li>
-                        <li class="hidden-xs"><a href="">FAQ</a></li>
+                        <li class="hidden-xs"><a href="{{ route('about') }}">About</a></li>
+                        <li class="hidden-xs"><a href="{{ route('contact') }}">Contact</a></li>
+                        <li class="hidden-xs"><a href="{{ route('faq') }}">FAQ</a></li>
                     </ul>
                 </div>
                 <!--  <div class="top-bar-left">
@@ -239,8 +239,10 @@
                 <div class="col-md-12 text-center border-b">
                     <div class="form-list-search">
                         <input type="text" name="search" placeholder="Search for products brands and more"
-                               class="form-control searchInput" value="{{ implode(' ', session('search_keywords_' . session('user_search_key'), [])) }}">
-                        <button class="btn orange-bg searchBtn">SERACH<i class="fa-solid fa-magnifying-glass"></i></button>
+                               class="form-control searchInput"
+                               value="{{ implode(' ', session('search_keywords_' . session('user_search_key'), [])) }}">
+                        <button class="btn orange-bg searchBtn">SERACH<i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
 
 
                     </div>
@@ -277,13 +279,15 @@
                         </div>
                     </div>
                     <div class="col-md-6 text-center">
-                        <a href="index"><img class="logo-f" src="assets/user/img/logo.svg" alt="logo"></a>
+                        <a href="{{ route('home') }}"><img class="logo-f" src="{{ asset(siteSettings()['logo']) }}"
+                                                           alt="logo"></a>
                         <p class="p-f">
-                            Corporate Office: Rupayan Shopping Square, Level-5, Plot-2, Block-G,<br>
-                            Sayem Sobhan Anvir Road, Bashundhara R/A, Dhaka-1229, Bangladesh.
+                            Corporate Office<br>
+                            {{ siteSettings()['address'] ?? '' }}
                         </p>
-                        <h4 class="h4-f">Need help? Call Us:<span class="orange-text">01712768782</span></h4>
-                        <p class="mail-f">contact@rytoyu.com</p>
+                        <h4 class="h4-f">Need help? Call Us:<span
+                                class="orange-text">{{ siteSettings()['company_mobile'] ?? '' }}</span></h4>
+                        <p class="mail-f">{{ siteSettings()['company_email'] ?? '' }}</p>
                     </div>
                     <div class="col-md-3">
                         <ul class="ul-link-f">
@@ -298,7 +302,9 @@
             <div class="container">
                 <div class="row">
                     <div class="col-sm-12 text-center">
-                        <div class="copyright">© Copyright 2024 rytoyu. All Rights Reserved.</div>
+                        <div class="copyright">
+                            © Copyright {{ date('Y') }} {{ siteSettings()['company_name'] }}. All Rights Reserved.
+                        </div>
                     </div>
                 </div>
             </div>

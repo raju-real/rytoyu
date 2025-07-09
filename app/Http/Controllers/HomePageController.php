@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SendMail;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
@@ -14,6 +15,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
@@ -227,4 +229,36 @@ class HomePageController extends Controller
             ->with('message', 'Invalid Credentials!')
             ->withInput($request->only('mobile', 'remember'));
     }
+
+    public function sendContactMessage(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required|max:50',
+            'email' => 'required|email|max:50',
+            'mobile' => 'required|max:20',
+            'message' => 'required|max:1000'
+        ]);
+        $mail_data = [
+            'subject' => $request->name . ' wants to contact with you',
+            'body' => $request->message,
+            'title' => 'Someone wants to contact with you.',
+            'mobile' => $request->mobile,
+            'name' => $request->name,
+            'email' => $request->email
+        ];
+
+        try {
+            $mailSent = Mail::to(siteSettings()['company_email'])->send(new SendMail($mail_data));
+
+            if (!$mailSent) {
+                return redirect()->route("contact")->with(['type' => 'success', 'message' => 'Your message has been sent successfully.']);
+            } else {
+                return redirect()->route("contact")->with(['type' => 'info', 'message' => 'Mail sending success, but no recipients accepted!']);
+            }
+        } catch (\Exception $e) {
+            return redirect()->route("contact")->with(['type' => 'danger', 'message' => 'Message not sent. Something went wrong!']);
+        }
+
+    }
+
 }

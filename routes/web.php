@@ -10,6 +10,11 @@ Route::controller(\App\Http\Controllers\HomePageController::class)->group(functi
     Route::get('single-product-info/{product_id}', 'singleProductInfo')->name('single-product-info');
     Route::get('product-lists', 'products')->name('product-lists');
     Route::get('product-details/{slug}', 'productDetails')->name('product-details');
+
+    Route::view('about','user.pages.about')->name('about');
+    Route::view('contact','user.pages.contact')->name('contact');
+    Route::post('send-contact-message','sendContactMessage')->name('send-contact-message');
+    Route::view('faq','user.pages.faq')->name('faq');
     // Authentication Part
     Route::get('register', 'userRegisterPage')->name('register');
     Route::post('user-register', 'userRegistration')->name('user-register');

@@ -42,6 +42,7 @@ return new class extends Migration
             $table->boolean('is_refundable')->default(false);
             $table->string('contact_person', 50)->nullable();
             $table->enum('listed_on', ['featured', 'new-arrivals', 'best-selling'])->default('featured');
+            $table->enum('request_status',['pending','approved'])->default("pending");
             $table->enum('status',['active','inactive'])->default("active");
             $table->timestamps();
             $table->integer('created_by');

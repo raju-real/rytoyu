@@ -13,8 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->enum('request_status',['pending','approved'])->default("pending")->after('listed_on');
+        Schema::create('faqs', function (Blueprint $table) {
+            $table->id();
+            $table->string('question',100);
+            $table->text('answer');
+            $table->timestamps();
         });
     }
 
@@ -25,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('faqs');
     }
 };

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\FaqController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
@@ -123,6 +124,8 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
                 Route::put('update-delivery-charge-status/{id}', 'updateDeliveryChargeStatus')->name('update-delivery-charge-status');
             });
         });
+        Route::resource('faqs', FaqController::class);
+
         // Announcements
         Route::resource('announcements', AnnouncementController::class);
         // Sellers

@@ -1,5 +1,5 @@
 @extends('user.layouts.app')
-@section('title','Home')
+@section('title','Sign Up')
 @push('css') @endpush
 
 @section('content')

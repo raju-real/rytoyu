@@ -16,7 +16,7 @@ class SettingController extends Controller
     {
         $this->validate($request,[
             'company_name' => 'required|string|max:100',
-            'company_email' => 'nullable|sometimes|email|max:20',
+            'company_email' => 'nullable|sometimes|email|max:50',
             'company_mobile' => 'nullable|sometimes|string|max:15',
             'company_phone' => 'nullable|sometimes|string|max:20',
             'logo' => 'nullable|sometimes|mimes:jpg,jpeg,png|max:1024',
