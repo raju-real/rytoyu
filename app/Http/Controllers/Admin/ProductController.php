@@ -23,12 +23,7 @@ class ProductController extends Controller
     {
         $data = Product::query();
 
-        // Seller logic
-        if (authAdminType() === 'seller') {
-            $data->where('seller_id', Auth::id());
-        } elseif (request()->filled('seller')) {
-            $data->where('seller_id', sellerIdByCode(request()->get('seller')));
-        }
+        $data->where('seller_id', authSellerId());
 
         $data->when(request()->get('brand'), function ($query) {
             $query->where('brand_id', brandIdBySlug(request()->get('brand')));
@@ -185,6 +180,11 @@ class ProductController extends Controller
         $product->is_exchangeable = $request->is_exchangeable;
         $product->is_refundable = $request->is_refundable;
         $product->listed_on = $request->listed_on ?? 'featured';
+        if(authAdminType() === 'seller') {
+            $product->request_status = 'pending';
+        } else {
+            $product->request_status = 'approved';
+        }
         $product->status = $request->status;
         $product->created_by = Auth::id();
         $product->updated_by = Auth::id();

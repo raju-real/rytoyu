@@ -28,6 +28,8 @@ class SettingController extends Controller
             'facebook_url' => 'nullable|sometimes|url|max:255',
             'linkedin_url' => 'nullable|sometimes|url|max:255',
             'youtube_url' => 'nullable|sometimes|url|max:255',
+            'instagram_url' => 'nullable|sometimes|url|max:255',
+            'tiktok_url' => 'nullable|sometimes|url|max:255',
             'google_map_url' => 'nullable|sometimes|url|max:1000',
             'support_policy' => 'nullable|sometimes|string|max:5000',
             'return_policy' => 'nullable|sometimes|string|max:5000',

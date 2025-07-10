@@ -8,7 +8,7 @@
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                 <h4 class="mb-sm-0 font-size-18">Product Details</h4>
                 <div class="page-title-right">
-                    <a href="{{ route('admin.products.index') }}" class="btn btn-sm btn-outline-primary">
+                    <a href="{{ route('admin.seller-products') }}" class="btn btn-sm btn-outline-primary">
                         <i class="fa fa-arrow-circle-left"></i> Back
                     </a>
                 </div>
@@ -63,6 +63,18 @@
             <div class="card">
                 <div class="card-body">
                     <table class="table table-md table-bordered table-striped">
+                        <tr>
+                            <td>Request Status</td>
+                            <td>:</td>
+                            <td>
+                                {{ ucFirst($product->request_status) }}
+                                @if($product->request_status === 'pending')
+                                    <a class="font-weight-500" href="{{ route('admin.update-product-request-status',['product' => $product->id, 'request_status' => 'approved']) }}">Approve</a>
+                                @elseif($product->request_status === 'approved')
+                                    <a class="font-weight-500" href="{{ route('admin.update-product-request-status',['product' => $product->id, 'request_status' => 'pending']) }}">Mark as Pending</a>
+                                @endif
+                            </td>
+                        </tr>
                         <tr>
                             <td>Status</td>
                             <td>:</td>

@@ -123,19 +123,22 @@
                         <ul class="nav sf-menu">
                             @foreach(megaMenus() as $menu)
                                 <li class="megamenu">
-                                    <a href="#">{{ $menu->name ?? '' }}</a>
+                                    <a href="{{ route('product-lists',['category' => $menu->slug]) }}">{{ $menu->name ?? '' }}</a>
                                     @if(count($menu->subcategories))
                                         <ul>
                                             <li class="row">
                                                 @foreach($menu->subcategories as $subcategory)
                                                     <div class="col-md-4">
                                                         <h4 class="block-title">
-                                                            <span>{{ $subcategory->name ?? '' }}</span></h4>
+                                                            <span>
+                                                                <a href="{{ route('product-lists',['category' => $menu->slug, 'subcategory' => $subcategory->slug]) }}">{{ $subcategory->name ?? '' }}</span></a>
+
+                                                        </h4>
                                                         @if(count($subcategory->sub_subcategories))
                                                             <ul>
                                                                 @foreach($subcategory->sub_subcategories as $sub_subcategory)
                                                                     <li>
-                                                                        <a href="#">{{ $sub_subcategory->name ?? '' }}</a>
+                                                                        <a href="{{ route('product-lists',['category' => $menu->slug, 'subcategory' => $subcategory->slug,'sub_subcategory' => $sub_subcategory->slug]) }}">{{ $sub_subcategory->name ?? '' }}</a>
                                                                     </li>
                                                                 @endforeach
                                                             </ul>
@@ -152,20 +155,19 @@
                                 <ul>
                                     <li class="row">
                                         <div class="col-md-4">
-                                            <h4 class="block-title"><span>Sonos</span></h4>
+                                            <h4 class="block-title"><span>Explore</span></h4>
                                             <ul>
-                                                <li><a href="#">Sonos 1</a></li>
-                                                <li><a href="#">Sonos 2</a></li>
-                                                <li><a href="#">Sonos 3</a></li>
-                                                <li><a href="#">Sonos 4</a></li>
-                                                <li><a href="#">Sonos 5</a></li>
-                                                <li><a href="#">Sonos 6</a></li>
+                                                @foreach(getBrands() as $brand)
+                                                    <li>
+                                                        <a href="{{ route('product-lists',['brand' => $brand->slug]) }}">{{ $brand->slug }}</a>
+                                                    </li>
+                                                @endforeach
                                             </ul>
                                         </div>
                                     </li>
                                 </ul>
                             </li>
-                            <li><a href="" class="orange-text">SALE</a></li>
+                            <li><a href="{{ route('product-lists') }}" class="orange-text">SALE</a></li>
                         </ul>
                     </nav>
                     <!-- /Navigation -->
@@ -188,8 +190,10 @@
                 <!-- Header shopping cart -->
                 <div class="header-cart">
                     <div class="cart-wrapper">
+                        @if(\Illuminate\Support\Facades\Auth::check())
                         <a href="wishlist.html" class="btn btn-theme-transparent hidden-xs hidden-sm"><i
                                 class="fa-regular fa-heart"></i></a>
+                        @endif
                         <a href="#" class="btn btn-theme-transparent cart-value" data-toggle="modal"
                            data-target="#popup-cart"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs"
                                                                                                id="cart-item-total">  </span>
@@ -249,21 +253,11 @@
                 </div>
                 <div class="col-md-12">
                     <ul class="list-inline list-group footer-nav">
+                        @foreach(activeCategories() as $category)
                         <li>
-                            <a href="">WOMEN</a>
+                            <a href="{{ route('product-lists', ['category' => $category->slug]) }}">{{ $category->name ?? '' }}</a>
                         </li>
-                        <li>
-                            <a href="">MEN</a>
-                        </li>
-                        <li>
-                            <a href="">BRANDS</a>
-                        </li>
-                        <li>
-                            <a href="">SHOP</a>
-                        </li>
-                        <li>
-                            <a href="">NEW</a>
-                        </li>
+                        @endforeach
                     </ul>
                 </div>
                 <div class="row">
@@ -271,9 +265,9 @@
                         <div class="widget">
                             <h4 class="widget-title">FOLLOW US</h4>
                             <ul class="social-icons">
-                                <li><a href="#" class="facebook"><i class="fa-brands fa-facebook-f"></i></a></li>
-                                <li><a href="#" class="twitter"><i class="fa-brands fa-instagram"></i></a></li>
-                                <li><a href="#" class="instagram"><i class="fa-brands fa-tiktok"></i></a></li>
+                                <li><a href="{{ siteSettings()['facebook_url'] ?? '#' }}" class="facebook"><i class="fa-brands fa-facebook-f"></i></a></li>
+                                <li><a href="{{ siteSettings()['twitter_url'] ?? '#' }}" class="twitter"><i class="fa-brands fa-instagram"></i></a></li>
+                                <li><a href="{{ siteSettings()['instagram_url'] ?? '#' }}" class="instagram"><i class="fa-brands fa-tiktok"></i></a></li>
                                 <li><a href="#" class="pinterest"><i class="fa-brands fa-linkedin-in"></i></a></li>
                             </ul>
                         </div>

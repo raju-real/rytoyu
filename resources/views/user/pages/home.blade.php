@@ -12,7 +12,7 @@
                     <!-- Slide item -->
                     @foreach (activeSliders() as $slider)
                         <div class="item slide1">
-                            <img class="slide-img" src="{{ asset($slider->image_path) }}" alt="" />
+                            <img class="slide-img" src="{{ asset($slider->image_path) }}" alt=""/>
                             <div class="caption">
                                 <div class="container">
                                     <div class="div-table">
@@ -25,17 +25,17 @@
                                                         {{ $slider->highlighted_caption ?? '' }}
                                                         <span>
                                                             <img src="{{ asset('assets/user/img/border.png') }}"
-                                                                alt="img">
+                                                                 alt="img">
                                                         </span>
                                                     </label>
                                                 </h5>
                                                 <p class="caption-text">
                                                     @if (isset($slider->redirect_link))
                                                         <a class="btn btn-theme" href="{{ $slider->redirect_link }}"
-                                                            target="_blank">{{ $slider->button_name ?? '' }}</a>
+                                                           target="_blank">{{ $slider->button_name ?? '' }}</a>
                                                     @else
                                                         <a class="btn btn-theme"
-                                                            href="{{ route('product-lists', ['slider' => $slider->slug]) }}">{{ $slider->button_name ?? '' }}</a>
+                                                           href="{{ route('product-lists', ['slider' => $slider->slug]) }}">{{ $slider->button_name ?? '' }}</a>
                                                     @endif
                                                 </p>
                                             </div>
@@ -75,9 +75,9 @@
                     @foreach (getNewInProducts() as $product)
                         <div class="thumbnail no-border no-padding">
                             <div class="media">
-                                <img class="img-sl" src="{{ asset($product->thumbnail_path) }}" alt="" />
+                                <img class="img-sl" src="{{ asset($product->thumbnail_path) }}" alt=""/>
                                 <button class="btn orange-bg view-btn product-view"
-                                    data-product-id="{{ $product->id }}"><i class="fa-regular fa-eye"></i></button>
+                                        data-product-id="{{ $product->id }}"><i class="fa-regular fa-eye"></i></button>
                             </div>
                             <div class="caption text-center">
                                 <h4 class="caption-title"><a
@@ -120,8 +120,8 @@
                         <div class="btn-row">
                             @foreach ($product_type->categories as $category)
                                 <button class="btn btn-shop orange-bg product-type-btn"
-                                    data-type="{{ $product_type->slug }}"
-                                    data-slug="{{ categorySlugById($category->id) }}">SHOP
+                                        data-type="{{ $product_type->slug }}"
+                                        data-slug="{{ categorySlugById($category->id) }}">SHOP
                                     {{ $category->name ?? '' }}</button>
                             @endforeach
                         </div>
@@ -142,7 +142,7 @@
                     @foreach (getBrands() as $brand)
                         <div class="thumbnail no-border no-padding">
                             <div class="media">
-                                <img class="img-sl" src="{{ asset($brand->image) }}" alt="" />
+                                <img class="img-sl" src="{{ asset($brand->image) }}" alt=""/>
                             </div>
                             <img src="{{ asset($brand->logo) }}" class="brand-logo">
                         </div>
@@ -162,9 +162,9 @@
                     @foreach (getLatestOfferProducts() as $product)
                         <div class="thumbnail no-border no-padding">
                             <div class="media">
-                                <img class="img-sl" src="{{ asset($product->thumbnail_path) }}" alt="" />
+                                <img class="img-sl" src="{{ asset($product->thumbnail_path) }}" alt=""/>
                                 <button class="btn orange-bg view-btn product-view"
-                                    data-product-id="{{ $product->id }}"><i class="fa-regular fa-eye"></i></button>
+                                        data-product-id="{{ $product->id }}"><i class="fa-regular fa-eye"></i></button>
                             </div>
                             <div class="caption text-center">
                                 <h4 class="caption-title"><a
@@ -199,9 +199,9 @@
                     @foreach (getUserSearchProducts() as $product)
                         <div class="thumbnail no-border no-padding">
                             <div class="media">
-                                <img class="img-sl" src="{{ asset($product->thumbnail_path) }}" alt="" />
+                                <img class="img-sl" src="{{ asset($product->thumbnail_path) }}" alt=""/>
                                 <button class="btn orange-bg view-btn product-view"
-                                    data-product-id="{{ $product->id }}"><i class="fa-regular fa-eye"></i></button>
+                                        data-product-id="{{ $product->id }}"><i class="fa-regular fa-eye"></i></button>
                             </div>
                             <div class="caption text-center">
                                 <h4 class="caption-title"><a
@@ -231,39 +231,39 @@
         <div class="row m-0">
             <div class="col-md-4 p-0">
                 <div class="alll-offer-list bg-gray">
-                    <div class="icon-offer"><img src="assets/user/img/off1.svg" alt="icon"></div>
+                    <div class="icon-offer"><img src="{{ asset('assets/user/img/off1.svg') }}" alt="icon"></div>
                     <div class="offer-details">
                         <p>
                             <strong>Sing up to receive special offers:</strong>
                             Unlock exclusive deals and the latest trends.
                         </p>
-                        <button class="btn orange-bg"><span>Join Now</span></button>
+                        <button class="btn orange-bg redirect-to-link" data-route="{{ route('register') }}"><span>Join Now</span></button>
                     </div>
-                    <img class="shape" src="assets/user/img/shape.svg" alt="">
+                    <img class="shape" src="{{ asset('assets/user/img/shape.svg') }}" alt="">
                 </div>
             </div>
             <div class="col-md-4 p-0">
                 <div class="alll-offer-list bg-gray">
-                    <div class="icon-offer"><img src="assets/user/img/off2.svg" alt="icon"></div>
+                    <div class="icon-offer"><img src="{{ asset('assets/user/img/off2.svg') }}" alt="icon"></div>
                     <div class="offer-details">
                         <p>
                             <strong>Become a partner: </strong>
                             Grow your brand with us and reach fashion lovers across Bangladesh.
                         </p>
-                        <button class="btn orange-bg"><span>Apply</span></button>
+                        <button class="btn orange-bg redirect-to-link"><span>Apply</span></button>
                     </div>
-                    <img class="shape" src="assets/user/img/shape.svg" alt="">
+                    <img class="shape" src="{{ asset('assets/user/img/shape.svg') }}" alt="">
                 </div>
             </div>
             <div class="col-md-4 p-0">
                 <div class="alll-offer-list bg-gray">
-                    <div class="icon-offer"><img src="assets/user/img/off3.svg" alt="icon"></div>
+                    <div class="icon-offer"><img src="{{ asset('assets/user/img/off3.svg') }}" alt="icon"></div>
                     <div class="offer-details">
                         <p><strong>Join our team:</strong> Be part of something big-shape the future of fashion with
-                            Rytoyu! </p>
+                            {{ siteSettings()['company_name'] ?? 'Rytoyu' }}! </p>
                         <button class="btn orange-bg"><span>Apply</span></button>
                     </div>
-                    <img class="shape" src="assets/user/img/shape.svg" alt="">
+                    <img class="shape" src="{{ asset("assets/user/img/shape.svg") }}" alt="">
                 </div>
             </div>
         </div>

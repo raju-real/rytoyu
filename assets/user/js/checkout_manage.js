@@ -130,12 +130,12 @@
                     AppHelpers.showToast("success", response.data.message);
                     loadMiniCartItem();
                 } else {
-                    AppHelpers.showToast("danger", response.data.message);
+                    AppHelpers.showToast("danger",'Invalid Request', response.data.message);
                 }
             })
             .catch(function (error) {
                 console.error(error);
-                AppHelpers.showToast("danger", "Something went wrong!");
+                AppHelpers.showToast("danger",'Invalid Request', error);
             });
     }
 
@@ -313,7 +313,7 @@
         function setServiceCharge() {
             const selected_method = $("#accordion a.selected").data("value") || "cash-on-delivery";
             $('#order_payment_method_error').empty();
-            
+
             axios
                 .get(base_url + "/set-payment-method?payment_method=" + selected_method)
                 .then((response) => {
@@ -381,7 +381,7 @@
             // If using FormData
             const selectedPayment =  $("#accordion a.selected").data("value") || "cash-on-delivery";
 
-            formData.append("payment_method", selectedPayment); 
+            formData.append("payment_method", selectedPayment);
 
             axios
                 .post(base_url + "/submit-order", formData)

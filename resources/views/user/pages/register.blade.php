@@ -34,12 +34,12 @@
                                     <div class="sign-other">
                                         <ul class="login-so list-inline">
                                             <label>Sign in with: </label>
-                                            <li>
-                                                <a href=""><i class="fa-brands fa-facebook-f"></i></a>
-                                            </li>
-                                            <li>
-                                                <a href=""><i class="fa-brands fa-instagram"></i></a>
-                                            </li>
+{{--                                            <li>--}}
+{{--                                                <a href=""><i class="fa-brands fa-facebook-f"></i></a>--}}
+{{--                                            </li>--}}
+{{--                                            <li>--}}
+{{--                                                <a href=""><i class="fa-brands fa-instagram"></i></a>--}}
+{{--                                            </li>--}}
                                             <li>
                                                 <a href=""><i class="fa-brands fa-google"></i></a>
                                             </li>

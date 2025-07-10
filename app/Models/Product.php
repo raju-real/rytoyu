@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ProductApproved;
 use App\Models\Scopes\SellerScope;
 use App\Traits\ModelHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,6 +18,7 @@ class Product extends Model
     {
         // Product::withoutGlobalScope('sellerScope')->get();
         static::addGlobalScope(new SellerScope);
+        static::addGlobalScope(new ProductApproved());
     }
 
     /**

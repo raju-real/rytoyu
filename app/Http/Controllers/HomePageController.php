@@ -251,9 +251,9 @@ class HomePageController extends Controller
             $mailSent = Mail::to(siteSettings()['company_email'])->send(new SendMail($mail_data));
 
             if (!$mailSent) {
-                return redirect()->route("contact")->with(['type' => 'success', 'message' => 'Your message has been sent successfully.']);
+                return redirect()->route("contact")->with(['type' => 'success', 'message' => 'Message not sent. Something went wrong!']);
             } else {
-                return redirect()->route("contact")->with(['type' => 'info', 'message' => 'Mail sending success, but no recipients accepted!']);
+                return redirect()->route("contact")->with(['type' => 'info', 'message' => 'Your message has been sent successfully.']);
             }
         } catch (\Exception $e) {
             return redirect()->route("contact")->with(['type' => 'danger', 'message' => 'Message not sent. Something went wrong!']);

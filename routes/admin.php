@@ -134,6 +134,10 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
             Route::put('update-seller-status/{id}', 'updateSellerStatus')->name('update-seller-status');
             Route::put('update-seller-request-status/{id}', 'updateSellerRequestStatus')->name('update-seller-request-status');
             Route::get('show-seller-info/{seller_code}', 'showSellerInfo')->name('show-seller-info');
+            // Product
+            Route::get('seller-products', 'productList')->name('seller-products');
+            Route::get('seller-product/{slug}', 'sellerProduct')->name('seller-product');
+            Route::get('update-product-request-status', 'updateRequestStatus')->name('update-product-request-status');
         });
         // Sliders
         Route::resource('sliders', SliderController::class);

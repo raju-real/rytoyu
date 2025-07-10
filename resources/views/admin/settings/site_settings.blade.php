@@ -182,6 +182,30 @@
                                     @enderror
                                 </div>
                             </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">Instagram URL</label>
+                                    <input type="text" name="instagram_url"
+                                           value="{{ old('instagram_url') ?? siteSettings()['instagram_url'] ?? '' }}"
+                                           class="form-control {{ hasError('instagram_url') }}"
+                                           placeholder="Instagram URL">
+                                    @error('instagram_url')
+                                    {!! displayError($message) !!}
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">TikTok URL</label>
+                                    <input type="text" name="tiktok_url"
+                                           value="{{ old('tiktok_url') ?? siteSettings()['tiktok_url'] ?? '' }}"
+                                           class="form-control {{ hasError('tiktok_url') }}"
+                                           placeholder="TikTok URL">
+                                    @error('tiktok_url')
+                                    {!! displayError($message) !!}
+                                    @enderror
+                                </div>
+                            </div>
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <label class="form-label">Google Map URL</label>

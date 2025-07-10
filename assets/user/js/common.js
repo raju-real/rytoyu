@@ -42,6 +42,15 @@
         window.location.href = url.toString(); // Redirect to URL
     });
 
+    // Redirect to a Route
+    $(document).on("click", '.redirect-to-link', function () {
+        const redirectRoute = $(this).data('route');
+        if (redirectRoute) {
+            const url = new URL(redirectRoute);
+            window.location.href = url.toString();
+        }
+    });
+
 
     $(document).on("click", ".product-view", function () {
         const productId = $(this).data("product-id");

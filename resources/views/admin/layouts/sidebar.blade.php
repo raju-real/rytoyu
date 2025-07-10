@@ -140,7 +140,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="{{ isMainMenuActive('sellers') }}">
+            <li class="{{ isMainMenuActive('sellers,seller-products,seller-product') }}">
                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                     <i class="bx bxl-product-hunt"></i>
                     <span>sellers</span>
@@ -156,6 +156,12 @@
                         <a href="{{ route('admin.sellers.create') }}"
                            class="{{ isSubMenuActive('sellers') }}">
                             <i class="bx bx-chevron-right"></i> Add Seller
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.seller-products') }}"
+                           class="{{ isSubMenuActive('seller-products,seller-product') }}">
+                            <i class="bx bx-chevron-right"></i> Product List
                         </a>
                     </li>
                 </ul>

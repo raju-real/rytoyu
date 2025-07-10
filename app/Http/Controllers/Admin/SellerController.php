@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Product;
+use App\Models\Scopes\ProductApproved;
 use App\Models\User;
 use App\Models\Admin;
 use App\Rules\RatioRule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -207,18 +210,74 @@ class SellerController extends Controller
             $seller->shop->makeHidden(['created_at', 'updated_at']);
         }
 
-        $html =  view('admin.seller.seller_info', compact('seller'))->render();
+        $html = view('admin.seller.seller_info', compact('seller'))->render();
         return response()->json([
             'title' => 'Seller Information',
             'html' => $html
         ]);
-        
-    }
 
+    }
 
     public function destroy($id)
     {
         Admin::findOrFail($id)->delete();
         return redirect()->route('admin.sellers.index')->with(deleteMessage());
+    }
+
+    // Product Part
+    public function productList()
+    {
+        $data = Product::withoutGlobalScope(ProductApproved::class)
+            ->where('seller_id', '!=', 1);
+
+        if (request()->filled('request_status')) {
+            $data->where('request_status', request()->get('request_status'));
+        } else {
+            $data->where('request_status', 'pending');
+        }
+
+        $data->when(request()->filled('seller'), function ($query) {
+            $query->where('seller_id', sellerIdByCode(request()->get('seller')));
+        });
+
+        $data->when(request()->filled('brand'), function ($query) {
+            $query->where('brand_id', brandIdBySlug(request()->get('brand')));
+        });
+
+        $data->when(request()->filled('category'), function ($query) {
+            $query->where('category_id', categoryIdBySlug(request()->get('category')));
+        });
+
+        $data->when(request()->filled('subcategory'), function ($query) {
+            $query->where('subcategory_id', subCategoryIdBySlug(request()->get('subcategory')));
+        });
+
+        $data->when(request()->filled('sub_subcategory'), function ($query) {
+            $query->where('sub_subcategory_id', subSubCategoryIdBySlug(request()->get('sub_subcategory')));
+        });
+
+        $products = $data->latest()->paginate(100);
+
+        return view('admin.seller.product_list', compact('products'));
+    }
+
+    public function sellerProduct($slug)
+    {
+        $product = Product::withoutGlobalScope(ProductApproved::class)->with('variants', 'images')->whereSlug($slug)->firstOrFail();
+        return view('admin.seller.product_details', compact('product'));
+    }
+
+    public function updateRequestStatus()
+    {
+        $validate = Validator::make(request()->all(), [
+            'product' => 'required|exists:products,id',
+            'request_status' => 'required|in:pending,approved'
+        ]);
+        if ($validate->fails()) {
+            return back()->with(warningMessage());
+        }
+
+        Product::withoutGlobalScope(ProductApproved::class)->where('id', request()->get('product'))->update(['request_status' => request()->get('request_status')]);
+        return redirect()->back()->with(infoMessage());
     }
 }

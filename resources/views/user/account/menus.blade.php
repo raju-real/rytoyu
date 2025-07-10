@@ -17,8 +17,8 @@
     </li>
     @endif
 
-    <li><a href="order-status.html">Order Status</a></li>
-    <li><a href="review-rating.html">Reviews and Ratings</a></li>
-    <li><a href="return.html">Returns Requests</a></li>
+{{--    <li><a href="order-status.html">Order Status</a></li>--}}
+{{--    <li><a href="review-rating.html">Reviews and Ratings</a></li>--}}
+{{--    <li><a href="return.html">Returns Requests</a></li>--}}
 
 </ul>
