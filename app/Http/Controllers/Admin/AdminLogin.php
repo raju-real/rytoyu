@@ -15,7 +15,7 @@ class AdminLogin extends Controller
             'email' => 'required|email',
             'password' => 'required'
         ]);
-        $credentials = ['email' => $request->email, 'password' => $request->password, 'status' => 'active'];
+        $credentials = ['email' => $request->email, 'password' => $request->password,'request_status' => 'approved', 'status' => 'active'];
         if (Auth::guard('admin')->attempt($credentials, $request->remember)) {
             auth()->guard('admin')->user()->update(['last_login_at' => now()]);
             return redirect()->intended(route('admin.dashboard'));

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\SendMail;
+use App\Models\Admin;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
@@ -189,6 +190,39 @@ class HomePageController extends Controller
         return redirect()->route('home');
     }
 
+    public function sellerRegister(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required|max:50',
+            'email' => [
+                'required',
+                'email',
+                'max:30',
+                Rule::unique('admins')->whereNull('deleted_at'),
+            ],
+            'mobile' => [
+                'required',
+                'min:11',
+                'max:11',
+                Rule::unique('admins')->whereNull('deleted_at'),
+            ],
+            'password' => 'required|min:6|max:15'
+        ]);
+
+        $seller = new Admin();
+        $seller->type = 'seller';
+        $seller->code = Admin::getCode();
+        $seller->name = $request->name;
+        $seller->email = $request->email;
+        $seller->mobile = $request->mobile;
+        $seller->password_plain = $request->password;
+        $seller->password = Hash::make($request->password);
+        $seller->status = 'inactive';
+        $seller->request_status = 'pending';
+        $seller->save();
+        return redirect()->route('seller-registration-form')->with('message','Thanks for registering! Our admin team will get in touch with you as soon as possible.');
+    }
+
     public function userLoginPage()
     {
         return view('user.pages.login');
@@ -229,6 +263,7 @@ class HomePageController extends Controller
             ->with('message', 'Invalid Credentials!')
             ->withInput($request->only('mobile', 'remember'));
     }
+
 
     public function sendContactMessage(Request $request)
     {

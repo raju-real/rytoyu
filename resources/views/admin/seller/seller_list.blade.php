@@ -38,7 +38,7 @@
                         <div class="accordion-body">
                             <form method="GET" action="{{ route('admin.sellers.index') }}">
                                 <div class="row">
-                                    <div class="col-md-6 pb-4">
+                                    <div class="col-md-4 pb-4">
                                         <div class="form-group">
                                             <input type="search" name="search" class="form-control"
                                                    placeholder="Search by Name,Email,Mobile" value="{{ request('search') ?? '' }}">
@@ -49,6 +49,17 @@
                                             <select name="status" class="form-select">
                                                 <option value="" {{ !isset(request()->status) ? 'selected' : '' }}>Status</option>
                                                 @foreach(getStatus() as $status)
+                                                    <option
+                                                        value="{{ $status->value }}" {{ request('status') === $status->value ? 'selected' : '' }}>{{ $status->title }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <select name="request_status" class="form-select">
+                                                <option value="" {{ !isset(request()->status) ? 'selected' : '' }}>Request Status</option>
+                                                @foreach(getRequestStatus() as $status)
                                                     <option
                                                         value="{{ $status->value }}" {{ request('status') === $status->value ? 'selected' : '' }}>{{ $status->title }}</option>
                                                 @endforeach

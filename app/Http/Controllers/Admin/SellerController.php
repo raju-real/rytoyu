@@ -31,6 +31,9 @@ class SellerController extends Controller
         $data->when(request()->get('status'), function ($query) {
             $query->where('status', request()->get('status'));
         });
+        $data->when(request()->get('request_status'), function ($query) {
+            $query->where('request_status', request()->get('request_status'));
+        });
         $data->seller();
         $sellers = $data->paginate(20);
         return view('admin.seller.seller_list', compact('sellers'));

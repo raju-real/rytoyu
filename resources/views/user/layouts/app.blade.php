@@ -30,7 +30,7 @@
     <script src="{{ asset('assets/user/plugins/iesupport/html5shiv.js') }}"></script>
     <script src="{{ asset('assets/user/plugins/iesupport/respond.min.js') }}"></script>
     <![endif]-->
-
+    @stack('css')
 </head>
 <body id="home" class="wide">
 <!-- PRELOADER -->

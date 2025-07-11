@@ -20,6 +20,10 @@ Route::controller(\App\Http\Controllers\HomePageController::class)->group(functi
     Route::post('user-register', 'userRegistration')->name('user-register');
     Route::get('login', 'userLoginPage')->name('login');
     Route::post('user-login', 'userLogin')->name('user-login');
+
+    // Seller Registration
+    Route::view('seller-registration-form','user.pages.seller_registration')->name('seller-registration-form');
+    Route::post('seller-register','sellerRegister')->name('seller-register');
 });
 // Cart and Order
 Route::controller(\App\Http\Controllers\CacheCartController::class)->group(function () {

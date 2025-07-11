@@ -33,7 +33,7 @@
                                                     @if (isset($slider->redirect_link))
                                                         <a class="btn btn-theme" href="{{ $slider->redirect_link }}"
                                                            target="_blank">{{ $slider->button_name ?? '' }}</a>
-                                                    @else
+                                                    @elseif(count($slider->products))
                                                         <a class="btn btn-theme"
                                                            href="{{ route('product-lists', ['slider' => $slider->slug]) }}">{{ $slider->button_name ?? '' }}</a>
                                                     @endif
@@ -250,7 +250,7 @@
                             <strong>Become a partner: </strong>
                             Grow your brand with us and reach fashion lovers across Bangladesh.
                         </p>
-                        <button class="btn orange-bg redirect-to-link"><span>Apply</span></button>
+                        <button class="btn orange-bg redirect-to-link" data-route="{{ route('seller-registration-form') }}"><span>Apply</span></button>
                     </div>
                     <img class="shape" src="{{ asset('assets/user/img/shape.svg') }}" alt="">
                 </div>

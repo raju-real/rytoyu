@@ -34,7 +34,7 @@ return new class extends Migration
             $table->dateTime('last_login_at')->nullable();
             $table->dateTime('last_logout_at')->nullable();
             $table->timestamps();
-            $table->integer('created_by');
+            $table->integer('created_by')->nullable();
             $table->integer('password_reset_code')->nullable();
             $table->softDeletes();
         });
