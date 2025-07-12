@@ -261,7 +261,7 @@
                     <div class="offer-details">
                         <p><strong>Join our team:</strong> Be part of something big-shape the future of fashion with
                             {{ siteSettings()['company_name'] ?? 'Rytoyu' }}! </p>
-                        <button class="btn orange-bg"><span>Apply</span></button>
+                        <button class="btn orange-bg redirect-to-link" data-route="{{ route('join-request') }}"><span>Apply</span></button>
                     </div>
                     <img class="shape" src="{{ asset("assets/user/img/shape.svg") }}" alt="">
                 </div>

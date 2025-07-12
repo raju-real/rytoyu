@@ -4,10 +4,12 @@ use Carbon\Carbon;
 use App\Models\Admin;
 use App\Models\Product;
 use Endroid\QrCode\QrCode;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use App\Models\NewInProduct;
 use Endroid\QrCode\Logo\Logo;
 use App\Models\DeliveryCharge;
+
 //use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Label\Label;
@@ -139,6 +141,17 @@ if (!function_exists('paymentMethods')) {
             (object)['value' => 'cash-on-delivery', 'title' => 'Cash on Delivery'],
             (object)['value' => 'online-payment', 'title' => 'Online Payment']
         ];
+    }
+}
+
+if (!function_exists('paymentMethodName')) {
+    function paymentMethodName($value): string
+    {
+        if($value === 'cash-on-delivery') {
+            return 'Cash on Delivery';
+        } elseif ($value === 'online-payment') {
+            return 'Online Payment';
+        }
     }
 }
 
@@ -364,13 +377,14 @@ if (!function_exists('uploadImage')) {
 }
 
 if (!function_exists('uploadFile')) {
-    function uploadFile($file, string $path = "files/"): string
+    function uploadFile($file, string $path = "partial"): string
     {
-        $uniqueFileName = time() . '_' . '.' . $file->getClientOriginalExtension();
-        if (!file_exists($path)) {
-            mkdir($path, 0755, true);
+        $folderPath = "assets/files/" . $path;
+        $uniqueFileName = time() . '_' . $file->getClientOriginalExtension();
+        if (!file_exists($folderPath)) {
+            mkdir($folderPath, 0755, true);
         }
-        $file->move($path, $uniqueFileName);
+        $file->move($folderPath, $uniqueFileName);
         return $uniqueFileName;
     }
 }
@@ -393,10 +407,10 @@ if (!function_exists('generateQr')) {
 
         // Build QR code with simplesoftwareio/simple-qrcode
         /**
-        QrCode::format('png')
-             ->size($size)
-             ->margin($margin)
-             ->generate($qr_data, $file_path);
+         * QrCode::format('png')
+         * ->size($size)
+         * ->margin($margin)
+         * ->generate($qr_data, $file_path);
          */
         // Build QR code with endroid/qr-code:^4.0
         $qrCode = QrCode::create($qr_data)
@@ -413,7 +427,6 @@ if (!function_exists('generateQr')) {
 
     }
 }
-
 
 
 if (!function_exists('segmentOne')) {
@@ -867,36 +880,36 @@ if (!function_exists('productCountByBrand')) {
     }
 }
 
-// Search control and cookie control
 if (!function_exists('trackUserSearchKeyword')) {
     function trackUserSearchKeyword($searchParam)
     {
         $searchParam = trim(strtolower($searchParam));
         if (!$searchParam) return;
-
-        // Get or generate user search key
-        $searchKey = request()->cookie('user_search_key') ?? request()->cookie('browser_id') ?? \Illuminate\Support\Str::uuid()->toString();
-        cookie()->queue('user_search_key', $searchKey, 60 * 24 * 30);
-
-        // Fetch old keywords
-        $existing = json_decode(\Illuminate\Support\Facades\Cookie::get("search_keywords_{$searchKey}"), true) ?? [];
-
+        // Get or generate a unique browser ID (persistent cookie for 1 year)
+        // This key identifies the user's browser for cache storage.
+        $browserId = request()->cookie('browser_id');
+        if (!$browserId) {
+            $browserId = Str::uuid()->toString();
+            cookie()->queue('browser_id', $browserId, 60 * 24 * 365); // Persist for a year
+        }
+        // Define the cache key for this browser's keywords
+        $cacheKey = "user_search_keywords:{$browserId}";
+        $cacheTtl = 60 * 24 * 30; // 30 days in minutes
+        // Fetch old keywords from the cache
+        // If using Redis as 'redis' driver, Cache::get will deserialize automatically if stored as JSON.
+        $existing = Cache::get($cacheKey, []); // Default to empty array if not found
+        // Ensure $existing is an array (in case of malformed data)
+        if (!is_array($existing)) {
+            $existing = [];
+        }
         // Push new keyword to front if unique
         if (!in_array($searchParam, $existing)) {
             array_unshift($existing, $searchParam);
             $existing = array_slice($existing, 0, 10); // keep max 10
         }
-
-        // Queue cookie update
-        cookie()->queue(cookie("search_keywords_{$searchKey}", json_encode($existing), 60 * 24 * 30));
-    }
-}
-
-if (!function_exists('getUserSearchKeywords')) {
-    function getUserSearchKeywords()
-    {
-        $searchKey = request()->cookie('user_search_key') ?? request()->cookie('browser_id');
-        return json_decode(\Illuminate\Support\Facades\Cookie::get("search_keywords_{$searchKey}"), true) ?? [];
+        // Store the updated keywords back into the cache
+        // Cache::put automatically handles serialization (e.g., to JSON for Redis)
+        Cache::put($cacheKey, $existing, $cacheTtl);
     }
 }
 
@@ -904,16 +917,28 @@ if (!function_exists('getUserSearchKeywords')) {
 if (!function_exists('getUserSearchProducts')) {
     function getUserSearchProducts()
     {
-        $searchKey = request()->cookie('user_search_key');
-        if (!$searchKey) return Product::inRandomOrder()->take(16)->get();
-        // Fetch the keywords
-        $keywords = json_decode(request()->cookie("search_keywords_{$searchKey}"), true) ?? [];
-        // Clean and prepare
+        // Get the unique browser ID from the cookie
+        $browserId = request()->cookie('browser_id');
+        // If no browser ID, return random products (no history available)
+        if (!$browserId) {
+            return Product::inRandomOrder()->take(16)->get();
+        }
+        // Define the cache key
+        $cacheKey = "user_search_keywords:{$browserId}";
+        // Fetch keywords from the cache
+        $keywords = Cache::get($cacheKey, []); // Default to empty array if not found
+        // Ensure $keywords is an array and clean/prepare it
         $keywords = array_filter($keywords, fn($term) => is_string($term) && trim($term) !== '');
-        if (empty($keywords)) return Product::inRandomOrder()->take(16)->get();
-        // Convert keywords to a single full-text search string
-        $searchString = implode(' ', array_map('trim', $keywords));
-        // Search using full-text
+        // If no valid keywords, return random products
+        if (empty($keywords)) {
+            return Product::inRandomOrder()->take(16)->get();
+        }
+        // Convert keywords to a single full-text search string for MySQL.
+        // Add '+' and '*' for boolean mode for better relevance and partial matches.
+        $searchString = implode(' ', array_map(function ($term) {
+            return '+' . trim($term) . '*';
+        }, $keywords));
+        // Search using full-text (requires FULLTEXT index on 'name' column)
         $matchedProducts = Product::whereRaw("MATCH(name) AGAINST (? IN BOOLEAN MODE)", [$searchString])
             ->take(16)
             ->get();
@@ -931,17 +956,34 @@ if (!function_exists('getUserSearchProducts')) {
     }
 }
 
-
-// Cart section
-
-if(! function_exists('deliveryDistricts')) {
-    function deliveryDistricts() {
-        return DeliveryCharge::where('status','active')->select('id', 'slug','district_name')->orderBy('district_name')->get();
+if (!function_exists('getUserSearchKeywords')) {
+    function getUserSearchKeywords()
+    {
+        $searchKey = request()->cookie('user_search_key') ?? request()->cookie('browser_id');
+        return json_decode(\Illuminate\Support\Facades\Cookie::get("search_keywords_{$searchKey}"), true) ?? [];
     }
 }
 
-if(! function_exists('districtIdBySlug')) {
-    function districtIdBySlug($slug) {
+
+// Cart section
+
+if (!function_exists('allDistrict')) {
+    function allDistrict()
+    {
+        return DeliveryCharge::select('id', 'slug', 'district_name')->orderBy('district_name')->get();
+    }
+}
+
+if (!function_exists('deliveryDistricts')) {
+    function deliveryDistricts()
+    {
+        return DeliveryCharge::where('status', 'active')->select('id', 'slug', 'district_name')->orderBy('district_name')->get();
+    }
+}
+
+if (!function_exists('districtIdBySlug')) {
+    function districtIdBySlug($slug)
+    {
         return DeliveryCharge::whereSlug($slug)->first()->value('id');
     }
 }
@@ -949,9 +991,9 @@ if(! function_exists('districtIdBySlug')) {
 if (!function_exists('shippingFee')) {
     function shippingFee()
     {
-        if(session()->has('selected_district')) {
-            $district_slug =  session('selected_district');
-            $charge =  DeliveryCharge::whereSlug($district_slug)->firstOrFail(['delivery_charge']);
+        if (session()->has('selected_district')) {
+            $district_slug = session('selected_district');
+            $charge = DeliveryCharge::whereSlug($district_slug)->firstOrFail(['delivery_charge']);
             return $charge->delivery_charge;
         }
     }

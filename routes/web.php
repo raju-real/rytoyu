@@ -24,6 +24,9 @@ Route::controller(\App\Http\Controllers\HomePageController::class)->group(functi
     // Seller Registration
     Route::view('seller-registration-form','user.pages.seller_registration')->name('seller-registration-form');
     Route::post('seller-register','sellerRegister')->name('seller-register');
+    // Team Join request
+    Route::view('join-request','user.pages.join_request')->name('join-request');
+    Route::post('send-join-request','sendJoinRequest')->name('send-join-request');
 });
 // Cart and Order
 Route::controller(\App\Http\Controllers\CacheCartController::class)->group(function () {
@@ -51,6 +54,7 @@ Route::middleware('auth')->group(function () {
     // Manage Profile
     Route::controller(\App\Http\Controllers\User\ProfileController::class)->group(function () {
         Route::get('user-profile', 'profile')->name('user-profile');
+        Route::put('update-user-profile', 'updateUserProfile')->name('update-user-profile');
         Route::view('change-password', 'user.account.change_password')->name('change-password');
         Route::put('update-password', 'updatePassword')->name('update-password');
         Route::put('update-initial-password', 'updateInitialPassword')->name('update-initial-password');
@@ -65,6 +69,8 @@ Route::middleware('auth')->group(function () {
     Route::controller(\App\Http\Controllers\User\OrderController::class)->group(function () {
         Route::get('order-list', 'orderList')->name('order-list');
         Route::get('order-details/{invoice}', 'orderDetails')->name('order-details');
+        Route::get('user-order-invoice/{unique_id}', 'orderInvoice')->name('user-order-invoice');
+        Route::get('submit-review/{combine_id}','submitReview')->name('submit-review');
     });
 
     Route::controller(SslCommerzPaymentController::class)->as('sslcommerz.')->group(function () {

@@ -1,5 +1,5 @@
 @extends('user.layouts.app')
-@section('title', 'Home')
+@section('title', 'Checkout')
 @push('css')
     <style>
         a.disabled {
@@ -14,11 +14,11 @@
     <section class="page-section breadcrumbs">
         <div class="container">
             <div class="page-header">
-                <h1>Shopping Cart</h1>
+                <h1>Checkout</h1>
             </div>
             <ul class="breadcrumb">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Shop</a></li>
+                <li><a href="{{ route('home') }}">Home</a></li>
+                <li><a href="{{ route('home') }}">Shop</a></li>
                 <li class="active">Shopping Cart</li>
             </ul>
         </div>

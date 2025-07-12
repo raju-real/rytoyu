@@ -1,5 +1,5 @@
 @extends('user.layouts.app')
-@section('title','Seller Registration')
+@section('title','Join Request')
 @push('css')
     <style>
         .basic-information {
@@ -17,11 +17,11 @@
         <section class="page-section breadcrumbs">
             <div class="container">
                 <div class="page-header">
-                    <h1>Seller Registration</h1>
+                    <h1>Join Request</h1>
                 </div>
                 <ul class="breadcrumb">
                     <li><a href="{{ route('home') }}">Home</a></li>
-                    <li class="active">Seller Registration</li>
+                    <li class="active">Join Request</li>
                 </ul>
             </div>
         </section>
@@ -33,13 +33,13 @@
                     <p class="alert alert-info">{{ session('message') }}</p>
                 @endif
                 <section class="login-regis-area p-20">
-                    <form action="{{ route('seller-register') }}" class="form-login" method="POST">
+                    <form action="{{ route('send-join-request') }}" class="form-login" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             <div class="col-md-12 hello-text-wrap">
                                 <div class="registration-top">
                                     <h2 class="text-left login-title">
-                                        Create an account
+                                        Submit join request
                                         <br>
                                         <span class="basic-information font-weight-500">Share your basic information, and our team will connect with you to guide you through the next steps.</span>
                                     </h2>
@@ -79,7 +79,7 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group field-all">
-                                        <label>Mobile</label>
+                                        <label>Mobile {!! starSign() !!}</label>
                                         <div class="input-group w-full">
                                             <input name="mobile" type="text" class="form-control" id="mobile"
                                                    value="{{ old('mobile') ?? '' }}"
@@ -92,12 +92,12 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group field-all ">
-                                        <label>Password</label> {!! starSign() !!}
+                                        <label>Curriculum Vitae</label> {!! starSign() !!}
                                         <div class="input-group w-full">
-                                            <input name="password" type="password" class="form-control" id="password"
-                                                   placeholder="Password">
+                                            <input name="curriculum_vitae" type="file" class="form-control" id="curriculum_vitae"
+                                                   placeholder="curriculum_vitae" accept=".pdf">
                                         </div>
-                                        @error('password')
+                                        @error('curriculum_vitae')
                                         {!! displayError($message) !!}
                                         @enderror
                                     </div>
@@ -106,7 +106,7 @@
 
                             <div class="col-md-12 text-right">
                                 <button type="submit" class="btn orange-bg submit-all">
-                                    <i class="fa-regular fa-paper-plane"></i>Register
+                                    <i class="fa-regular fa-paper-plane"></i>Submit
                                 </button>
                             </div>
                         </div>

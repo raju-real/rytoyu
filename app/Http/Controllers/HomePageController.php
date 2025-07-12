@@ -6,6 +6,7 @@ use App\Mail\SendMail;
 use App\Models\Admin;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\JoinRequest;
 use App\Models\Product;
 use App\Models\ProductType;
 use App\Models\Slider;
@@ -32,7 +33,7 @@ class HomePageController extends Controller
     {
         $searchParam = request()->get('search');
         if (!$searchParam) return redirect()->back();
-        //trackUserSearchKeyword($searchParam);   // Track search
+        trackUserSearchKeyword($searchParam);   // Track search
         $products = Product::whereRaw("MATCH(name) AGAINST (? IN BOOLEAN MODE)", [$searchParam])->paginate(30);
         return view('user.pages.products', compact('products', 'searchParam'));
     }
@@ -262,6 +263,26 @@ class HomePageController extends Controller
         return redirect()->back()
             ->with('message', 'Invalid Credentials!')
             ->withInput($request->only('mobile', 'remember'));
+    }
+
+    public function sendJoinRequest(Request $request)
+    {
+        $this->validate($request,[
+            'name' => 'required|max:50',
+            'email' => 'required|email|max:50',
+            'mobile' => 'required|max:11',
+            'curriculum_vitae' => 'required|mimes:pdf|max:5120'
+        ]);
+
+        $row = new JoinRequest();
+        $row->name = $request->name;
+        $row->email = $request->email;
+        $row->mobile = $request->mobile;
+        if ($request->file('curriculum_vitae')) {
+            $row->cv_path = uploadFile($request->file('curriculum_vitae'), 'curriculum_vitae');
+        }
+        $row->save();
+        return redirect()->route('join-request')->with('message','Your request has been sent successfully! Our admin team will get in touch with you as soon as possible.');
     }
 
 

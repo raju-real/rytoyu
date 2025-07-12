@@ -17,6 +17,29 @@ class ProfileController extends Controller
         return view('user.account.profile', compact('user'));
     }
 
+    public function updateUserProfile(Request $request)
+    {
+        $this->validate($request,[
+            'first_name' => 'required|max:100',
+            'last_name' => 'required|max:100',
+            'district' => 'required|exists:delivery_charges,slug',
+            'city' => 'required|max:100',
+            'zip_code' => 'required|max:10',
+            'address' => 'required|max:255'
+        ]);
+
+        $user = Auth::user();
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->district_id = districtIdBySlug($request->district);
+        $user->city = $request->city;
+        $user->zip_code = $request->zip_code;
+        $user->delivery_address = $request->address;
+        $user->save();
+        return redirect()->route('user-profile')
+                ->with(infoMessage('Information has been updated successfully!'));
+    }
+
     public function updatePassword(Request $request)
     {
         $this->validate($request, [

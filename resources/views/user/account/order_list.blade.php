@@ -44,20 +44,20 @@
                                                 <tr>
                                                     <th colspan="3">
                                                         <div class="brn-span"><i class="fas fa-file-invoice"></i>#
-                                                            {{ $order->invoice ?? ($order->order_number ?? '') }}
+                                                            <a target="_blank" href="{{ route('user-order-invoice',$order->unique_id) }}">{{ $order->invoice ?? ($order->order_number ?? '') }}</a>
                                                         </div>
                                                     </th>
                                                     <th><a href="{{ route('order-details', $order->unique_id) }}"
                                                             class="span-s">Details</a>
-                                                        <a href="{{ route('sslcommerz.pay-now', ['unique_id' => $order->unique_id]) }}"
-                                                            class="span-s">Pay Now</a>
+{{--                                                        <a href="{{ route('sslcommerz.pay-now', ['unique_id' => $order->unique_id]) }}"--}}
+{{--                                                            class="span-s">Pay Now</a>--}}
                                                     </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
                                                     <td class="description">
-                                                        <h4>Order Date: {{ dateFormat($order->created_at, 'd, M y') }}</h4>
+                                                        <span class="font-weight-500">Order Date: {{ dateFormat($order->created_at, 'd, M y') }}</span>
                                                     </td>
                                                     <td class="description">
                                                         <span><strong>TK:

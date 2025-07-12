@@ -39,37 +39,78 @@
                             </div>
                         @endif
                         <div class="details-box">
-                            <form class="form-delivery" action="#">
-                                <div class="all-form">
-                                    <div class="row">
-                                        <div class="col-md-6 col-sm-6">
-                                            <div class="form-group"><input required type="text" placeholder="First Name"
-                                                                           class="form-control"></div>
+                            @if(Session::has('message'))
+                                <p class="alert alert-info">{{ Session::get('message') }}</p>
+                            @endif
+                            <form action="{{ route('update-user-profile') }}" method="POST" class="form-delivery">
+                                @csrf
+                                @method('PUT')
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input name="first_name" id="first_name" class="form-control" type="text"
+                                                   placeholder="First Name" value="{{ $user->first_name ?? '' }}">
+                                            @error('first_name')
+                                            {!! displayError($message) !!}
+                                            @enderror
                                         </div>
-                                        <div class="col-md-6 col-sm-6">
-                                            <div class="form-group"><input required type="text" placeholder="Last Name"
-                                                                           class="form-control"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input name="last_name" id="last_name" class="form-control" type="text"
+                                                   placeholder="Last Name" value="{{ $user->last_name ?? '' }}">
+                                            @error('last_name')
+                                            {!! displayError($message) !!}
+                                            @enderror
                                         </div>
-                                        <div class="col-md-6 col-sm-6">
-                                            <div class="form-group"><input required type="text" placeholder="Gender"
-                                                                           class="form-control"></div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group selectpicker-wrapper">
+                                            <select id="district" name="district" class="form-control sel-bg">
+                                                @foreach (allDistrict() as $district)
+                                                    <option value="{{ $district->slug }}"
+                                                        {{ $user->district_id == $district->id ? 'selected' : '' }}>
+                                                        {{ $district->district_name ?? '' }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('district')
+                                            {!! displayError($message) !!}
+                                            @enderror
                                         </div>
-                                        <div class="col-md-6 col-sm-6">
-                                            <div class="form-group"><input required type="text" placeholder="Email"
-                                                                           class="form-control"></div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input name="city" id="city" class="form-control" type="text"
+                                                   placeholder="City"
+                                                   value="{{ $user->city ?? '' }}">
+                                            @error('city')
+                                            {!! displayError($message) !!}
+                                            @enderror
                                         </div>
-                                        <div class="col-md-6 col-sm-6">
-                                            <div class="form-group"><input required type="text"
-                                                                           placeholder="Phone Number"
-                                                                           class="form-control"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input name="zip_code" id="zip_code" class="form-control" type="text"
+                                                   placeholder="Postcode/ZIP" value="{{ $user->zip_code ?? '' }}">
+                                            @error('zip_code')
+                                            {!! displayError($message) !!}
+                                            @enderror
                                         </div>
-                                        <div class="col-md-6 col-sm-6">
-                                            <div class="form-group"><input type="text" placeholder="Fax"
-                                                                           class="form-control"></div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input name="address" id="address" class="form-control" type="text"
+                                                   placeholder="Address" value="{{ $user->delivery_address ?? '' }}">
+                                            @error('address')
+                                            {!! displayError($message) !!}
+                                            @enderror
                                         </div>
-                                        <div class="col-md-12 col-sm-12 text-right">
-                                            <button class="btn btn-theme btn-upa" type="submit"> Update</button>
-                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-sm-12 text-right">
+                                        <button class="btn btn-theme btn-upa" type="submit"> Update</button>
                                     </div>
                                 </div>
                             </form>
