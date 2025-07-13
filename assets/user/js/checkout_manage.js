@@ -129,6 +129,7 @@
                 if (response.data.status === "success") {
                     AppHelpers.showToast("success", response.data.message);
                     loadMiniCartItem();
+
                 } else {
                     AppHelpers.showToast("danger",'Invalid Request', response.data.message);
                 }

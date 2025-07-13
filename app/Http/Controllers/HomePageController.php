@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\JoinRequest;
 use App\Models\Product;
 use App\Models\ProductType;
+use App\Models\Review;
 use App\Models\Slider;
 use App\Models\SliderProduct;
 use App\Models\SubCategory;
@@ -142,7 +143,8 @@ class HomePageController extends Controller
     {
         $product = Product::whereSlug($slug)->firstOrFail();
         $related_products = Product::where('category_id', $product->category_id)->inRandomOrder()->take(16)->get();
-        return view('user.pages.product_details', compact('product', 'related_products'));
+        $reviews = Review::where('product_id',$product->id)->paginate(50);
+        return view('user.pages.product_details', compact('product', 'related_products','reviews'));
     }
 
     // Authentication Part

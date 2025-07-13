@@ -289,6 +289,16 @@ class CacheCartController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Cart updated successfully.']);
     }
 
+    protected function cartItemsCount()
+    {
+        $cartItems = $this->getCartItems(); // your method to fetch cart data
+        if($cartItems) {
+            return count($cartItems['items']);
+        } else {
+            return 0;
+        }
+    }
+
     public function removeFromCart(Request $request)
     {
         $request->validate([
@@ -305,7 +315,8 @@ class CacheCartController extends Controller
         }
         $this->saveCartItems($cartItems);
         if ($removedCount > 0) {
-            return response()->json(['status' => 'success', 'message' => 'Selected item(s) removed from cart.']);
+
+            return response()->json(['status' => 'success', 'message' => 'Selected item(s) removed from cart.','cart_item_count' => $this->cartItemsCount()]);
         }
         return response()->json(['status' => 'error', 'message' => 'No matching items found in cart.']);
     }
@@ -461,7 +472,7 @@ class CacheCartController extends Controller
         //session()->forget('applied_coupon');
         //session()->forget('applied_coupon_discount');
         return response()->json([
-            'status' => 'success', 
+            'status' => 'success',
             'message' => 'Your order has been submitted successfully.'
         ]);
     }

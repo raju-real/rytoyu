@@ -1,6 +1,12 @@
 @extends('user.layouts.app')
 @section('title',$product->name ?? 'Product Details')
-@push('css') @endpush
+@push('css')
+    <style>
+        .rating {
+            direction: ltr;
+        }
+    </style>
+@endpush
 
 @section('content')
     <!-- PAGE -->
@@ -180,102 +186,47 @@
 
     <div class="clearfix"></div>
     <!-- /CONTENT AREA -->
-    <div class="container border-top mt-40">
-        <div class="col-md-12">
-            <ul class="review-ul">
-                <li>
-                    <div class="review-left">
-                        <h4>Masud Ahmed</h4>
-                        <p>Dhaka, Bangladesh</p>
-                        <span>12-01-2025</span>
-                    </div>
-                    <div class="review-right">
-                        <div class="review-start">
-                            <div class="product-rating clearfix">
-                                <div class="rating">
-                                    <span class="star active"></span>
-                                    <span class="star active"></span>
-                                    <span class="star active"></span>
-                                    <span class="star active"></span>
-                                    <span class="star active"></span>
-                                </div>
+    @if($reviews->count())
+        <div class="container border-top mt-40">
+            <div class="col-md-12">
+                <ul class="review-ul">
+                    @foreach($reviews as $review)
+                        <li>
+                            <div class="review-left">
+                                <h4>{{ $review->user->name ?? '' }}</h4>
+                                <p>{{ $review->order->district->district_name ??'' }}, Bangladesh</p>
+                                <span>{{ dateFormat($review->created_at,'d-m-Y') }}</span>
                             </div>
-                        </div>
-                        <h5>Wow</h5>
-                        <p>I love this hoodie so much! It definitely runs on the larger side. Also PLEASE make more
-                            colors I NEED!!</p>
-                        <span class="span-r">Size Purchased: Small</span>
-                        <span class="span-r">Size Normally Worn: Small-Medium</span>
-                        <span class="span-r">Yes, I recommend this product.</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="review-left">
-                        <h4>Shakil Khan</h4>
-                        <p>Dhaka, Bangladesh</p>
-                        <span>12-01-2025</span>
-                    </div>
-                    <div class="review-right">
-                        <div class="review-start">
-                            <div class="product-rating clearfix">
-                                <div class="rating">
-                                    <span class="star active"></span>
-                                    <span class="star active"></span>
-                                    <span class="star active"></span>
-                                    <span class="star active"></span>
-                                    <span class="star active"></span>
+                            <div class="review-right">
+                                <div class="review-start">
+                                    <div class="product-rating clearfix">
+                                        <div class="rating">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                <span class="star {{ $i <= $review->rating ? 'active' : '' }}"></span>
+                                            @endfor
+                                        </div>
+                                    </div>
                                 </div>
+                                <h5>{{ getRatingTitle($review->rating) }}</h5>
+                                {!! $review->comment ?? '' !!}
                             </div>
-                        </div>
-                        <h5>Wow</h5>
-                        <p>I love this hoodie so much! It definitely runs on the larger side. Also PLEASE make more
-                            colors I NEED!!</p>
-                        <span class="span-r">Size Purchased: Small</span>
-                        <span class="span-r">Size Normally Worn: Small-Medium</span>
-                        <span class="span-r">Yes, I recommend this product.</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="review-left">
-                        <h4>Sumon</h4>
-                        <p>Dhaka, Bangladesh</p>
-                        <span>12-01-2025</span>
-                    </div>
-                    <div class="review-right">
-                        <div class="review-start">
-                            <div class="product-rating clearfix">
-                                <div class="rating">
-                                    <span class="star"></span>
-                                    <span class="star active"></span>
-                                    <span class="star active"></span>
-                                    <span class="star active"></span>
-                                    <span class="star active"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <h5>Wow</h5>
-                        <p>I love this hoodie so much! It definitely runs on the larger side. Also PLEASE make more
-                            colors I NEED!!</p>
-                        <span class="span-r">Size Purchased: Small</span>
-                        <span class="span-r">Size Normally Worn: Small-Medium</span>
-                        <span class="span-r">Yes, I recommend this product.</span>
-                    </div>
-                </li>
-            </ul>
-            <div class="col-md-12 text-center">
-                <button class="btn w-review">Write Review</button>
+                        </li>
+                    @endforeach
+
+                    {!! $reviews->links('pagination::bootstrap-4') !!}
+                </ul>
             </div>
         </div>
-    </div>
+    @endif
 
 
-    <div class="container">
-        <div class="review-box">
-            <label>ADD A REVIEW</label>
-            <textarea class="form-control" rows="8" placeholder="Your message"></textarea>
-            <button class="btn orange-bg"><i class="fa-solid fa-comment-dots"></i>REVIEW</button>
-        </div>
-    </div>
+    {{--    <div class="container">--}}
+    {{--        <div class="review-box">--}}
+    {{--            <label>ADD A REVIEW</label>--}}
+    {{--            <textarea class="form-control" rows="8" placeholder="Your message"></textarea>--}}
+    {{--            <button class="btn orange-bg"><i class="fa-solid fa-comment-dots"></i>REVIEW</button>--}}
+    {{--        </div>--}}
+    {{--    </div>--}}
 
 @endsection
 

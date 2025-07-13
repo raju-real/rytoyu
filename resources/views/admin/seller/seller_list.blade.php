@@ -88,13 +88,13 @@
                             <tr>
                                 <th class="text-center">Sl.no</th>
                                 <th class="text-center">Code</th>
-                                <th>Photo</th>
+                                <th class="text-center">Photo</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Mobile</th>
                                 <th class="text-center">Commission</th>
-                                <th>Approve Status</th>
-                                <th>Active Status</th>
+                                <th class="text-center">Approve Status</th>
+                                <th class="text-center">Active Status</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -103,24 +103,24 @@
                                 <tr>
                                     <td class="text-center">{{ $loop->index + 1 }}</td>
                                     <td class="text-center">{{ $seller->code }}</td>
-                                    <td class="text-center">
+                                    <td class="text-center padding-5">
                                         @if($seller->image != Null && file_exists($seller->image))
-                                            <img src="{{ asset($seller->image) }}" class="avatar-sm rounded-3 d-block img-50">
+                                            <img src="{{ asset($seller->image) }}" class="avatar-sm rounded-3 img-50">
                                         @else
-                                            <img src="{{ asset(userAvatar()) }}" class="avatar-sm rounded-3 d-block img-50">
+                                            <img src="{{ asset(userAvatar()) }}" class="avatar-sm rounded-3 img-50">
                                         @endif
                                     </td>
                                     <td>{{ $seller->name ?? '' }}</td>
                                     <td>{{ $seller->email ?? '' }}</td>
                                     <td>{{ $seller->mobile ?? '' }}</td>
                                     <td class="text-center">{{ $seller->commission_rate ?? '' }} %</td>
-                                    <td>
+                                    <td class="text-center">
                                         <input type="checkbox" id="request-{{ $loop->index + 1 }}" class="request-status" data-id="{{ $seller->id }}" switch="bool" {{ isApproved($seller->request_status) ? 'checked' : '' }} />
-                                        <label for="request-{{ $loop->index + 1 }}" data-on-label="Yes" data-off-label="No"></label>
+                                        <label class="custom-label-margin" for="request-{{ $loop->index + 1 }}" data-on-label="Yes" data-off-label="No"></label>
                                     </td>
-                                    <td>
+                                    <td class="text-center">
                                         <input type="checkbox" id="seller-{{ $loop->index + 1 }}" class="seller-status" data-id="{{ $seller->id }}" switch="bool" {{ isActive($seller->status) ? 'checked' : '' }} />
-                                        <label for="seller-{{ $loop->index + 1 }}" data-on-label="Yes" data-off-label="No"></label>
+                                        <label class="custom-label-margin" for="seller-{{ $loop->index + 1 }}" data-on-label="Yes" data-off-label="No"></label>
                                     </td>
                                     <td>
                                         <a data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"

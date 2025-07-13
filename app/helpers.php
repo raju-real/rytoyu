@@ -147,7 +147,7 @@ if (!function_exists('paymentMethods')) {
 if (!function_exists('paymentMethodName')) {
     function paymentMethodName($value): string
     {
-        if($value === 'cash-on-delivery') {
+        if ($value === 'cash-on-delivery') {
             return 'Cash on Delivery';
         } elseif ($value === 'online-payment') {
             return 'Online Payment';
@@ -995,6 +995,27 @@ if (!function_exists('shippingFee')) {
             $district_slug = session('selected_district');
             $charge = DeliveryCharge::whereSlug($district_slug)->firstOrFail(['delivery_charge']);
             return $charge->delivery_charge;
+        }
+    }
+}
+
+// In your controller or a helper function (recommended)
+if (!function_exists('getRatingTitle')) {
+    function getRatingTitle(int $rating): string
+    {
+        switch ($rating) {
+            case 1:
+                return 'Terrible'; // Or 'Poor', 'Bad'
+            case 2:
+                return 'Meh';      // Or 'Fair', 'Okay'
+            case 3:
+                return 'Good';
+            case 4:
+                return 'Great!';   // Or 'Very Good'
+            case 5:
+                return 'Fantastic!'; // Or 'Excellent', 'Amazing', 'Wow!'
+            default:
+                return 'No Rating'; // Handle cases where rating might be 0 or outside 1-5
         }
     }
 }

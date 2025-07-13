@@ -20,6 +20,9 @@
                     <div class="information-title">Order #{{ $order->invoice ?? ($order->order_no ?? '') }}</div>
 
                     <div class="order-status-area">
+                        @if(Session::has('message'))
+                            <p class="alert alert-info">{{ Session::get('message') }}</p>
+                        @endif
                         <!-- order-status-area-inner -->
                         <div class="order-status-area-inner">
                             <!-- Ship To -->
@@ -78,17 +81,18 @@
                                 <h4>Purchase Price</h4>
                                 <p>{{ numberFormat($order->total_item_order_price) ?? 0 }} BDT</p>
                             </div>
-                            <div class="price-row border-solid">
+                            <div class="price-row">
                                 <h4>Shipping</h4>
-                                <p>{{ numberFormat($order->shipping_fee) ?? 0 }} BDT</p>
+                                <p>(+) {{ numberFormat($order->shipping_fee) ?? 0 }} BDT</p>
                             </div>
-                            <div class="price-row border-solid">
+                            <div class="price-row">
                                 <h4>Coupon Discount</h4>
-                                <p>{{ numberFormat($order->coupon_discount_amount) ?? 0 }} BDT</p>
+                                <p>(-) {{ numberFormat($order->coupon_discount_amount) ?? 0 }} BDT</p>
                             </div>
-                            <div class="price-row border-solid">
+                            <div class="price-row">
                                 <h4>Service charge + vat</h4>
-                                <p>{{ $order->service_charge . ' + ' . $order->total_vat . ' = ' . $order->service_charge + $order->total_vat }}
+                                <p>
+                                    (-) {{ $order->service_charge . ' + ' . $order->total_vat . ' = ' . $order->service_charge + $order->total_vat }}
                                     BDT</p>
                             </div>
                             <div class="price-row total-row">
@@ -98,7 +102,7 @@
                             <h4 class="order-activities marg-20"><strong>Payment Method</strong></h4>
                             <p class="payment-met-status">{{ paymentMethodName($order->payment_method) }}</p>
                         </div>
-
+                        <h5 class="price-h5">Item Details</h5>
                         <div class="row orders">
                             <div class="col-md-12">
                                 @foreach ($order->order_products as $item)
@@ -113,9 +117,11 @@
                                             <th>
                                                 <span class="span-s">{{ $item->order_status ?? '' }}</span>
                                             </th>
+                                            @if($item->order_status === 'delivered')
                                             <th>
                                                 <a href="{{ route('submit-review',$item->order_id.'-'.$item->id.'-'.$item->seller_id) }}">Review</a>
                                             </th>
+                                            @endif
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -143,9 +149,7 @@
                                             </td>
                                             <td class="description">
                                                 <span><strong>Qty:</strong></span>{{ $item->quantity ?? 0 }}</td>
-
                                         </tr>
-
                                         </tbody>
                                     </table>
                                 @endforeach

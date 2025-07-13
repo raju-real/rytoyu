@@ -68,9 +68,10 @@ Route::middleware('auth')->group(function () {
     // Manage Order
     Route::controller(\App\Http\Controllers\User\OrderController::class)->group(function () {
         Route::get('order-list', 'orderList')->name('order-list');
-        Route::get('order-details/{invoice}', 'orderDetails')->name('order-details');
+        Route::get('order-details/{unique_id}', 'orderDetails')->name('order-details');
         Route::get('user-order-invoice/{unique_id}', 'orderInvoice')->name('user-order-invoice');
         Route::get('submit-review/{combine_id}','submitReview')->name('submit-review');
+        Route::post('store-review/{order_product_id}','storeReview')->name('store-review');
     });
 
     Route::controller(SslCommerzPaymentController::class)->as('sslcommerz.')->group(function () {

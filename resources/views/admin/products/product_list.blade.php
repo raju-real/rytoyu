@@ -1,11 +1,7 @@
 @extends('admin.layouts.app')
 @section('title', 'Product List')
 @push('css')
-    <style>
-        .table td {
-            text-align: left;
-        }
-    </style>
+
 @endpush
 
 @section('content')
@@ -175,12 +171,12 @@
                             <tr>
                                 <th class="text-center">Sl.no</th>
                                 <th>Type</th>
-                                <th>Thumbnail</th>
+                                <th class="text-center">Thumbnail</th>
                                 <th>Name</th>
                                 <th class="text-center">Variant</th>
                                 <th class="text-center">Inventory</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Action</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -188,13 +184,13 @@
                                 <tr>
                                     <td class="text-center">{{ $loop->index + 1 }}</td>
                                     <td>{{ $product->type->name ?? '' }}</td>
-                                    <td>
+                                    <td class="text-center padding-5">
                                         @if ($product->thumbnail_path != null && file_exists($product->thumbnail_path))
                                             <img src="{{ asset($product->thumbnail_path) }}"
-                                                 class="avatar-sm rounded-3 d-block ">
+                                                 class="avatar-sm rounded-3">
                                         @else
                                             <img src="{{ asset('assets/common/images/ecommerce.png') }}"
-                                                 class="avatar-sm rounded-3 d-block">
+                                                 class="avatar-sm rounded-3">
                                         @endif
                                     </td>
                                     <td>{{ $product->name ?? '' }}</td>
@@ -215,14 +211,14 @@
                                             <i class="fa fa-info-circle"></i>
                                         </a>
                                     </td>
-                                    <td>
+                                    <td class="text-center">
                                         <input type="checkbox" id="product-{{ $loop->index + 1 }}"
                                                class="product-status" data-id="{{ $product->id }}" switch="bool"
                                             {{ isActive($product->status) ? 'checked' : '' }} />
-                                        <label for="product-{{ $loop->index + 1 }}" data-on-label="Yes"
+                                        <label class="custom-label-margin" for="product-{{ $loop->index + 1 }}" data-on-label="Yes"
                                                data-off-label="No"></label>
                                     </td>
-                                    <td>
+                                    <td class="text-center">
                                         <a data-bs-toggle="tooltip" data-bs-placement="top" title="Show Details"
                                            href="{{ route('admin.products.show', $product->slug) }}"
                                            class="btn btn-sm btn-soft-info"><i class="fa fa-eye"></i>
