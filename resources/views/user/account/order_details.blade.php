@@ -92,7 +92,7 @@
                             <div class="price-row">
                                 <h4>Service charge + vat</h4>
                                 <p>
-                                    (-) {{ $order->service_charge . ' + ' . $order->total_vat . ' = ' . $order->service_charge + $order->total_vat }}
+                                    (+) {{ $order->service_charge . ' + ' . $order->total_vat . ' = ' . $order->service_charge + $order->total_vat }}
                                     BDT</p>
                             </div>
                             <div class="price-row total-row">

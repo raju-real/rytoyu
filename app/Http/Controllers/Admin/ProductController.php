@@ -7,6 +7,7 @@ use App\Http\Requests\ProductRequest;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\ProductVariant;
+use App\Models\Scopes\ProductApproved;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
@@ -25,23 +26,28 @@ class ProductController extends Controller
 
         $data->where('seller_id', authSellerId());
 
-        $data->when(request()->get('brand'), function ($query) {
+        $data->when(request()->filled('brand'), function ($query) {
             $query->where('brand_id', brandIdBySlug(request()->get('brand')));
         });
 
-        $data->when(request()->get('category'), function ($query) {
+        $data->when(request()->filled('category'), function ($query) {
             $query->where('category_id', categoryIdBySlug(request()->get('category')));
         });
 
-        $data->when(request()->get('subcategory'), function ($query) {
+        $data->when(request()->filled('subcategory'), function ($query) {
             $query->where('subcategory_id', subCategoryIdBySlug(request()->get('subcategory')));
         });
 
-        $data->when(request()->get('sub_subcategory'), function ($query) {
+        $data->when(request()->filled('sub_subcategory'), function ($query) {
             $query->where('sub_subcategory_id', subSubCategoryIdBySlug(request()->get('sub_subcategory')));
         });
 
-        $data->when(request()->get('status'), function ($query) {
+        if (request()->filled('request_status')) {
+            $data = $data->withoutGlobalScope(ProductApproved::class);
+            $data->where('request_status', request()->get('request_status'));
+        }
+
+        $data->when(request()->filled('status'), function ($query) {
             $query->where('status', request()->get('status'));
         });
 
@@ -180,7 +186,7 @@ class ProductController extends Controller
         $product->is_exchangeable = $request->is_exchangeable;
         $product->is_refundable = $request->is_refundable;
         $product->listed_on = $request->listed_on ?? 'featured';
-        if(authAdminType() === 'seller') {
+        if (authAdminType() === 'seller') {
             $product->request_status = 'pending';
         } else {
             $product->request_status = 'approved';
@@ -243,14 +249,14 @@ class ProductController extends Controller
 
     public function edit($slug)
     {
-        $product = Product::whereSlug($slug)->firstOrFail();
+        $product = Product::withoutGlobalScope(ProductApproved::class)->whereSlug($slug)->firstOrFail();
         $route = route('admin.products.update', $product->id);
         return view('admin.products.product_add_edit', compact('product', 'route'));
     }
 
     public function show($slug)
     {
-        $product = Product::whereSlug($slug)->firstOrFail();
+        $product = Product::withoutGlobalScope(ProductApproved::class)->whereSlug($slug)->firstOrFail();
         return view('admin.products.product_details', compact('product', 'product'));
     }
 
@@ -258,7 +264,7 @@ class ProductController extends Controller
     public function update(ProductRequest $request, $id)
     {
         $validatedData = $request->validated();
-        $product = Product::findOrFail($id);
+        $product = Product::withoutGlobalScope(ProductApproved::class)->findOrFail($id);
         $product->product_code = $request->product_code;
         $product->name = $request->name;
         $product->slug = Str::slug($validatedData['product_code'] . '-' . $validatedData['name']);
@@ -369,7 +375,7 @@ class ProductController extends Controller
 
     public function updateProductStatus($id): \Illuminate\Http\JsonResponse
     {
-        $sub_category = Product::findOrFail($id);
+        $sub_category = Product::withoutGlobalScope(ProductApproved::class)->findOrFail($id);
         // Toggle status between 'active' and 'inactive'
         $sub_category->status = $sub_category->status === 'active' ? 'inactive' : 'active';
         if ($sub_category->save()) {
@@ -392,7 +398,7 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::withoutGlobalScope(ProductApproved::class)->findOrFail($id);
         $product->variants()->delete();
         $product->images()->delete();
         $product->delete();
@@ -401,7 +407,7 @@ class ProductController extends Controller
 
     public function productVariants($product_id = null): \Illuminate\Http\JsonResponse
     {
-        $product = Product::findOrFail($product_id);
+        $product = Product::withoutGlobalScope(ProductApproved::class)->findOrFail($product_id);
         return response()->json([
             'success' => true,
             'product_name' => $product->name,
@@ -418,7 +424,7 @@ class ProductController extends Controller
      */
     protected function updatePricing($product_id): void
     {
-        $defaultVariant = ProductVariant::where('product_id', $product_id)
+        $defaultVariant = ProductVariant::withoutGlobalScope(ProductApproved::class)->where('product_id', $product_id)
             ->where('is_default', 1)
             ->first();
         Product::where('id', $product_id)->update([

@@ -31,10 +31,12 @@ class SettingController extends Controller
             'instagram_url' => 'nullable|sometimes|url|max:255',
             'tiktok_url' => 'nullable|sometimes|url|max:255',
             'google_map_url' => 'nullable|sometimes|url|max:1000',
-            'support_policy' => 'nullable|sometimes|string|max:5000',
-            'return_policy' => 'nullable|sometimes|string|max:5000',
-            'about_us' => 'nullable|sometimes|string|max:5000',
-            'mission_and_vision' => 'nullable|sometimes|string|max:5000',
+            'privacy_policy' => 'nullable|sometimes|string|max:30000',
+            'terms_conditions' => 'nullable|sometimes|string|max:30000',
+            'support_policy' => 'nullable|sometimes|string|max:30000',
+            'return_policy' => 'nullable|sometimes|string|max:30000',
+            'about_us' => 'nullable|sometimes|string|max:30000',
+            'mission_and_vision' => 'nullable|sometimes|string|max:10000',
         ]);
         // Process keys and values
         $keys = array_keys($request->all());// Fetch all keys from the request

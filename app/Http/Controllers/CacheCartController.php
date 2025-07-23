@@ -7,6 +7,7 @@ use App\Models\Color;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\OrderProduct;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use App\Models\ProductVariant;
 use App\Jobs\LogSellerOrderJob;
@@ -292,7 +293,7 @@ class CacheCartController extends Controller
     protected function cartItemsCount()
     {
         $cartItems = $this->getCartItems(); // your method to fetch cart data
-        if($cartItems) {
+        if ($cartItems) {
             return count($cartItems['items']);
         } else {
             return 0;
@@ -316,7 +317,7 @@ class CacheCartController extends Controller
         $this->saveCartItems($cartItems);
         if ($removedCount > 0) {
 
-            return response()->json(['status' => 'success', 'message' => 'Selected item(s) removed from cart.','cart_item_count' => $this->cartItemsCount()]);
+            return response()->json(['status' => 'success', 'message' => 'Selected item(s) removed from cart.', 'cart_item_count' => $this->cartItemsCount()]);
         }
         return response()->json(['status' => 'error', 'message' => 'No matching items found in cart.']);
     }
@@ -334,6 +335,42 @@ class CacheCartController extends Controller
     {
         Cache::forget($this->cartKey);
         return response()->json(['status' => 'success', 'message' => 'Cart cleared.']);
+    }
+
+    // Wishlist manage
+    public function wishlists()
+    {
+        $products = Wishlist::where('user_id', Auth::id())->get();
+        return view('user.pages.wishlists', compact('products'));
+    }
+
+    public function addToWishList(Request $request)
+    {
+        $this->validate($request, [
+            'product_id' => 'required'
+        ]);
+
+        $product_id = encrypt_decrypt($request->product_id, 'decrypt');
+        if (Product::where('id', $product_id)->exists()) {
+            if (Wishlist::where('user_id', Auth::id())->where('product_id', $product_id)->exists()) {
+                return response()->json(['status' => 'error', 'message' => 'Item already added wishlist.']);
+            } else {
+                $wishlist = new Wishlist();
+                $wishlist->user_id = Auth::id();
+                $wishlist->product_id = $product_id;
+                $wishlist->save();
+                return response()->json(['status' => 'success', 'message' => 'Item added to wishlist.']);
+            }
+        }
+    }
+
+    public function deleteWishListItem($item_id)
+    {
+        $id = encrypt_decrypt($item_id,'decrypt');
+        if(Wishlist::where('id',$id)->exists()) {
+            Wishlist::where('id',$id)->delete();
+            return redirect()->route('wishlists')->with('message','Wishlist item removed successfully');
+        }
     }
 
     public function checkout()
@@ -432,9 +469,9 @@ class CacheCartController extends Controller
             if (!$variant) {
                 continue;
             }
-            $quantity =  $item['quantity'];
+            $quantity = $item['quantity'];
             // Price calculation
-            $item_unit_price =    $variant->unit_price;
+            $item_unit_price = $variant->unit_price;
             $item_discount_price = $variant->discount_price;
             $item_order_price = $item_discount_price > 0 ? $item_discount_price : $item_unit_price;
 

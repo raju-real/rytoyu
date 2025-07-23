@@ -191,8 +191,8 @@
                 <div class="header-cart">
                     <div class="cart-wrapper">
                         @if(\Illuminate\Support\Facades\Auth::check())
-                        <a href="wishlist.html" class="btn btn-theme-transparent hidden-xs hidden-sm"><i
-                                class="fa-regular fa-heart"></i></a>
+                            <a href="{{ route('wishlists') }}" class="btn btn-theme-transparent hidden-xs hidden-sm"><i
+                                    class="fa-regular fa-heart"></i></a>
                         @endif
                         <a href="#" class="btn btn-theme-transparent cart-value" data-toggle="modal"
                            data-target="#popup-cart"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs"
@@ -254,9 +254,9 @@
                 <div class="col-md-12">
                     <ul class="list-inline list-group footer-nav">
                         @foreach(activeCategories() as $category)
-                        <li>
-                            <a href="{{ route('product-lists', ['category' => $category->slug]) }}">{{ $category->name ?? '' }}</a>
-                        </li>
+                            <li>
+                                <a href="{{ route('product-lists', ['category' => $category->slug]) }}">{{ $category->name ?? '' }}</a>
+                            </li>
                         @endforeach
                     </ul>
                 </div>
@@ -265,9 +265,12 @@
                         <div class="widget">
                             <h4 class="widget-title">FOLLOW US</h4>
                             <ul class="social-icons">
-                                <li><a href="{{ siteSettings()['facebook_url'] ?? '#' }}" class="facebook"><i class="fa-brands fa-facebook-f"></i></a></li>
-                                <li><a href="{{ siteSettings()['twitter_url'] ?? '#' }}" class="twitter"><i class="fa-brands fa-instagram"></i></a></li>
-                                <li><a href="{{ siteSettings()['instagram_url'] ?? '#' }}" class="instagram"><i class="fa-brands fa-tiktok"></i></a></li>
+                                <li><a href="{{ siteSettings()['facebook_url'] ?? '#' }}" class="facebook"><i
+                                            class="fa-brands fa-facebook-f"></i></a></li>
+                                <li><a href="{{ siteSettings()['twitter_url'] ?? '#' }}" class="twitter"><i
+                                            class="fa-brands fa-instagram"></i></a></li>
+                                <li><a href="{{ siteSettings()['instagram_url'] ?? '#' }}" class="instagram"><i
+                                            class="fa-brands fa-tiktok"></i></a></li>
                                 <li><a href="#" class="pinterest"><i class="fa-brands fa-linkedin-in"></i></a></li>
                             </ul>
                         </div>
@@ -285,8 +288,8 @@
                     </div>
                     <div class="col-md-3">
                         <ul class="ul-link-f">
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Terms & Conditions</a></li>
+                            <li><a href="{{ route('privacy-policy') }}">Privacy Policy</a></li>
+                            <li><a href="{{ route('terms-and-conditions') }}">Terms & Conditions</a></li>
                         </ul>
                     </div>
                 </div>

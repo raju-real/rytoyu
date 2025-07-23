@@ -7,16 +7,7 @@
 
     let config = {
         toolbar: [
-            [
-                "Bold",
-                "Italic",
-                "Strike",
-                "JustifyLeft",
-                "JustifyCenter",
-                "JustifyRight",
-                "NumberedList",
-                "BulletedList",
-            ],
+            ['Bold', 'Italic', 'Strike', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'NumberedList', 'BulletedList', '-', 'Maximize']
         ],
     };
 

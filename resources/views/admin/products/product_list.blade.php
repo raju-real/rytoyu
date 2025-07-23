@@ -145,8 +145,23 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group mb-3">
+                                            <select name="request_status" class="form-select">
+                                                <option value="" {{ !isset(request()->request_status) ? 'selected' : '' }}>
+                                                    Request Status
+                                                </option>
+                                                @foreach (getRequestStatus() as $status)
+                                                    <option value="{{ $status->value }}"
+                                                        {{ request('request_status') === $status->value ? 'selected' : '' }}>
+                                                        {{ $status->title }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group mb-3">
                                             <input type="number" name="stock_less_than" class="form-control"
-                                                   placeholder="Stock Less Than" value="{{ request('stock_less_than') ?? '' }}">
+                                                   placeholder="Stock Less Than"
+                                                   value="{{ request('stock_less_than') ?? '' }}">
                                         </div>
                                     </div>
                                     <div class="col-md-2 mt-0">
@@ -215,7 +230,8 @@
                                         <input type="checkbox" id="product-{{ $loop->index + 1 }}"
                                                class="product-status" data-id="{{ $product->id }}" switch="bool"
                                             {{ isActive($product->status) ? 'checked' : '' }} />
-                                        <label class="custom-label-margin" for="product-{{ $loop->index + 1 }}" data-on-label="Yes"
+                                        <label class="custom-label-margin" for="product-{{ $loop->index + 1 }}"
+                                               data-on-label="Yes"
                                                data-off-label="No"></label>
                                     </td>
                                     <td class="text-center">

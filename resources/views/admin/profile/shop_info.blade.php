@@ -69,7 +69,7 @@
                                             <input type="text" name="start_from" class="form-control datepicker"
                                                 autocomplete="off"
                                                 value="{{ old('start_from') ?? (authShopInfo()->start_from ?? '') }}"
-                                                placeholder="Start From" autocomplete="off" autofocus readonly>
+                                                placeholder="Start From" readonly>
                                             <div class="input-group-append">
                                                 <span class="input-group-text">
                                                     <i class="fa fa-calendar"></i> </span>
@@ -94,7 +94,7 @@
                                         @endif
                                     </label>
                                     <input type="file" name="logo" class="form-control {{ hasError('logo') }}"
-                                        accept=".jpg,.jpg.png">
+                                        accept=".jpg,.jpg,.png">
                                     @error('logo')
                                         {!! displayError($message) !!}
                                     @enderror

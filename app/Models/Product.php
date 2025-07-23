@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\BlockIllegalProducts;
 use App\Models\Scopes\ProductApproved;
 use App\Models\Scopes\SellerScope;
 use App\Traits\ModelHelper;
@@ -18,6 +19,7 @@ class Product extends Model
     {
         // Product::withoutGlobalScope('sellerScope')->get();
         static::addGlobalScope(new SellerScope);
+        static::addGlobalScope(new BlockIllegalProducts);
         static::addGlobalScope(new ProductApproved());
     }
 
@@ -28,7 +30,7 @@ class Product extends Model
      * composer require laravel/scout
      * composer require meilisearch/meilisearch-php http-interop/http-factory-guzzle
      */
-    use HasFactory, SoftDeletes, ModelHelper, Searchable;
+    use HasFactory, SoftDeletes, ModelHelper;
 
     protected $table = "products";
     protected $appends = ['total_variant','default_variant', 'total_images','seller_shop_name'];

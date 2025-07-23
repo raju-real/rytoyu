@@ -133,7 +133,7 @@
                                 data-product-id="{{ $product->id }}">
                             <i class="fa fa-shopping-cart"></i> Add to cart
                         </button>
-                        <button class="btn btn-theme btn-wish-list btn-cart-m"><i
+                        <button class="btn btn-theme btn-wish-list btn-cart-m add-to-wishlist" type="button" data-product-id="{{ encrypt_decrypt($product->id,'encrypt') }}"><i
                                 class="fa-regular fa-heart orange-text"></i></button>
                         <button class="btn btn-theme btn-compare btn-cart-m"><i class="fa fa-exchange"></i></button>
                     </div>

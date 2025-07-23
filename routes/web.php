@@ -15,6 +15,8 @@ Route::controller(\App\Http\Controllers\HomePageController::class)->group(functi
     Route::view('contact','user.pages.contact')->name('contact');
     Route::post('send-contact-message','sendContactMessage')->name('send-contact-message');
     Route::view('faq','user.pages.faq')->name('faq');
+    Route::view('privacy-policy','user.pages.privacy_policy')->name('privacy-policy');
+    Route::view('terms-and-conditions','user.pages.terms_conditions')->name('terms-and-conditions');
     // Authentication Part
     Route::get('register', 'userRegisterPage')->name('register');
     Route::post('user-register', 'userRegistration')->name('user-register');
@@ -47,6 +49,10 @@ Route::controller(\App\Http\Controllers\CacheCartController::class)->group(funct
         Route::get('load-price-summery', 'loadPriceSummery')->name('load-price-summery');
         Route::get('checkout-products', 'getCheckoutProducts')->name('checkout-products');
         Route::post('submit-order', 'submitOrder')->name('submit-order');
+        // Manage wishlists
+        Route::get('wishlists','wishlists')->name('wishlists');
+        Route::post('add-to-wishlist','addToWishList')->name('add-to-wishlist');
+        Route::get('delete-wish-list-item/{item_id}','deleteWishListItem')->name('delete-wish-list-item');
     });
 });
 // User Part

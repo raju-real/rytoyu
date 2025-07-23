@@ -106,6 +106,34 @@
         }
     });
 
+
+    // Trigger for add to wishlist button
+    $(document).on("click", ".add-to-wishlist", addToWishlist);
+    function addToWishlist(event) {
+        event.preventDefault(); // prevent default form submission if inside a form
+
+        const button = $(event.currentTarget);
+        const productId = button.data("product-id");
+
+        axios
+            .post(base_url + "/add-to-wishlist", {
+                product_id: productId
+            })
+            .then(function (response) {
+                if (response.data.status === "success") {
+                    AppHelpers.showToast("success", response.data.message);
+                    loadMiniCartItem();
+
+                } else {
+                    AppHelpers.showToast("error",'Invalid Request', response.data.message);
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+                AppHelpers.showToast("danger",'Invalid Request', error);
+            });
+    }
+
     // Trigger for add to cart button
     $(document).on("click", ".add-t-c-2", addToCart);
 

@@ -25,7 +25,7 @@
         <div class="back-to-category">
             <span class="link">
                 <i class="fa fa-angle-left"></i> Back to
-                <a href="category.html">{{ $product->category->name ?? '' }}</a>
+                <a href="{{ route('product-lists', ['category' => $product->category->slug]) }}">{{ $product->category->name ?? '' }}</a>
             </span>
         </div>
         <div class="brand-name">
@@ -110,7 +110,7 @@
                     data-product-id="{{ $product->id }}">
                 <i class="fa fa-shopping-cart"></i> Add to cart
             </button>
-            <button class="btn btn-theme btn-wish-list btn-cart-m">
+            <button class="btn btn-theme btn-wish-list btn-cart-m add-to-wishlist" type="button" data-product-id="{{ encrypt_decrypt($product->id,'encrypt') }}">
                 <i class="fa-regular fa-heart orange-text"></i>
             </button>
         </div>

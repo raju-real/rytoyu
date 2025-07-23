@@ -231,6 +231,26 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="mb-3">
+                                    <label class="form-label">Privacy Policy</label>
+                                    <textarea class="form-control" name="privacy_policy"
+                                              id="privacy_policy">{{ old('privacy_policy') ?? siteSettings()['privacy_policy'] ?? '' }}</textarea>
+                                    @error('privacy_policy')
+                                    {!! displayError($message) !!}
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Terms & Conditions</label>
+                                    <textarea class="form-control" name="terms_conditions"
+                                              id="terms_conditions">{{ old('terms_conditions') ?? siteSettings()['terms_conditions'] ?? '' }}</textarea>
+                                    @error('terms_conditions')
+                                    {!! displayError($message) !!}
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="mb-3">
                                     <label class="form-label">Support Policy</label>
                                     <textarea class="form-control" name="support_policy"
                                               id="support_policy">{{ old('support_policy') ?? siteSettings()['support_policy'] ?? '' }}</textarea>
@@ -284,11 +304,13 @@
     <script>
         let config = {
             toolbar: [
-                ['Bold', 'Italic', 'Strike', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'NumberedList', 'BulletedList'],
+                ['Bold', 'Italic', 'Strike', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'NumberedList', 'BulletedList', '-', 'Maximize'],
             ]
         };
 
         CKEDITOR.config.allowedContent = true;
+        CKEDITOR.replace('privacy_policy', config);
+        CKEDITOR.replace('terms_conditions', config);
         CKEDITOR.replace('support_policy', config);
         CKEDITOR.replace('return_policy', config);
         CKEDITOR.replace('about_us', config);
