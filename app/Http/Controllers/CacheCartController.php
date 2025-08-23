@@ -166,6 +166,11 @@ class CacheCartController extends Controller
 
         $total_item_price = $cart_items['item_total'];
         $shipping_fee = shippingFee(); // example fixed shipping fee
+        if (session()->has('selected_district')) {
+            $district_slug = session('selected_district');
+            $charge = DeliveryCharge::whereSlug($district_slug)->firstOrFail(['delivery_charge']);
+            $shipping_fee = $charge->delivery_charge;
+        }
         $item_total_discount = 0;
         $applied_coupon = null;
         $coupon_discount = 0;

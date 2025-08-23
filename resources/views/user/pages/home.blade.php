@@ -83,7 +83,9 @@
                                 <h4 class="caption-title"><a
                                         href="{{ route('product-details', $product->slug) }}">{{ $product->name ?? '' }}</a>
                                 </h4>
-                                <p class="p-title">{{ $product->brand->name ?? '' }}</p>
+                                <p class="p-title"><a
+                                        href="{{ route('product-lists',['brand' => $product->brand->slug]) }}">{{ $product->brand->name ?? '' }}</a>
+                                </p>
                                 @if ($product->discount_price > 0)
                                     <div class="price">
                                         <ins>TK: {{ $product->discount_price }}</ins>
@@ -140,12 +142,14 @@
             <div class="top-products-carousel">
                 <div class="owl-carousel slider-c-custom" id="top-products-carouselb">
                     @foreach (getBrands() as $brand)
-                        <div class="thumbnail no-border no-padding">
-                            <div class="media">
-                                <img class="img-sl" src="{{ asset($brand->image) }}" alt=""/>
+                        <a href="{{ route('product-lists',['brand' => $brand->slug]) }}">
+                            <div class="thumbnail no-border no-padding">
+                                <div class="media">
+                                    <img class="img-sl" src="{{ asset($brand->image) }}" alt=""/>
+                                </div>
+                                <img src="{{ asset($brand->logo) }}" class="brand-logo">
                             </div>
-                            <img src="{{ asset($brand->logo) }}" class="brand-logo">
-                        </div>
+                        </a>
                     @endforeach
                 </div>
             </div>
@@ -170,7 +174,9 @@
                                 <h4 class="caption-title"><a
                                         href="{{ route('product-details', $product->slug) }}">{{ $product->name ?? '' }}</a>
                                 </h4>
-                                <p class="p-title">{{ $product->brand->name ?? '' }}</p>
+                                <p class="p-title"><a
+                                        href="{{ route('product-lists',['brand' => $product->brand->slug]) }}">{{ $product->brand->name ?? '' }}</a>
+                                </p>
                                 @if ($product->discount_price > 0)
                                     <div class="price">
                                         <ins>TK: {{ $product->discount_price }}</ins>
@@ -207,7 +213,9 @@
                                 <h4 class="caption-title"><a
                                         href="{{ route('product-details', $product->slug) }}">{{ $product->name ?? '' }}</a>
                                 </h4>
-                                <p class="p-title">{{ $product->brand->name ?? '' }}</p>
+                                <p class="p-title"><a
+                                        href="{{ route('product-lists',['brand' => $product->brand->slug]) }}">{{ $product->brand->name ?? '' }}</a>
+                                </p>
                                 @if ($product->discount_price > 0)
                                     <div class="price">
                                         <ins>TK: {{ $product->discount_price }}</ins>
@@ -237,7 +245,8 @@
                             <strong>Sing up to receive special offers:</strong>
                             Unlock exclusive deals and the latest trends.
                         </p>
-                        <button class="btn orange-bg redirect-to-link" data-route="{{ route('register') }}"><span>Join Now</span></button>
+                        <button class="btn orange-bg redirect-to-link" data-route="{{ route('register') }}"><span>Join Now</span>
+                        </button>
                     </div>
                     <img class="shape" src="{{ asset('assets/user/img/shape.svg') }}" alt="">
                 </div>
@@ -250,7 +259,8 @@
                             <strong>Become a partner: </strong>
                             Grow your brand with us and reach fashion lovers across Bangladesh.
                         </p>
-                        <button class="btn orange-bg redirect-to-link" data-route="{{ route('seller-registration-form') }}"><span>Apply</span></button>
+                        <button class="btn orange-bg redirect-to-link"
+                                data-route="{{ route('seller-registration-form') }}"><span>Apply</span></button>
                     </div>
                     <img class="shape" src="{{ asset('assets/user/img/shape.svg') }}" alt="">
                 </div>
@@ -261,7 +271,8 @@
                     <div class="offer-details">
                         <p><strong>Join our team:</strong> Be part of something big-shape the future of fashion with
                             {{ siteSettings()['company_name'] ?? 'Rytoyu' }}! </p>
-                        <button class="btn orange-bg redirect-to-link" data-route="{{ route('join-request') }}"><span>Apply</span></button>
+                        <button class="btn orange-bg redirect-to-link" data-route="{{ route('join-request') }}"><span>Apply</span>
+                        </button>
                     </div>
                     <img class="shape" src="{{ asset("assets/user/img/shape.svg") }}" alt="">
                 </div>

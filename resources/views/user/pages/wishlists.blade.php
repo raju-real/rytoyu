@@ -6,6 +6,7 @@
             pointer-events: none;
             opacity: 0.6;
         }
+
         .active-color {
             color: #00b16a !important;
         }
@@ -60,22 +61,29 @@
                                         </td>
                                         <td class="description">
                                             <h4>
-                                                <a class="active-color" href="{{ route('product-details', $item->product->slug) }}">{{ $item->product->name ?? '' }}</a>
+                                                <a class="active-color"
+                                                   href="{{ route('product-details', $item->product->slug) }}">{{ $item->product->name ?? '' }}</a>
                                             </h4>
-                                            by <a href="{{ route('product-lists', ['category' => $item->product->category->slug]) }}">{{ productCategoryNameById($item->product_id) }}</a>
+                                            by <a
+                                                href="{{ route('product-lists', ['category' => $item->product->category->slug]) }}">{{ productCategoryNameById($item->product_id) }}</a>
                                         </td>
 
                                         <td class="total">
                                             TK:
                                             @if($item->product->default_variant->discount_price > 0)
-                                                <span id="unit-price">{{ numberFormat($item->product->default_variant->discount_price) ?? 0 }}</span>
+                                                <span
+                                                    id="unit-price">{{ numberFormat($item->product->default_variant->discount_price) ?? 0 }}</span>
                                                 <span id="discount-price"><del>{{ numberFormat($item->product->default_variant->unit_price) ?? 0 }}</del></span>
                                             @else
-                                                <span id="unit-price">{{ numberFormat($item->product->default_variant->unit_price) ?? 0 }}</span>
+                                                <span
+                                                    id="unit-price">{{ numberFormat($item->product->default_variant->unit_price) ?? 0 }}</span>
                                             @endif
                                         </td>
-                                        <td class="total">
-                                            <a href="{{ route('delete-wish-list-item', encrypt_decrypt($item->id,'encrypt')) }}">
+
+                                        <td class="text-center align-middle" style="vertical-align: middle;line-height: 20px;">
+                                            <a href="javascript:void(0)" class="add-t-c-2" data-product-id="{{ $item->product->id }}">
+                                                <i class="fa fa-shopping-cart"></i>
+                                            </a><a href="{{ route('delete-wish-list-item', encrypt_decrypt($item->id,'encrypt')) }}">
                                                 <i class="fa fa-close"></i>
                                             </a>
                                         </td>

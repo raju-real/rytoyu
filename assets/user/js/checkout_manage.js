@@ -109,6 +109,7 @@
 
     // Trigger for add to wishlist button
     $(document).on("click", ".add-to-wishlist", addToWishlist);
+
     function addToWishlist(event) {
         event.preventDefault(); // prevent default form submission if inside a form
 
@@ -125,12 +126,12 @@
                     loadMiniCartItem();
 
                 } else {
-                    AppHelpers.showToast("error",'Invalid Request', response.data.message);
+                    AppHelpers.showToast("error", 'Invalid Request', response.data.message);
                 }
             })
             .catch(function (error) {
                 console.error(error);
-                AppHelpers.showToast("danger",'Invalid Request', error);
+                AppHelpers.showToast("danger", 'Invalid Request', error);
             });
     }
 
@@ -156,15 +157,17 @@
             .then(function (response) {
                 if (response.data.status === "success") {
                     AppHelpers.showToast("success", response.data.message);
+                    let audio = new Audio('assets/common/audio/access.mp3');
+                    audio.play();
                     loadMiniCartItem();
 
                 } else {
-                    AppHelpers.showToast("danger",'Invalid Request', response.data.message);
+                    AppHelpers.showToast("danger", 'Invalid Request', response.data.message);
                 }
             })
             .catch(function (error) {
                 console.error(error);
-                AppHelpers.showToast("danger",'Invalid Request', error);
+                AppHelpers.showToast("danger", 'Invalid Request', error);
             });
     }
 
@@ -190,11 +193,11 @@
             if (anyChecked) {
                 $("#delete-selected")
                     .removeClass("disabled")
-                    .css({ "pointer-events": "auto", opacity: "1" });
+                    .css({"pointer-events": "auto", opacity: "1"});
             } else {
                 $("#delete-selected")
                     .addClass("disabled")
-                    .css({ "pointer-events": "none", opacity: "0.6" });
+                    .css({"pointer-events": "none", opacity: "0.6"});
             }
         }
 
@@ -294,6 +297,7 @@
         $(document).on("change", "#district", function () {
             setShippingFee();
         });
+
         // Set shipping fee
         function setShippingFee() {
             const district = $("#district").val();
@@ -313,6 +317,7 @@
                     );
                 });
         }
+
         // Set cash on delivery as default
         function setPaymentMethod() {
             const $target = $('#accordion a[data-value="cash-on-delivery"]');
@@ -326,6 +331,7 @@
             $panel.find(".panel-collapse").collapse("show");
             setServiceCharge();
         }
+
         // Set payment method
         $("#accordion a").on("click", function (e) {
             e.preventDefault();
@@ -348,7 +354,7 @@
                 .then((response) => {
                     if (response.data.status === "error") {
                         $("#order_payment_method_error").addClass('alert alert-danger').text(response.data.message);
-                    } else if(response.data.status === 'success' && response.data.payment_method === 'online-payment') {
+                    } else if (response.data.status === 'success' && response.data.payment_method === 'online-payment') {
                         $('#order_payment_method_error').text("Extra " + response.data.service_charge + ' Tk will bed added with your total amount.')
                     }
                     reloadPriceSummery();
@@ -376,6 +382,7 @@
                     );
                 });
         }
+
         // Reload price summery
         function reloadPriceSummery() {
             axios
@@ -391,6 +398,7 @@
                     );
                 });
         }
+
         // Submit order
         $(document).on("click", "#order-submit", function (event) {
             event.preventDefault();
@@ -401,14 +409,14 @@
             // Disable button and show loading state
             submitButton
                 .addClass("disabled")
-                .css({ "pointer-events": "none", opacity: "0.6" })
+                .css({"pointer-events": "none", opacity: "0.6"})
                 .html(buttonText);
 
             const form = $("#order-form")[0];
             const formData = new FormData(form);
 
             // If using FormData
-            const selectedPayment =  $("#accordion a.selected").data("value") || "cash-on-delivery";
+            const selectedPayment = $("#accordion a.selected").data("value") || "cash-on-delivery";
 
             formData.append("payment_method", selectedPayment);
 
@@ -439,7 +447,7 @@
                     // Re-enable button on error
                     submitButton
                         .removeClass("disabled")
-                        .css({ "pointer-events": "", opacity: "" })
+                        .css({"pointer-events": "", opacity: ""})
                         .html("Submit Order");
                 });
         });

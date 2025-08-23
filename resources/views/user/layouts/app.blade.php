@@ -182,7 +182,7 @@
                 <!-- Header search -->
                 <div class="header-search">
                     <input name="search" class="form-control searchInput" type="text"
-                           placeholder="Search for products, brands and more"
+                           placeholder="Search for products"
                            value="{{ implode(' ', session('search_keywords_' . session('user_search_key'), [])) }}"/>
                     <button class="searchBtn"><i class="fa fa-search"></i></button>
                 </div>
@@ -242,7 +242,7 @@
             <div class="container">
                 <div class="col-md-12 text-center border-b">
                     <div class="form-list-search">
-                        <input type="text" name="search" placeholder="Search for products brands and more"
+                        <input type="text" name="search" placeholder="Search for products"
                                class="form-control searchInput"
                                value="{{ implode(' ', session('search_keywords_' . session('user_search_key'), [])) }}">
                         <button class="btn orange-bg searchBtn">SERACH<i class="fa-solid fa-magnifying-glass"></i>

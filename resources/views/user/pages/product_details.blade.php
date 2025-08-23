@@ -39,21 +39,19 @@
                 <div class="col-md-6">
                     <div class="back-to-category">
                         <span class="link"><i class="fa fa-angle-left"></i> Back to <a
-                                href="category.html">{{ $product->category->name ?? '' }}</a></span>
+                                href="{{ route('product-lists', ['category' => $product->category->slug]) }}">{{ $product->category->name ?? '' }}</a></span>
                     </div>
                     <div class="brand-name">
-                        <a href=""> {{ $product->brand->name ?? '' }}</a>
+                        <a href="{{ route('product-lists', ['brand' => $product->brand->slug]) }}"> {{ $product->brand->name ?? '' }}</a>
                     </div>
                     <h2 class="product-title">{{ $product->name ?? '' }}</h2>
                     <div class="product-rating clearfix">
                         <div class="rating">
-                            <span class="star"></span><!--
-                                 --><span class="star active"></span><!--
-                                 --><span class="star active"></span><!--
-                                 --><span class="star active"></span><!--
-                                 --><span class="star active"></span>
+                            @for ($i = 1; $i <= 5; $i++)
+                                <span class="star {{ $i <= $product->max_review ? 'active' : '' }}"></span>
+                            @endfor
                         </div>
-                        <a class="reviews" href="#">16 reviews</a>
+                        <a class="reviews" href="#">{{ $product->total_review ?? 0 }} reviews</a>
                     </div>
                     <div class="product-availability">Availability:
                         <strong id="stock-status">{{ $product->default_variant->stock_status ?? '' }}</strong>
@@ -133,7 +131,8 @@
                                 data-product-id="{{ $product->id }}">
                             <i class="fa fa-shopping-cart"></i> Add to cart
                         </button>
-                        <button class="btn btn-theme btn-wish-list btn-cart-m add-to-wishlist" type="button" data-product-id="{{ encrypt_decrypt($product->id,'encrypt') }}"><i
+                        <button class="btn btn-theme btn-wish-list btn-cart-m add-to-wishlist" type="button"
+                                data-product-id="{{ encrypt_decrypt($product->id,'encrypt') }}"><i
                                 class="fa-regular fa-heart orange-text"></i></button>
                         <button class="btn btn-theme btn-compare btn-cart-m"><i class="fa fa-exchange"></i></button>
                     </div>
@@ -152,8 +151,8 @@
                         <div class="thumbnail no-border no-padding">
                             <div class="media">
                                 <img class="img-sl" src="{{ asset($product->thumbnail_path) }}" alt=""/>
-                                <button class="btn orange-bg view-btn" data-toggle="modal" data-target="#addcart"><i
-                                        class="fa-regular fa-eye"></i></button>
+                                <button class="btn orange-bg view-btn product-view"
+                                        data-product-id="{{ $product->id }}"><i class="fa-regular fa-eye"></i></button>
                             </div>
                             <div class="caption text-center">
                                 <h4 class="caption-title"><a

@@ -33,7 +33,7 @@ class Product extends Model
     use HasFactory, SoftDeletes, ModelHelper;
 
     protected $table = "products";
-    protected $appends = ['total_variant','default_variant', 'total_images','seller_shop_name'];
+    protected $appends = ['total_variant','default_variant', 'total_images','seller_shop_name','total_reviews','max_review'];
     protected $fillable = ['name', 'unit_price', 'discount_price', 'category_id', 'slug'];
 
     /**
@@ -52,6 +52,16 @@ class Product extends Model
     public function seller()
     {
         return $this->belongsTo(Admin::class,'seller_id','id');
+    }
+
+    public function getTotalReviewAttribute()
+    {
+        return Review::where('product_id', $this->id)->count() ?? 0;
+    }
+
+    public function getMaxReviewAttribute()
+    {
+        return Review::where('product_id', $this->id)->max('rating') ?? 0;
     }
 
     public function getTotalVariantAttribute()
