@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\User\SslCommerzPaymentController;
 use Illuminate\Support\Facades\Route;
+use BotMan\BotMan\BotMan;
+use App\Services\ProductChatbotConversation;
 // Website Manage
 Route::controller(\App\Http\Controllers\HomePageController::class)->group(function () {
     // Basic Activity
@@ -99,4 +102,41 @@ Route::controller(\App\Http\Controllers\SocialLoginController::class)->group(fun
     // Instagram Login
     Route::get('auth/instagram', 'redirectToInstagram')->name('instagram.login');
     Route::get('auth/instagram/callback', 'instagramCallback')->name('instagram.callback');
+});
+
+Route::post('/chat', [ChatbotController::class, 'handleChat'])->name('chat');
+
+
+Route::match(['get', 'post'], '/botman', function () {
+    \Log::info('BotMan request received', request()->all());
+
+    $botman = app('botman');
+
+    // Add simple test response
+    $botman->hears('test', function(BotMan $bot) {
+        $bot->reply('Test successful!');
+    });
+
+    // Greetings
+    $botman->hears('hello|hi|hey|hola|greetings', function (BotMan $bot) {
+        $bot->startConversation(new ProductChatbotConversation());
+    });
+
+    // Product search
+    $botman->hears('.*(product|products|item|items).*', function (BotMan $bot) {
+        $bot->startConversation(new ProductChatbotConversation());
+    });
+
+    // Price search
+    $botman->hears('.*(price|cost|expensive|cheap|affordable).*', function (BotMan $bot) {
+        $bot->startConversation(new ProductChatbotConversation());
+    });
+
+    // Default response
+    $botman->fallback(function (BotMan $bot) {
+        \Log::info('Fallback response triggered');
+        $bot->reply('I can help you find products. Try asking about products by name or price. Type "hello" to start!');
+    });
+
+    $botman->listen();
 });

@@ -628,3 +628,22 @@ jQuery(window).scroll(function () {
         $('.header.fixed').sticky('update');
     }
 });
+
+
+
+let lastScrollTop = 0; // previous scroll position
+  const footerImage = document.getElementById('footerImage');
+
+  window.addEventListener('scroll', function() {
+    let st = window.pageYOffset || document.documentElement.scrollTop;
+
+    if (st > lastScrollTop) {
+      // scroll down
+      footerImage.style.display = 'block';
+    } else {
+      // scroll up
+      footerImage.style.display = 'none';
+    }
+
+    lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
+  });

@@ -23,6 +23,7 @@ class SettingController extends Controller
             'favicon' => 'nullable|sometimes|mimes:png|max:1024',
             'address' => 'nullable|sometimes|string|max:500',
             'slogan' => 'nullable|sometimes|string|max:255',
+            'whatsapp_number' => 'nullable|sometimes|string|max:11',
             'footer_text' => 'nullable|sometimes|string|max:1000',
             'website_url' => 'nullable|sometimes|url|max:255',
             'facebook_url' => 'nullable|sometimes|url|max:255',

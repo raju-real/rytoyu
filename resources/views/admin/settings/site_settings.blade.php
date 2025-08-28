@@ -136,6 +136,19 @@
 
                             <div class="col-md-4">
                                 <div class="mb-3">
+                                    <label class="form-label">WhatsApp Number</label>
+                                    <input type="text" name="whatsapp_number"
+                                           value="{{ old('whatsapp_number') ?? siteSettings()['whatsapp_number'] ?? '' }}"
+                                           class="form-control {{ hasError('whatsapp_number') }}"
+                                           placeholder="WhatsApp Number">
+                                    @error('whatsapp_number')
+                                    {!! displayError($message) !!}
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="mb-3">
                                     <label class="form-label">Website URL</label>
                                     <input type="text" name="website_url"
                                            value="{{ old('website_url') ?? siteSettings()['website_url'] ?? '' }}"

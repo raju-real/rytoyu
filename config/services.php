@@ -60,4 +60,11 @@ return [
         'redirect' => $social_info['redirect_base_url'].'/auth/facebook/callback'
     ],
 
+    'botman' => [
+    'config' => [
+        'conversation_cache_time' => 40,
+        'user_cache_time' => 30,
+    ],
+],
+
 ];

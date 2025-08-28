@@ -24,11 +24,16 @@
     <link href="{{ asset('assets/user/css/responsive.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/user/css/theme-green-1.css') }}" rel="stylesheet" id="theme-config-link">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+
+<link href="{{ asset('assets/user/css/chat.css') }}" rel="stylesheet">
     <!-- Head Libs -->
     <script src="{{ asset('assets/user/plugins/modernizr.custom.js') }}"></script>
+
     <!--[if lt IE 9]>
     <script src="{{ asset('assets/user/plugins/iesupport/html5shiv.js') }}"></script>
     <script src="{{ asset('assets/user/plugins/iesupport/respond.min.js') }}"></script>
+
+
     <![endif]-->
     @stack('css')
 </head>
@@ -233,9 +238,15 @@
         @yield('content')
     </div>
     <!-- /CONTENT AREA -->
-    <div class="chat-wa">
-        <img src="{{ asset('assets/user/img/chat.svg') }}">
-    </div>
+    @if(siteSettings()['whatsapp_number'])
+        <div class="chat-wa">
+            <a href="https://api.whatsapp.com/send?phone=+88{{ siteSettings()['whatsapp_number'] }}&text=Hello!&type=phone_number&app_absent=0"
+               target="_blank"
+               id="footerImage">
+                <img src="{{ asset('assets/user/img/chat.svg') }}" alt="Chat on WhatsApp">
+            </a>
+        </div>
+    @endif
     <!-- FOOTER -->
     <footer class="footer">
         <div class="footer-widgets">
@@ -309,6 +320,10 @@
     </footer>
     <!-- /FOOTER -->
     <div id="to-top" class="to-top"><i class="fa fa-angle-up"></i></div>
+
+
+
+
 </div>
 <!-- /WRAPPER -->
 <!-- product -details modal -->
@@ -326,6 +341,46 @@
     </div>
 </div>
 <!--end product details modal-->
+
+
+
+<!-- Professional Chatbot Widget -->
+<div id="chatbot-container" class="chatbot-container">
+    <div class="chatbot-header">
+        <div class="chatbot-header-content">
+            <div class="chatbot-avatar">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+                </svg>
+            </div>
+            <div>
+                <h3 class="chatbot-title">Product Assistant</h3>
+                <p class="chatbot-subtitle">Online • Ready to help</p>
+            </div>
+        </div>
+        <button id="chatbot-close" class="chatbot-close">&times;</button>
+    </div>
+    <div id="chatbot-messages" class="chatbot-messages"></div>
+    <div class="chatbot-input-container">
+        <input type="text" id="chatbot-input" class="chatbot-input" placeholder="Type your message..." autocomplete="off">
+        <button id="chatbot-send" class="chatbot-send">
+            <svg viewBox="0 0 24 24">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+            </svg>
+        </button>
+    </div>
+</div>
+<button id="chatbot-toggle" class="chatbot-toggle">
+    <div class="chatbot-toggle-icon">
+        <svg viewBox="0 0 24 24">
+            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+        </svg>
+    </div>
+    Chat with us
+</button>
+
+
+
 <!-- JS Global -->
 <script src="{{ asset('assets/user/plugins/jquery/jquery-1.11.1.min.js') }}"></script>
 <script src="{{ asset('assets/user/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
@@ -348,6 +403,8 @@
 <script src="{{ asset('assets/user/js/common.js') }}"></script>
 {{--<script src="{{ asset('assets/user/js/product-details.js') }}"></script>--}}
 <script src="{{ asset('assets/user/js/checkout_manage.js') }}"></script>
+<script src="{{ asset('assets/user/js/chat.js') }}"></script>
+
 @stack('js')
 </body>
 </html>

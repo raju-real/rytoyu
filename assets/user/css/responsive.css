@@ -515,3 +515,16 @@ ul.size-shop li{
     width: 77%;
 }
 }
+
+ #footerImage {
+      position: fixed; width:80px;
+      bottom: 100px; 
+      right: 10px; z-index: 99;
+     
+      display: none; /* initially hidden */
+    }
+    .product-single .buttons .quantity .qty{
+        padding-left: 0px; text-align: center;
+        padding-right: 0px;
+    }
+
