@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\FaqController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -115,6 +116,11 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
         Route::resource('colors', ColorController::class);
         Route::resource('units', UnitController::class);
         Route::resource('tags', TagController::class);
+        // Coupon
+        Route::resource('coupons', CouponController::class);
+        Route::controller(CouponController::class)->group(function () {
+            Route::put('update-coupon-status/{id}', 'updateCouponStatus')->name('update-coupon-status');
+        });
         // Settings
         Route::controller(SettingController::class)->group(function () {
             Route::get('site-settings', 'siteSettings')->name('site-settings');

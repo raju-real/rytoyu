@@ -25,7 +25,7 @@
     <link href="{{ asset('assets/user/css/theme-green-1.css') }}" rel="stylesheet" id="theme-config-link">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
 
-    <link href="{{ asset('assets/user/css/chat.css') }}" rel="stylesheet">
+<link href="{{ asset('assets/user/css/chat.css') }}" rel="stylesheet">
     <!-- Head Libs -->
     <script src="{{ asset('assets/user/plugins/modernizr.custom.js') }}"></script>
 
@@ -36,262 +36,6 @@
 
     <![endif]-->
     @stack('css')
-
-    <style>
-        /* Custom CSS for the Chatbot Interface */
-        #chatbot-icon {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            cursor: pointer;
-            transition: transform 0.3s ease-in-out;
-            width: 60px;
-            height: 60px;
-            background-color: #4a5568;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        #chatbot-icon:hover {
-            transform: scale(1.1);
-        }
-
-        #chatbot-icon i {
-            font-size: 2rem;
-        }
-
-        #chat-container {
-            position: fixed;
-            bottom: 90px;
-            right: 20px;
-            z-index: 999;
-            width: 450px; /* Increased width */
-            height: 500px;
-            display: none; /* Initially hidden */
-            flex-direction: column;
-            background-color: white;
-            border-radius: 1rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            font-family: 'Inter', sans-serif;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-
-        @media (max-width: 500px) {
-            #chat-container {
-                width: 90%;
-                left: 5%;
-                right: 5%;
-            }
-        }
-
-        .chat-header {
-            background-color: #4a5568;
-            color: white;
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 600;
-            border-top-left-radius: 1rem;
-            border-top-right-radius: 1rem;
-        }
-
-        .chat-header button {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        .chat-messages {
-            height: calc(100% - 120px); /* Fixed height for scrolling */
-            padding: 1rem;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            background-color: #f7fafc;
-        }
-
-        .message {
-            padding: 0.75rem 1rem;
-            border-radius: 1rem;
-            max-width: 85%;
-            word-wrap: break-word;
-            line-height: 1.5;
-        }
-
-        .user-message {
-            background-color: #2b6cb0;
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 0.25rem;
-        }
-
-        .bot-message {
-            background-color: #e2e8f0;
-            color: #2d3748;
-            align-self: flex-start;
-            border-bottom-left-radius: 0.25rem;
-        }
-
-        .product-list {
-            background-color: #ffffff;
-            padding: 0.75rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .product-list h5 {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 1rem;
-        }
-
-        .product-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.75rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .product-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .product-item img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 0.5rem;
-        }
-
-        .product-info {
-            flex-grow: 1;
-        }
-
-        .product-info h6 {
-            font-size: 1.1rem; /* Increased font size for product name */
-            font-weight: 600; /* Bolder for emphasis */
-            margin: 0;
-        }
-
-        .product-info p {
-            font-size: 1rem; /* Increased font size for price */
-            color: #4a5568;
-            margin: 0;
-        }
-
-        .product-info .view-details-btn {
-            font-size: 10px;
-            color: #4c51bf;
-            text-decoration: none;
-            transition: color 0.2s;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-        }
-
-        .product-info .view-details-btn:hover {
-            color: #3b418b;
-        }
-
-        .input-container {
-            display: flex;
-            padding: 1rem;
-            border-top: 1px solid #e2e8f0;
-            background-color: #f7fafc;
-            border-bottom-left-radius: 1rem;
-            border-bottom-right-radius: 1rem;
-        }
-
-        .input-container input {
-            flex-grow: 1;
-            padding: 0.75rem 1rem;
-            border: 1px solid #cbd5e0;
-            border-radius: 1.5rem;
-            outline: none;
-        }
-
-        .input-container button {
-            background-color: #4c51bf;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            margin-left: 0.5rem;
-            border-radius: 1.5rem;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .input-container button:hover {
-            background-color: #3b418b;
-        }
-
-        .input-container button:disabled {
-            background-color: #a0aec0;
-            cursor: not-allowed;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .loading-dots span {
-            animation: blink 1.4s infinite;
-            animation-fill-mode: both;
-        }
-
-        .loading-dots span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .loading-dots span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes blink {
-            0%, 80%, 100% {
-                opacity: 0;
-            }
-            40% {
-                opacity: 1;
-            }
-        }
-
-        /* New CSS for 'Show All Results' button */
-        .show-all-btn {
-            display: inline-block;
-            margin-top: 10px;
-            text-align: center;
-            background-color: #4f46e5;
-            color: white;
-            padding: 10px 16px;
-            border-radius: 9999px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.2s;
-        }
-
-        .show-all-btn:hover {
-            background-color: #4338ca;
-        }
-    </style>
 </head>
 <body id="home" class="wide">
 <!-- PRELOADER -->
@@ -578,6 +322,8 @@
     <div id="to-top" class="to-top"><i class="fa fa-angle-up"></i></div>
 
 
+
+
 </div>
 <!-- /WRAPPER -->
 <!-- product -details modal -->
@@ -596,25 +342,44 @@
 </div>
 <!--end product details modal-->
 
-<!-- The main chat icon -->
-<div id="chatbot-icon">
-    <i class="fa-solid fa-comments"></i>
-</div>
 
-<!-- The chat container, initially hidden -->
-<div id="chat-container">
-    <div class="chat-header">
-        <span>E-commerce Chatbot</span>
-        <button id="close-chat-button">&times;</button>
+
+<!-- Professional Chatbot Widget -->
+<div id="chatbot-container" class="chatbot-container">
+    <div class="chatbot-header">
+        <div class="chatbot-header-content">
+            <div class="chatbot-avatar">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+                </svg>
+            </div>
+            <div>
+                <h3 class="chatbot-title">Product Assistant</h3>
+                <p class="chatbot-subtitle">Online • Ready to help</p>
+            </div>
+        </div>
+        <button id="chatbot-close" class="chatbot-close">&times;</button>
     </div>
-    <div id="chat-messages" class="chat-messages">
-        <div class="message bot-message">Hello! How can I help you find a product today?</div>
-    </div>
-    <div class="input-container">
-        <input type="text" id="user-input" placeholder="Ask about products...">
-        <button id="send-button">Send</button>
+    <div id="chatbot-messages" class="chatbot-messages"></div>
+    <div class="chatbot-input-container">
+        <input type="text" id="chatbot-input" class="chatbot-input" placeholder="Type your message..." autocomplete="off">
+        <button id="chatbot-send" class="chatbot-send">
+            <svg viewBox="0 0 24 24">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+            </svg>
+        </button>
     </div>
 </div>
+<button id="chatbot-toggle" class="chatbot-toggle">
+    <div class="chatbot-toggle-icon">
+        <svg viewBox="0 0 24 24">
+            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+        </svg>
+    </div>
+    Chat with us
+</button>
+
+
 
 <!-- JS Global -->
 <script src="{{ asset('assets/user/plugins/jquery/jquery-1.11.1.min.js') }}"></script>
@@ -633,13 +398,12 @@
 <script src="{{ asset('assets/user/plugins/jquery.cookie.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <!--<![endif]-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+<script src="{{ asset('assets/admin/js/axios.js') }}"></script>
 <script src="{{ asset('assets/admin/js/helpers.js') }}"></script>
 <script src="{{ asset('assets/user/js/common.js') }}"></script>
 {{--<script src="{{ asset('assets/user/js/product-details.js') }}"></script>--}}
 <script src="{{ asset('assets/user/js/checkout_manage.js') }}"></script>
-<script src="{{ asset('assets/user/js/gemini_chat.js') }}"></script>
-
+<script src="{{ asset('assets/user/js/chat.js') }}"></script>
 
 @stack('js')
 </body>

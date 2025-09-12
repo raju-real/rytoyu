@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\GeminiChatBotController;
 use App\Http\Controllers\User\SslCommerzPaymentController;
 use Illuminate\Support\Facades\Route;
 use BotMan\BotMan\BotMan;
@@ -104,6 +105,13 @@ Route::controller(\App\Http\Controllers\SocialLoginController::class)->group(fun
     Route::get('auth/instagram/callback', 'instagramCallback')->name('instagram.callback');
 });
 
+//Gemini chatbot
+Route::controller(GeminiChatBotController::class)->group(function () {
+   Route::post('chat-bot-query','handleQuery')->name('chat-bot-query');
+});
+
+
+//Other
 Route::post('/chat', [ChatbotController::class, 'handleChat'])->name('chat');
 
 

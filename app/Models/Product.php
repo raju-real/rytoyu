@@ -54,7 +54,7 @@ class Product extends Model
         return $this->belongsTo(Admin::class,'seller_id','id');
     }
 
-    public function getTotalReviewAttribute()
+    public function getTotalReviewsAttribute()
     {
         return Review::where('product_id', $this->id)->count() ?? 0;
     }

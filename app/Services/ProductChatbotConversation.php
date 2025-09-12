@@ -103,11 +103,14 @@ class ProductChatbotConversation extends Conversation
 
     public function searchProductsByName()
     {
-        $products = Product::where('name', 'LIKE', '%'.$this->productName.'%')
-            ->orWhere('slug', 'LIKE', '%'.$this->productName.'%')
-            ->orWhere('short_description', 'LIKE', '%'.$this->productName.'%')
-            ->take(5) // Limit to 5 products
-            ->get();
+//        $products = Product::where('name', 'LIKE', '%'.$this->productName.'%')
+//            ->orWhere('slug', 'LIKE', '%'.$this->productName.'%')
+//            ->orWhere('short_description', 'LIKE', '%'.$this->productName.'%')
+//            ->take(5) // Limit to 5 products
+//            ->get();
+        $data = Product::query();
+        $data->whereRaw("MATCH(name) AGAINST (? IN BOOLEAN MODE)", [$this->productName]);
+        $products = $data->take(10)->get();
 
         if ($products->count() > 0) {
             $this->say("I found {$products->count()} product(s) matching '{$this->productName}':");
