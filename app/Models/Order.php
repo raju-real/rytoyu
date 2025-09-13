@@ -141,6 +141,26 @@ class Order extends Model
         ])->whereUniqueId($unique_id)->first();
     }
 
+    public static function sellerOrderProduct($unique_id = Null, $seller_id = Null)
+    {
+        return Order::with([
+            'seller_order_logs' => function ($seller_order_log) use($seller_id) {
+                $seller_order_log->where('seller_id', $seller_id);
+                $seller_order_log->select('id','seller_id','order_id','order_amount');
+            },
+            'order_products' => function($order_product) use($seller_id) {
+                $order_product->where('seller_id', $seller_id);
+                $order_product->select('id', 'order_id', 'product_id', 'seller_id', 'item_order_price', 'quantity', 'item_total_order_price', 'size', 'color', 'order_status');
+                $order_product->with([
+                    'product' => function($product) {
+                        $product->select('id', 'product_code', 'name', 'thumbnail_path');
+                    }
+                ]);
+            }
+        ])->whereUniqueId($unique_id)->first()
+            ->makeHidden('total_item_unit_price','total_item_discount','total_item_order_price','total_discount','total_order_price','paid_amount','due_amount');
+    }
+
     public function order_products()
     {
         return $this->hasMany(OrderProduct::class, 'order_id', 'id');

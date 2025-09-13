@@ -105,13 +105,13 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group mb-3">
-                                            <select name="status" class="form-select">
-                                                <option value="" {{ !isset(request()->status) ? 'selected' : '' }}>
+                                            <select name="request_status" class="form-select">
+                                                <option value="" {{ !isset(request()->request_status) ? 'selected' : '' }}>
                                                     Status
                                                 </option>
                                                 @foreach (getRequestStatus() as $status)
                                                     <option value="{{ $status->value }}"
-                                                        {{ request('status') === $status->value ? 'selected' : '' }}>
+                                                        {{ request('request_status') === $status->value ? 'selected' : '' }}>
                                                         {{ $status->title }}</option>
                                                 @endforeach
                                             </select>

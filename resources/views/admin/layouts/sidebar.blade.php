@@ -167,24 +167,24 @@
                 </ul>
             </li>
 
-        <li class="{{ isMainMenuActive('coupons') }}">
-            <a href="javascript: void(0);" class="has-arrow waves-effect">
-                <i class='bx  bx-laugh' ></i>
-                <span>Coupon</span>
-            </a>
-            <ul class="sub-menu" aria-expanded="false">
-                <li>
-                    <a href="{{ route('admin.coupons.index') }}" class="{{ isSubMenuActive('coupons') }}">
-                        <i class="bx bx-chevron-right"></i> Coupon List
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.coupons.create') }}" class="{{ isSubMenuActive('coupons') }}">
-                        <i class="bx bx-chevron-right"></i> Add Coupon
-                    </a>
-                </li>
-            </ul>
-        </li>
+            <li class="{{ isMainMenuActive('coupons') }}">
+                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                    <i class='bx  bx-laugh'></i>
+                    <span>Coupon</span>
+                </a>
+                <ul class="sub-menu" aria-expanded="false">
+                    <li>
+                        <a href="{{ route('admin.coupons.index') }}" class="{{ isSubMenuActive('coupons') }}">
+                            <i class="bx bx-chevron-right"></i> Coupon List
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.coupons.create') }}" class="{{ isSubMenuActive('coupons') }}">
+                            <i class="bx bx-chevron-right"></i> Add Coupon
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
             <li class="{{ isMainMenuActive('site-settings,delivery-charges,faqs') }}">
                 <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -210,6 +210,15 @@
                         </a>
                     </li>
                 </ul>
+            </li>
+        @endif
+
+        @if(authAdminType() === 'seller')
+            <li>
+                <a href="{{ route('admin.seller-orders') }}" class="waves-effect">
+                    <i class="bx bx-home-circle"></i>
+                    <span>Order List</span>
+                </a>
             </li>
         @endif
     </ul>

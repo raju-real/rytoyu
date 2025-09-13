@@ -597,24 +597,24 @@
 <!--end product details modal-->
 
 <!-- The main chat icon -->
-<div id="chatbot-icon">
-    <i class="fa-solid fa-comments"></i>
-</div>
+{{--<div id="chatbot-icon">--}}
+{{--    <i class="fa-solid fa-comments"></i>--}}
+{{--</div>--}}
 
-<!-- The chat container, initially hidden -->
-<div id="chat-container">
-    <div class="chat-header">
-        <span>E-commerce Chatbot</span>
-        <button id="close-chat-button">&times;</button>
-    </div>
-    <div id="chat-messages" class="chat-messages">
-        <div class="message bot-message">Hello! How can I help you find a product today?</div>
-    </div>
-    <div class="input-container">
-        <input type="text" id="user-input" placeholder="Ask about products...">
-        <button id="send-button">Send</button>
-    </div>
-</div>
+{{--<!-- The chat container, initially hidden -->--}}
+{{--<div id="chat-container">--}}
+{{--    <div class="chat-header">--}}
+{{--        <span>E-commerce Chatbot</span>--}}
+{{--        <button id="close-chat-button">&times;</button>--}}
+{{--    </div>--}}
+{{--    <div id="chat-messages" class="chat-messages">--}}
+{{--        <div class="message bot-message">Hello! How can I help you find a product today?</div>--}}
+{{--    </div>--}}
+{{--    <div class="input-container">--}}
+{{--        <input type="text" id="user-input" placeholder="Ask about products...">--}}
+{{--        <button id="send-button">Send</button>--}}
+{{--    </div>--}}
+{{--</div>--}}
 
 <!-- JS Global -->
 <script src="{{ asset('assets/user/plugins/jquery/jquery-1.11.1.min.js') }}"></script>

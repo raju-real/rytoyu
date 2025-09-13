@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Product;
+use App\Models\Scopes\BlockIllegalProducts;
 use App\Models\Scopes\ProductApproved;
 use App\Models\User;
 use App\Models\Admin;
@@ -230,16 +231,11 @@ class SellerController extends Controller
     // Product Part
     public function productList()
     {
-        $data = Product::withoutGlobalScope(ProductApproved::class)
+        $data = Product::withoutGlobalScope(ProductApproved::class)->withoutGlobalScope(BlockIllegalProducts::class)
             ->where('seller_id', '!=', 1);
 
-        if (request()->filled('request_status')) {
-            $data->where('request_status', request()->get('request_status'));
-        } else {
-            $data->where('request_status', 'pending');
-        }
-
         $data->when(request()->filled('seller'), function ($query) {
+            return sellerIdByCode(request()->get('seller'));
             $query->where('seller_id', sellerIdByCode(request()->get('seller')));
         });
 
@@ -257,6 +253,10 @@ class SellerController extends Controller
 
         $data->when(request()->filled('sub_subcategory'), function ($query) {
             $query->where('sub_subcategory_id', subSubCategoryIdBySlug(request()->get('sub_subcategory')));
+        });
+
+        $data->when(request()->filled('request_status'), function($query) {
+            $query->where('request_status', request()->get('request_status'));
         });
 
         $products = $data->latest()->paginate(100);

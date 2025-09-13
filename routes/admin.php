@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\FaqController;
+use App\Http\Controllers\Admin\SellerOrderManageController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
@@ -81,7 +82,18 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
         //.......
     });
     // =========================================================================
-    // End of only for administrator routes
+    // End of only for admin routes
+
+    // Start of only for seller routes
+    // =========================================================================
+    Route::middleware('seller')->group(function () {
+        Route::controller(SellerOrderManageController::class)->group(function() {
+           Route::get('seller-orders','orderList')->name('seller-orders');
+           Route::get('seller-order-info/{unique_id}','orderProducts')->name('seller-order-info');
+        });
+    });
+    // =========================================================================
+    // End of only for seller routes
 
     // Start of only for administrator and admin (with permission check)
     // =========================================================================
@@ -192,7 +204,6 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
     });
     // =========================================================================
     // End of Group route for administrator and admin (with permission check)
-
 
     Route::get('logout', function () {
         Auth::logout();

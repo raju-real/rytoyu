@@ -34,7 +34,7 @@ class AdminOrderManageController extends Controller
             });
         }
 
-        $orders =  $data->latest()->paginate(10);
+        $orders =  $data->latest()->paginate(50);
 
         return view('admin.orders.manage_orders', compact('orders'));
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Order;
 use Carbon\Carbon;
 use App\Models\Admin;
 use App\Models\Product;
@@ -1009,6 +1010,13 @@ if (!function_exists('districtIdBySlug')) {
     function districtIdBySlug($slug)
     {
         return DeliveryCharge::whereSlug($slug)->first()->value('id');
+    }
+}
+
+if (!function_exists('orderIdByUniqueId')) {
+    function orderIdByUniqueId($unique_id = Null)
+    {
+        return Order::whereUniqueId($unique_id)->first()->id ?? null;
     }
 }
 
