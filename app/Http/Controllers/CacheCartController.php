@@ -95,6 +95,7 @@ class CacheCartController extends Controller
             $cartItems[$itemKey]['quantity'] += $quantity;
         } else {
             $cartItems[$itemKey] = [
+                'seller_id' => $product->seller_id,
                 'product_id' => $productId,
                 'product_name' => $product->name,
                 'variant_id' => $variant->id,
@@ -119,6 +120,7 @@ class CacheCartController extends Controller
             $color = $item['color_id'] ? Color::find($item['color_id']) : null;
             return [
                 'item_key' => $itemKey, // Important: Attach item_key here
+                'seller_id' => $item['seller_id'],
                 'variant_id' => $item['variant_id'],
                 'product_id' => $item['product_id'],
                 'product_name' => $item['product_name'],
@@ -131,8 +133,12 @@ class CacheCartController extends Controller
                 'color_name' => $color->name ?? null,
             ];
         });
+
+        $totalSellers = $cartItemsArray->pluck('seller_id')->unique()->count();
         $itemTotal = $cartItemsArray->sum('order_price');
+
         return [
+            'total_seller' => $totalSellers,
             'item_total' => $itemTotal,
             'total_price' => $itemTotal,
             'items' => $cartItemsArray->values(),
@@ -158,6 +164,17 @@ class CacheCartController extends Controller
         //return intval($order_price * ($percentage / 100)); // Convert to integer (cuts decimals):
     }
 
+    public function getShippingFee()
+    {
+        $cart_items = $this->getCartItems();
+        $total_seller =  $cart_items['total_seller'];
+        if (session()->has('selected_district')) {
+            $district_slug = session('selected_district');
+            $charge = DeliveryCharge::whereSlug($district_slug)->firstOrFail(['delivery_charge']);
+            return $charge->delivery_charge * $total_seller;
+        }
+    }
+
     public function getPriceSummery()
     {
         $this->applyCoupon();
@@ -165,12 +182,12 @@ class CacheCartController extends Controller
         $cart_items = $this->getCartItems();
 
         $total_item_price = $cart_items['item_total'];
-        $shipping_fee = shippingFee(); // example fixed shipping fee
-        if (session()->has('selected_district')) {
-            $district_slug = session('selected_district');
-            $charge = DeliveryCharge::whereSlug($district_slug)->firstOrFail(['delivery_charge']);
-            $shipping_fee = $charge->delivery_charge;
-        }
+        $shipping_fee = $this->getShippingFee();
+//        if (session()->has('selected_district')) {
+//            $district_slug = session('selected_district');
+//            $charge = DeliveryCharge::whereSlug($district_slug)->firstOrFail(['delivery_charge']);
+//            $shipping_fee = $charge->delivery_charge;
+//        }
         $item_total_discount = 0;
         $applied_coupon = null;
         $coupon_discount = 0;
@@ -181,7 +198,7 @@ class CacheCartController extends Controller
         }
 
         $total_discount = $item_total_discount + $coupon_discount;
-        $total_amount = ($total_item_price + $shipping_fee) - $coupon_discount;
+        $total_amount = $total_item_price  - $coupon_discount;
         if (session()->has('selected_payment_method') && session('selected_payment_method') === 'online-payment') {
             $service_charge = $this->calculatedServiceCharge($total_amount);
         } else {
@@ -218,7 +235,7 @@ class CacheCartController extends Controller
         }
         $district_slug = request()->get('district') ?? 'dhaka';
         session()->put('selected_district', $district_slug);
-        return shippingFee();
+        return $this->getShippingFee();
     }
 
     public function setPaymentMethod()
@@ -256,8 +273,8 @@ class CacheCartController extends Controller
 
     public function applyCoupon()
     {
-        $coupon_code = 'DUMMY10';
-        $discount = 100;
+        $coupon_code = '';
+        $discount = 0;
         // **** Coupon apply logic here ///
         // Store coupon in session
         session(['applied_coupon_code' => $coupon_code]);

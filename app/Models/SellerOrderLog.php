@@ -9,10 +9,19 @@ class SellerOrderLog extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['seller_amount'];
+    protected $appends = ['seller_amount','shipping_fee','order_price'];
 
     public function getSellerAmountAttribute() {
         return $this->order_amount - $this->total_commission;
+    }
+
+    public function getShippingFeeAttribute() {
+        return $this->order->shipping_fee / $this->order->seller_count;
+    }
+
+    public function getOrderPriceAttribute()
+    {
+        return $this->order_amount + $this->shipping_fee;
     }
 
     public function order()

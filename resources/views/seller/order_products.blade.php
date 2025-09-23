@@ -51,14 +51,20 @@
                 <table class="table table-bordered mb-0">
                     <tbody>
                         <tr>
-                            <th style="width: 150px;">Order Price</th>
+                            <th style="width: 150px;">Item Price</th>
                             <td>{{ numberFormat($order_log->order_amount) ?? 0 }}</td>
+                            <th style="width: 150px;">Shipping Fee</th>
+                            <td>{{ $order_log->shipping_fee ?? 0 }}</td>
+                        </tr>
+                        <tr>
+                            <th style="width: 150px;">Order Amount</th>
+                            <td class="bg-primary text-white">{{ $order_log->order_price ?? 0 }}</td>
                             <th style="width: 150px;">Commission Rate</th>
-                            <td>{{ $order_log->commission_rate ?? 0 }}</td>
+                            <td>{{ $order_log->commission_rate ?? 0 }} %</td>
                         </tr>
                         <tr>
                             <th style="width: 150px;">Total Commission</th>
-                            <td>{{ $order_log->total_commission ?? 0 }}</td>
+                            <td>{{ $order_log->total_commission ?? 0 }} <small class="text-primary">from {{ numberFormat($order_log->order_amount) ?? 0 }}</small></td>
                             <th style="width: 150px;">Seller Amount</th>
                             <td class="bg-success text-white">{{ numberFormat($order_log->seller_amount) ?? 0 }}</td>
                         </tr>

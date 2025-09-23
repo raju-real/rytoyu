@@ -77,10 +77,11 @@
                                 <th>Sl.no</th>
                                 <th>Order Date</th>
                                 <th>Invoice</th>
-                                <th>Order Info</th>
-                                <th>Total Amount</th>
-                                <th>Commission</th>
+                                <th>Item Total</th>
+                                <th>Shipping Fee</th>
                                 <th>Order Amount</th>
+                                <th>Commission</th>
+                                <th>Seller Amount</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -93,7 +94,12 @@
                                         <a target="_blank"
                                            href="{{ route('admin.order-invoice', $order->order->unique_id) }}">{{ $order->invoice ?? '' }}</a>
                                     </td>
-                                    <td class="text-center">
+                                    <td>{{ numberFormat($order->order_amount, 2) }}</td>
+                                    <td>(+) {{ $order->shipping_fee ?? '' }}</td>
+                                    <td>{{ numberFormat($order->order_price, 2) }}</td>
+                                    <td>(-) {{ numberFormat($order->total_commission, 2) }}</td>
+                                    <td>{{ numberFormat($order->seller_amount, 2) }}</td>
+                                    <td>
                                         <a type="button" class="btn btn-sm btn-info show-order-products"
                                            data-bs-toggle="tooltip"
                                            data-bs-placement="top"
@@ -101,11 +107,6 @@
                                            data-id="{{ $order->order->unique_id }}">
                                             <i class="fa fa-eye fa-xl"></i>
                                         </a>
-                                    </td>
-                                    <td>{{ numberFormat($order->order_amount, 2) }}</td>
-                                    <td>{{ numberFormat($order->total_commission, 2) }}</td>
-                                    <td>{{ numberFormat($order->seller_amount, 2) }}</td>
-                                    <td>
                                         <a href="{{ route('admin.order-summary',$order->order->unique_id) }}"
                                            class="btn btn-primary btn-sm" data-bs-toggle="tooltip"
                                            data-bs-placement="top" title="Show Details">

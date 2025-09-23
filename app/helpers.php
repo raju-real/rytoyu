@@ -1020,17 +1020,6 @@ if (!function_exists('orderIdByUniqueId')) {
     }
 }
 
-if (!function_exists('shippingFee')) {
-    function shippingFee()
-    {
-        if (session()->has('selected_district')) {
-            $district_slug = session('selected_district');
-            $charge = DeliveryCharge::whereSlug($district_slug)->firstOrFail(['delivery_charge']);
-            return $charge->delivery_charge;
-        }
-    }
-}
-
 // In your controller or a helper function (recommended)
 if (!function_exists('getRatingTitle')) {
     function getRatingTitle(int $rating): string
