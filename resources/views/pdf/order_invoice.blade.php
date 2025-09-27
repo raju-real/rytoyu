@@ -52,6 +52,11 @@
                             <td style="border: none;padding: 2px 4px;">:</td>
                             <td style="border: none;padding: 2px 4px;">{{ ucFirst($order->payment_status) ?? '' }}</td>
                         </tr>
+                        <tr>
+                            <td style="border: none;padding: 2px 4px;">Amount</td>
+                            <td style="border: none;padding: 2px 4px;">:</td>
+                            <td style="border: none;padding: 2px 4px;"><strong>{{ $order->total_order_price ?? 0.0 }} BDT</strong></td>
+                        </tr>
                     </tbody>
                 </table>
             </td>
@@ -128,7 +133,7 @@
                 <td style="text-align: center;">{{ $order->total_vat ?? 0.0 }} BDT</td>
                 <td style="text-align: center;">(+) {{ $order->shipping_fee ?? 0.0 }} BDT</td>
                 <td style="text-align: center;">(+) {{ $order->service_charge ?? 0.0 }} BDT</td>
-                <td style="text-align: center;">{{ $order->coupon_code ?? 'N/A' }}DESTD</td>
+                <td style="text-align: center;">{{ $order->coupon_code ?? 'N/A' }}</td>
                 <td style="text-align: center;">(-) {{ $order->coupon_discount_amount ?? 0.0 }} BDT</td>
                 <td style="text-align: center;">{{ $order->total_order_price ?? 0.0 }} BDT</td>
             </tr>
