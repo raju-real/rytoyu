@@ -143,7 +143,7 @@
             <li class="{{ isMainMenuActive('sellers,seller-products,seller-product') }}">
                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                     <i class="bx bx-user-plus"></i>
-                    <span>sellers</span>
+                    <span>Sellers</span>
                 </a>
                 <ul class="sub-menu" aria-expanded="false">
                     <li>

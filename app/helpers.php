@@ -176,6 +176,26 @@ if (!function_exists('getConfirmStatus')) {
     }
 }
 
+if (!function_exists('getValidForUser')) {
+    function getValidForUser(): array
+    {
+        return [
+            (object)['value' => 'all-user', 'title' => 'All User'],
+            (object)['value' => 'new-user', 'title' => 'New User']
+        ];
+    }
+}
+
+if (!function_exists('discountTypes')) {
+    function discountTypes(): array
+    {
+        return [
+            (object)['value' => 'flat', 'title' => 'Flat'],
+            (object)['value' => 'percentage', 'title' => 'Percentage']
+        ];
+    }
+}
+
 if (!function_exists('webSectionFor')) {
     function webSectionFor(): array
     {

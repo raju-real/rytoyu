@@ -15,15 +15,15 @@ return new class extends Migration
     {
         Schema::create('coupons', function (Blueprint $table) {
             $table->id();
-            $table->enum('valid_for',['all','new','group']);
+            $table->enum('valid_for',['all-user','new-user']);
             $table->string('coupon_code',20)->unique();
             $table->enum('discount_type',['flat','percentage']);
             $table->integer('discount');
             $table->integer('used_limit')->default(1);
             $table->integer('minimum_cost')->default(0);
             $table->integer('up_to')->default(0);
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
+            $table->date('start_date');
+            $table->date('end_date');
             $table->enum('status',['active','inactive'])->default("active");
             $table->integer('created_by')->nullable();
             $table->timestamps();
