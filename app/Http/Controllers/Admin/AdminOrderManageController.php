@@ -88,7 +88,7 @@ class AdminOrderManageController extends Controller
                     ->orWhere('mobile', 'LIKE', "%{$search}%");
             });
         }
-        $data->select('id', 'unique_id', 'order_number', 'invoice', 'total_order_price', 'created_at');
+        $data->select('id', 'unique_id', 'order_number', 'invoice', 'total_order_price','seller_count', 'created_at');
         $orders = $data->paginate(20);
         return view('admin.orders.commission_logs', compact('orders'));
     }

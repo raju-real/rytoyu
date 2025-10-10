@@ -433,6 +433,7 @@ class CacheCartController extends Controller
         // Price calculation
         $total_vat = 0;
         $total_shipping = $price_summery['shipping_fee'];
+        $seller_count = $cartItems['total_seller'];
         // save order
         $order = new Order();
         $order->order_number = Order::getOrderNumber();
@@ -450,6 +451,7 @@ class CacheCartController extends Controller
         $order->coupon_code = $applied_coupon_code;
         $order->coupon_discount_amount = $applied_coupon_discount;
         $order->shipping_fee = $total_shipping;
+        $order->seller_count = $seller_count;
         $order->total_vat = 0;
         $order->total_discount = $total_item_discount + $applied_coupon_discount;
 

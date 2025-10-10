@@ -79,6 +79,13 @@ if (!function_exists('starSign')) {
     }
 }
 
+if (!function_exists('tooltip')) {
+    function tooltip($title = "", $placement = "top"): string
+    {
+        return 'data-bs-toggle="tooltip" data-bs-placement="' . $placement . '" title="' . $title . '"';
+    }
+}
+
 if (!function_exists('displayError')) {
     function displayError(string $error = "Something went wrong!"): string
     {

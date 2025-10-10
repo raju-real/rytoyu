@@ -23,16 +23,11 @@ class Order extends Model
         });
     }
 
-    protected $appends = ['customer_full_name', 'seller_count',  'payment_method_name', 'qr_image_path'];
+    protected $appends = ['customer_full_name', 'payment_method_name', 'qr_image_path'];
 
     public function getCustomerFullNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;
-    }
-
-    public function getSellerCountAttribute()
-    {
-        return SellerOrderLog::where('order_id', $this->id)->distinct()->count('seller_id') ?? 0;
     }
 
     public function getQrImagePathAttribute()
@@ -163,7 +158,7 @@ class Order extends Model
 
     public function order_products()
     {
-        return $this->hasMany(OrderProduct::class, 'order_id', 'id');
+        return $this->hasMany(OrderProduct::class, 'order_id', 'id')->orderBy('seller_id');
     }
 
     public function seller_order_logs()

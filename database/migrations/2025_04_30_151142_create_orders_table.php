@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('coupon_code')->nullable();
             $table->double('coupon_discount_amount', 8, 2)->default(0);
             $table->double('shipping_fee', 8, 2)->default(0);
+            $table->integer('seller_count')->default(0);
             $table->double('service_charge', 8, 2)->default(0); // For online payment
             $table->double('total_vat', 8, 2)->default(0);
             $table->double('total_discount',8,2);

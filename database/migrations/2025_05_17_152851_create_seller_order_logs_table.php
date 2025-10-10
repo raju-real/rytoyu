@@ -20,9 +20,12 @@ return new class extends Migration
             $table->string('order_number');
             $table->string('invoice');
             $table->integer('total_product')->default(0);
+            $table->double('shipping_fee')->default(0.00);
             $table->double('order_amount')->default(0.00);
             $table->double('commission_rate',8,2)->default(0.00);
             $table->double('total_commission')->default(0.00);
+            $table->double('order_price')->default(0.00)->after('total_commission');
+            $table->double('seller_amount')->default(0.00)->after('order_price');
             $table->enum('pay_to',['seller','merchant'])->default("merchant");
             $table->enum('payment_status',['paid','unpaid'])->default("unpaid");
             $table->timestamps();

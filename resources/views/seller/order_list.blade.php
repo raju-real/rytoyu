@@ -44,7 +44,7 @@
                                                 <input type="text" name="order_date" class="form-control datepicker"
                                                        value="{{ request('order_date') ?? '' }}"
                                                        placeholder="Order Date"
-                                                       autocomplete="off" autofocus >
+                                                       autocomplete="off" autofocus>
                                                 <div class="input-group-append">
                                                     <span class="input-group-text">
                                                         <i class="fa fa-calendar"></i> </span>
@@ -92,7 +92,7 @@
                                     <td>{{ dateFormat($order->created_at, 'd M, y') }}</td>
                                     <td>
                                         <a target="_blank"
-                                           href="{{ route('admin.order-invoice', $order->order->unique_id) }}">{{ $order->invoice ?? '' }}</a>
+                                           href="{{ route('admin.seller-order-invoice', $order->order->unique_id) }}">{{ $order->invoice ?? '' }}</a>
                                     </td>
                                     <td>{{ numberFormat($order->order_amount, 2) }}</td>
                                     <td>(+) {{ $order->shipping_fee ?? '' }}</td>
@@ -101,20 +101,12 @@
                                     <td>{{ numberFormat($order->seller_amount, 2) }}</td>
                                     <td>
                                         <a type="button" class="btn btn-sm btn-info show-order-products"
-                                           data-bs-toggle="tooltip"
-                                           data-bs-placement="top"
-                                           title="Order Info"
+                                           {!! tooltip("Order Info") !!}
                                            data-id="{{ $order->order->unique_id }}">
                                             <i class="fa fa-eye fa-xl"></i>
                                         </a>
-                                        <a href="{{ route('admin.order-summary',$order->order->unique_id) }}"
-                                           class="btn btn-primary btn-sm" data-bs-toggle="tooltip"
-                                           data-bs-placement="top" title="Show Details">
-                                            <i class="fa fa-info-circle"></i>
-                                        </a>
-                                        <a href="{{ route('admin.change-order-status',$order->order->unique_id) }}"
-                                           class="btn btn-success btn-sm" data-bs-toggle="tooltip"
-                                           data-bs-placement="top" title="Change Status">
+                                        <a href="{{ route('admin.seller-change-order-status',$order->order->unique_id) }}"
+                                           class="btn btn-success btn-sm" {!! tooltip("Details and Change Status") !!}>
                                             <i class="fa fa-highlighter"></i>
                                         </a>
                                     </td>

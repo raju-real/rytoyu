@@ -42,6 +42,8 @@ class LogSellerOrderJob implements ShouldQueue
             $orderAmount = OrderProduct::where('order_id', $order->id)
                 ->where('seller_id', $sellerId)
                 ->sum('item_total_order_price') ?? 0;
+            // Calculate Seller wise shipping fee
+            $shippingFee = $order->shipping_fee / $order->seller_count;
             // Fetch seller's commission rate from Admin model
             $seller = Admin::find($sellerId); // Ensure your Admin model is namespaced correctly
             $commissionRate = $seller->commission_rate ?? 0;
@@ -54,9 +56,12 @@ class LogSellerOrderJob implements ShouldQueue
                 'order_number' => $order->order_number,
                 'invoice' => $order->invoice,
                 'total_product' => $totalProduct,
+                'shipping_fee' => $shippingFee,
                 'order_amount' => $orderAmount,
                 'commission_rate' => $commissionRate,
                 'total_commission' => $commission,
+                'order_price' => $orderAmount + $shippingFee,
+                'seller_amount' =>  $orderAmount - $commission,
                 'payment_status' => 'unpaid'
             ]);
         }

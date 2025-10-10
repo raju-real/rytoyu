@@ -87,9 +87,13 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
     // Start of only for seller routes
     // =========================================================================
     Route::middleware('seller')->group(function () {
-        Route::controller(SellerOrderManageController::class)->group(function() {
-           Route::get('seller-orders','orderList')->name('seller-orders');
-           Route::get('seller-order-info/{unique_id}','orderProducts')->name('seller-order-info');
+        Route::controller(SellerOrderManageController::class)->group(function () {
+            Route::get('seller-orders', 'orderList')->name('seller-orders');
+            Route::get('seller-order-info/{unique_id}', 'orderProducts')->name('seller-order-info');
+            Route::get('seller-order-invoice/{unique_id}', 'orderInvoice')->name('seller-order-invoice');
+            Route::get('seller-change-order-status/{unique_id}', 'changeOrderStatus')->name('seller-change-order-status');
+            Route::get('seller-update-order-status', 'updateOrderStatus')->name('seller-update-order-status');
+            Route::get('seller-update-order-status-all', 'updateOrderStatusAll')->name('seller-update-order-status-all');
         });
     });
     // =========================================================================
