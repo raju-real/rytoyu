@@ -27,6 +27,10 @@ use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\DeliveryChargeController;
 use App\Http\Controllers\Admin\SubSubcategoryController;
 use App\Http\Controllers\Admin\AdminOrderManageController;
+use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\TodoController;
+use App\Http\Controllers\Admin\ExpenseController;
+use App\Http\Controllers\Admin\CourierSettingController;
 use App\Models\Order;
 
 /*
@@ -48,6 +52,32 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
     Route::controller(DashboardController::class)->group(function () {
         Route::get('dashboard', 'dashboard')->name('dashboard');
     });
+
+    // ── Notifications ─────────────────────────────────────────
+    Route::controller(NotificationController::class)->prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/',           'index')->name('index');
+        Route::get('/fetch',      'fetch')->name('fetch');
+        Route::post('/mark-read', 'markRead')->name('mark-read');
+    });
+
+    // ── To-Do ─────────────────────────────────────────────────
+    Route::controller(TodoController::class)->prefix('todos')->name('todos.')->group(function () {
+        Route::get('/',                        'index')->name('index');
+        Route::post('/',                       'store')->name('store');
+        Route::put('/{todo}',                  'update')->name('update');
+        Route::delete('/{todo}',               'destroy')->name('destroy');
+        Route::post('/{todo}/toggle-status',   'toggleStatus')->name('toggle-status');
+    });
+
+    // ── Expenses ──────────────────────────────────────────────
+    Route::controller(ExpenseController::class)->prefix('expenses')->name('expenses.')->group(function () {
+        Route::get('/',                                    'index')->name('index');
+        Route::post('/',                                   'store')->name('store');
+        Route::delete('/{expense}',                        'destroy')->name('destroy');
+        Route::post('/categories',                         'storeCategory')->name('categories.store');
+        Route::delete('/categories/{expenseCategory}',     'destroyCategory')->name('categories.destroy');
+    });
+
     Route::controller(ProfileController::class)->group(function () {
         Route::get('profile', 'profile')->name('profile');
         Route::put('update-profile', 'updateProfile')->name('update-profile');
@@ -56,6 +86,9 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
         Route::view('mobile-verification', 'admin.profile.verify_mobile')->name('mobile-verification');
         Route::post('send-verification-code', 'sendVerificationCode')->name('send-verification-code');
         Route::post('verify-code', 'verifyCode')->name('verify-code');
+
+        // Dashboard Ajax Chart
+        Route::get('dashboard/monthly-sales', [DashboardController::class, 'getMonthlySalesData'])->name('chart.monthly-sales');
     });
 
     //Products
@@ -64,6 +97,7 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
         Route::get('get-product-variants/{id}', 'productVariants')->name('get-product-variants');
         Route::get('get-product-variants-data', 'getProductVariantsData')->name('get-product-variants-data');
         Route::put('update-product-status/{id}', 'updateProductStatus')->name('update-product-status');
+        Route::put('update-product-variant/{id}', 'updateProductVariant')->name('update-product-variant');
     });
     // =========================================================================
     // End of Group route for administrator, admin and seller
@@ -146,6 +180,16 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
                 Route::put('update-delivery-charge-status/{id}', 'updateDeliveryChargeStatus')->name('update-delivery-charge-status');
             });
         });
+
+        Route::controller(\App\Http\Controllers\Admin\PaymentSettingController::class)->group(function () {
+            Route::get('payment-settings', 'paymentSettings')->name('payment-settings');
+            Route::put('update-payment-settings', 'updatePaymentSettings')->name('update-payment-settings');
+        });
+
+        Route::controller(\App\Http\Controllers\Admin\CourierSettingController::class)->group(function () {
+            Route::get('courier-settings', 'courierSettings')->name('courier-settings');
+            Route::put('update-courier-settings', 'updateCourierSettings')->name('update-courier-settings');
+        });
         Route::resource('faqs', FaqController::class);
 
         // Announcements
@@ -160,6 +204,12 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
             Route::get('seller-products', 'productList')->name('seller-products');
             Route::get('seller-product/{slug}', 'sellerProduct')->name('seller-product');
             Route::get('update-product-request-status', 'updateRequestStatus')->name('update-product-request-status');
+        });
+
+        // Payout Methods
+        Route::controller(\App\Http\Controllers\Seller\PayoutController::class)->group(function () {
+            Route::get('my-payouts', 'index')->name('my-payouts');
+            Route::post('request-payout', 'requestPayout')->name('request-payout');
         });
         // Sliders
         Route::resource('sliders', SliderController::class);
@@ -182,6 +232,7 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
             Route::get('change-order-status/{unique_id}', 'changeOrderStatus')->name('change-order-status');
             Route::get('update-order-status', 'updateOrderStatus')->name('update-order-status');
             Route::get('update-order-status-all', 'updateOrderStatusAll')->name('update-order-status-all');
+            Route::put('update-courier/{unique_id}', 'updateCourier')->name('update-courier');
         });
         //Inventory
         Route::controller(InventoryController::class)->group(function () {
@@ -204,6 +255,30 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth:admin']], function () {
             Route::post('add-latest-offer-product', 'addLatestOfferProducts')->name('add-latest-offer-product');
             Route::post('update-latest-offer-product-sorting', 'updateLatestOfferProductSorting')->name('update-latest-offer-product-sorting');
             Route::delete('delete-latest-offer-product', 'deleteLatestOfferProduct')->name('delete-latest-offer-product');
+        });
+
+        // Admin Payout Management
+        Route::controller(\App\Http\Controllers\Admin\PayoutController::class)->group(function () {
+            Route::get('vendor-payouts', 'index')->name('vendor-payouts');
+            Route::post('process-payout/{id}', 'processPayout')->name('process-payout');
+        });
+
+        // Admin Refund Management
+        Route::controller(\App\Http\Controllers\Admin\RefundController::class)->group(function () {
+            Route::get('refund-requests', 'index')->name('refund-requests');
+            Route::post('process-refund/{id}', 'processRefund')->name('process-refund');
+        });
+
+        // Roles Management
+        Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class);
+
+        // Admin Management
+        Route::resource('admin-users', \App\Http\Controllers\Admin\AdminUsersController::class);
+
+        // Reports Management
+        Route::controller(\App\Http\Controllers\Admin\ReportController::class)->group(function () {
+            Route::get('reports/sales', 'salesReport')->name('reports.sales');
+            Route::get('reports/commission', 'commissionReport')->name('reports.commission');
         });
     });
     // =========================================================================

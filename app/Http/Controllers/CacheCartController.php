@@ -183,11 +183,11 @@ class CacheCartController extends Controller
 
         $total_item_price = $cart_items['item_total'];
         $shipping_fee = $this->getShippingFee();
-//        if (session()->has('selected_district')) {
-//            $district_slug = session('selected_district');
-//            $charge = DeliveryCharge::whereSlug($district_slug)->firstOrFail(['delivery_charge']);
-//            $shipping_fee = $charge->delivery_charge;
-//        }
+        //        if (session()->has('selected_district')) {
+        //            $district_slug = session('selected_district');
+        //            $charge = DeliveryCharge::whereSlug($district_slug)->firstOrFail(['delivery_charge']);
+        //            $shipping_fee = $charge->delivery_charge;
+        //        }
         $item_total_discount = 0;
         $applied_coupon = null;
         $coupon_discount = 0;
@@ -388,10 +388,10 @@ class CacheCartController extends Controller
 
     public function deleteWishListItem($item_id)
     {
-        $id = encrypt_decrypt($item_id,'decrypt');
-        if(Wishlist::where('id',$id)->exists()) {
-            Wishlist::where('id',$id)->delete();
-            return redirect()->route('wishlists')->with('message','Wishlist item removed successfully');
+        $id = encrypt_decrypt($item_id, 'decrypt');
+        if (Wishlist::where('id', $id)->exists()) {
+            Wishlist::where('id', $id)->delete();
+            return redirect()->route('wishlists')->with('message', 'Wishlist item removed successfully');
         }
     }
 
@@ -525,6 +525,23 @@ class CacheCartController extends Controller
         }
         // Process Order Logs and notifications
         LogSellerOrderJob::dispatch($order->id);
+
+        $payment_method = session('selected_payment_method') ?? 'cash-on-delivery';
+        $gateway = $request->input('gateway');
+
+        $redirect_url = null;
+        if ($payment_method === 'online-payment' && $gateway) {
+            if ($gateway === 'sslcommerz') {
+                $redirect_url = route('sslcommerz.pay-now', ['unique_id' => $order->unique_id]);
+            } elseif ($gateway === 'bkash') {
+                $redirect_url = route('bkash.pay-now', ['unique_id' => $order->unique_id]);
+            } elseif ($gateway === 'rocket') {
+                $redirect_url = route('rocket.pay-now', ['unique_id' => $order->unique_id]);
+            } elseif ($gateway === 'nagad') {
+                $redirect_url = route('nagad.pay-now', ['unique_id' => $order->unique_id]);
+            }
+        }
+
         // Forget old cart and price summery
         //Cache::forget($this->cartKey);
         //Cache::forget($this->priceSummeryKey);
@@ -534,7 +551,8 @@ class CacheCartController extends Controller
         //session()->forget('applied_coupon_discount');
         return response()->json([
             'status' => 'success',
-            'message' => 'Your order has been submitted successfully.'
+            'message' => 'Your order has been submitted successfully.',
+            'redirect_url' => $redirect_url
         ]);
     }
 }

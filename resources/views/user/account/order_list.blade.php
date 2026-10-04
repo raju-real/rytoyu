@@ -44,20 +44,22 @@
                                                 <tr>
                                                     <th colspan="3">
                                                         <div class="brn-span"><i class="fas fa-file-invoice"></i>#
-                                                            <a target="_blank" href="{{ route('user-order-invoice',$order->unique_id) }}">{{ $order->invoice ?? ($order->order_number ?? '') }}</a>
+                                                            <a target="_blank"
+                                                                href="{{ route('user-order-invoice', $order->unique_id) }}">{{ $order->invoice ?? ($order->order_number ?? '') }}</a>
                                                         </div>
                                                     </th>
                                                     <th><a href="{{ route('order-details', $order->unique_id) }}"
                                                             class="span-s">Details</a>
-{{--                                                        <a href="{{ route('sslcommerz.pay-now', ['unique_id' => $order->unique_id]) }}"--}}
-{{--                                                            class="span-s">Pay Now</a>--}}
+                                                        {{--                                                        <a href="{{ route('sslcommerz.pay-now', ['unique_id' => $order->unique_id]) }}" --}}
+                                                        {{--                                                            class="span-s">Pay Now</a> --}}
                                                     </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
                                                     <td class="description">
-                                                        <span class="font-weight-500">Order Date: {{ dateFormat($order->created_at, 'd, M y') }}</span>
+                                                        <span class="font-weight-500">Order Date:
+                                                            {{ dateFormat($order->created_at, 'd, M y') }}</span>
                                                     </td>
                                                     <td class="description">
                                                         <span><strong>TK:
@@ -66,6 +68,21 @@
                                                     <td class="description">
                                                         <span><strong>Items:
                                                             </strong></span>{{ $order->order_products->count() ?? 0 }}
+                                                    </td>
+                                                    <td class="description">
+                                                        <span><strong>Status: </strong></span>
+                                                        <span
+                                                            class="badge badge-primary">{{ ucfirst($order->order_status) }}</span>
+                                                    </td>
+                                                    <td class="description">
+                                                        <span><strong>Payment: </strong></span>
+                                                        @if ($order->payment_status == 'paid')
+                                                            <span class="badge badge-success"
+                                                                style="background:#28a745; color:white; padding: 4px 8px; border-radius: 4px;">Paid</span>
+                                                        @else
+                                                            <span class="badge badge-warning"
+                                                                style="background:#ffc107; color:black; padding: 4px 8px; border-radius: 4px;">{{ ucfirst($order->payment_status ?? 'Unpaid') }}</span>
+                                                        @endif
                                                     </td>
                                                 </tr>
 

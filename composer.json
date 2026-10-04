@@ -23,6 +23,7 @@
         "laravel/tinker": "^2.7",
         "meilisearch/meilisearch-php": "^1.14",
         "niklasravnsborg/laravel-pdf": "^4.1",
+        "predis/predis": "^3.4",
         "simplesoftwareio/simple-qrcode": "^4.2"
     },
     "require-dev": {

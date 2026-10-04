@@ -17,7 +17,7 @@ class SellerOrderManageController extends Controller
     public function orderList()
     {
         $data = SellerOrderLog::query();
-        $data->where('seller_id',Auth::id());
+        $data->where('seller_id', Auth::id());
         if ($createdAt = request()->get('order_date')) {
             $data->whereDate('created_at', $createdAt);
         }
@@ -96,6 +96,20 @@ class SellerOrderManageController extends Controller
         $orderProduct->order_status = $validated['order_status'];
         $orderProduct->last_updated_by = Auth::id();
         $orderProduct->save();
+
+        // Increment seller balance if delivered
+        if ($validated['order_status'] === 'delivered' && $orderProduct->seller_id) {
+            $sellerAdmin = clone Auth::guard('admin')->user();
+            if ($sellerAdmin->id === $orderProduct->seller_id) {
+                // Calculate total to add (price * qty) - maybe deduct commission later? (Simplified for now)
+                $amount_to_add = $orderProduct->total_price;
+
+                // If there's commission logic, it should go here. Assuming total_price is what the seller gets for now.
+                $sellerAdmin->balance += $amount_to_add;
+                $sellerAdmin->save();
+            }
+        }
+
         return back()->with(successMessage('success', 'Order product status updated to ' . ucfirst($validated['order_status']) . '.'));
     }
 
@@ -109,10 +123,23 @@ class SellerOrderManageController extends Controller
             return back()->with(dangerMessage('danger', 'Invalid order status transition.'));
         }
         $order = Order::whereUniqueId(request()->get('unique_id'))->firstOrFail();
-        OrderProduct::whereIn('order_id', [$order->id])->where('seller_id', Auth::id())->update([
-            'order_status' => request()->get('order_status'),
-            'last_updated_by' => Auth::id()
-        ]);
+
+        $orderProducts = OrderProduct::whereIn('order_id', [$order->id])->where('seller_id', Auth::id())->get();
+
+        foreach ($orderProducts as $op) {
+            if ($op->order_status !== request()->get('order_status')) {
+                $op->order_status = request()->get('order_status');
+                $op->last_updated_by = Auth::id();
+                $op->save();
+
+                if (request()->get('order_status') === 'delivered') {
+                    $sellerAdmin = Auth::guard('admin')->user();
+                    $sellerAdmin->balance += $op->total_price;
+                    $sellerAdmin->save();
+                }
+            }
+        }
+
         return back()->with(successMessage('success', 'All Order product status updated to ' . ucfirst(request()->get('order_status')) . '.'));
     }
 }

@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="base-url" base_url="{!! url('/') !!}"/>
+    <meta name="base-url" base_url="{!! url('/') !!}" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title',siteSettings()['company_name'])</title>
+    <title>@yield('title', siteSettings()['company_name'])</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="@yield('meta_description', siteSettings()['company_name'] . ' - Your Shopping Destination')">
+    <meta property="og:title" content="@yield('title', siteSettings()['company_name'])">
+    <meta property="og:description" content="@yield('meta_description', siteSettings()['company_name'] . ' - Your Shopping Destination')">
+    <meta property="og:image" content="@yield('meta_image', asset(siteSettings()['logo'] ?? ecommerceIcon()))">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
     <!-- Favicon -->
     <link rel="apple-touch-icon-precomposed" sizes="144x144"
-          href="{{ asset(siteSettings()['favicon'] ?? ecommerceIcon()) }}">
+        href="{{ asset(siteSettings()['favicon'] ?? ecommerceIcon()) }}">
     <link rel="shortcut icon" href="{{ asset(siteSettings()['favicon'] ?? ecommerceIcon()) }}">
     <!-- CSS Global -->
     <link href="{{ asset('assets/user/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -23,7 +31,7 @@
     <link href="{{ asset('assets/user/css/theme.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/user/css/responsive.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/user/css/theme-green-1.css') }}" rel="stylesheet" id="theme-config-link">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 
     <link href="{{ asset('assets/user/css/chat.css') }}" rel="stylesheet">
     <!-- Head Libs -->
@@ -38,55 +46,141 @@
     @stack('css')
 
     <style>
-        /* Custom CSS for the Chatbot Interface */
-        #chatbot-icon {
+        /* ── Floating Action Buttons ─────────────────────────── */
+        .fab-stack {
             position: fixed;
-            bottom: 20px;
+            bottom: 24px;
             right: 20px;
             z-index: 1000;
-            cursor: pointer;
-            transition: transform 0.3s ease-in-out;
-            width: 60px;
-            height: 60px;
-            background-color: #4a5568;
-            color: white;
+            display: flex;
+            flex-direction: column-reverse;
+            /* First button at bottom */
+            align-items: center;
+            gap: 10px;
+        }
+
+        .fab-btn {
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            cursor: pointer;
+            color: white;
+            text-decoration: none;
+            font-size: 1.3rem;
+            animation: fabIn 0.4s ease backwards;
         }
 
-        #chatbot-icon:hover {
+        .fab-btn:nth-child(2) {
+            animation-delay: 0.05s;
+        }
+
+        .fab-btn:nth-child(3) {
+            animation-delay: 0.1s;
+        }
+
+        .fab-btn:nth-child(4) {
+            animation-delay: 0.15s;
+        }
+
+        @keyframes fabIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px) scale(0.85);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .fab-btn:hover {
             transform: scale(1.1);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
         }
 
-        #chatbot-icon i {
-            font-size: 2rem;
+        .fab-chatbot {
+            background: linear-gradient(135deg, #4361ee, #3a86ff);
         }
 
+        .fab-whatsapp {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+        }
+
+        .fab-messenger {
+            background: linear-gradient(135deg, #0084FF, #0057b8);
+        }
+
+        .fab-totop {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            display: none;
+        }
+
+        .fab-totop.visible {
+            display: flex;
+        }
+
+        /* Tooltip on hover */
+        .fab-btn::before {
+            content: attr(data-label);
+            position: absolute;
+            right: 62px;
+            background: rgba(0, 0, 0, 0.75);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .fab-btn:hover::before {
+            opacity: 1;
+        }
+
+        /* Chat container */
         #chat-container {
             position: fixed;
-            bottom: 90px;
+            bottom: 86px;
             right: 20px;
             z-index: 999;
-            width: 450px; /* Increased width */
+            width: 400px;
             height: 500px;
-            display: none; /* Initially hidden */
+            display: none;
             flex-direction: column;
-            background-color: white;
-            border-radius: 1rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 12px 50px rgba(0, 0, 0, 0.18);
             overflow: hidden;
             font-family: 'Inter', sans-serif;
-            animation: fadeIn 0.3s ease-in-out;
+            animation: chatIn 0.3s ease;
+        }
+
+        @keyframes chatIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(0.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         @media (max-width: 500px) {
             #chat-container {
-                width: 90%;
-                left: 5%;
-                right: 5%;
+                width: calc(100vw - 24px);
+                left: 12px;
+                right: 12px;
             }
         }
 
@@ -111,7 +205,8 @@
         }
 
         .chat-messages {
-            height: calc(100% - 120px); /* Fixed height for scrolling */
+            height: calc(100% - 120px);
+            /* Fixed height for scrolling */
             padding: 1rem;
             overflow-y: auto;
             display: flex;
@@ -178,13 +273,16 @@
         }
 
         .product-info h6 {
-            font-size: 1.1rem; /* Increased font size for product name */
-            font-weight: 600; /* Bolder for emphasis */
+            font-size: 1.1rem;
+            /* Increased font size for product name */
+            font-weight: 600;
+            /* Bolder for emphasis */
             margin: 0;
         }
 
         .product-info p {
-            font-size: 1rem; /* Increased font size for price */
+            font-size: 1rem;
+            /* Increased font size for price */
             color: #4a5568;
             margin: 0;
         }
@@ -246,6 +344,7 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -266,9 +365,13 @@
         }
 
         @keyframes blink {
-            0%, 80%, 100% {
+
+            0%,
+            80%,
+            100% {
                 opacity: 0;
             }
+
             40% {
                 opacity: 1;
             }
@@ -293,354 +396,403 @@
         }
     </style>
 </head>
+
 <body id="home" class="wide">
-<!-- PRELOADER -->
-<div id="preloader">
-    <div id="preloader-status">
-        <div class="spinner">
-            <div class="rect1"></div>
-            <div class="rect2"></div>
-            <div class="rect3"></div>
-            <div class="rect4"></div>
-            <div class="rect5"></div>
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <div id="preloader-status">
+            <div class="spinner">
+                <div class="rect1"></div>
+                <div class="rect2"></div>
+                <div class="rect3"></div>
+                <div class="rect4"></div>
+                <div class="rect5"></div>
+            </div>
+            <div id="preloader-title">Loading</div>
         </div>
-        <div id="preloader-title">Loading</div>
     </div>
-</div>
-<!-- /PRELOADER -->
-<!-- WRAPPER -->
-<div class="wrapper">
-    <!-- Popup: Shopping cart items -->
-    <div class="modal fade popup-cart" id="popup-cart" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="container">
-                <div class="cart-items">
-                    <div class="cart-items-inner" id="mini-cart-item">
+    <!-- /PRELOADER -->
+    <!-- WRAPPER -->
+    <div class="wrapper">
+        <!-- Popup: Shopping cart items -->
+        <div class="modal fade popup-cart" id="popup-cart" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="container">
+                    <div class="cart-items">
+                        <div class="cart-items-inner" id="mini-cart-item">
 
 
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- /Popup: Shopping cart items -->
-    <!-- Header top bar -->
-    <div class="top-bar">
-        <div class="container">
-            <div class="top-bar-inner">
-                <div class="top-bar-left">
-                    <ul class="list-inline">
-                        <li class="hidden-xs"><a href="{{ route('about') }}">About</a></li>
-                        <li class="hidden-xs"><a href="{{ route('contact') }}">Contact</a></li>
-                        <li class="hidden-xs"><a href="{{ route('faq') }}">FAQ</a></li>
-                    </ul>
-                </div>
-                <!--  <div class="top-bar-left">
+        <!-- /Popup: Shopping cart items -->
+        <!-- Header top bar -->
+        <div class="top-bar">
+            <div class="container">
+                <div class="top-bar-inner">
+                    <div class="top-bar-left">
+                        <ul class="list-inline">
+                            <li class="hidden-xs"><a href="{{ route('about') }}">About</a></li>
+                            <li class="hidden-xs"><a href="{{ route('contact') }}">Contact</a></li>
+                            <li class="hidden-xs"><a href="{{ route('faq') }}">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <!--  <div class="top-bar-left">
                    <label class="free-o"><span>Free Shipping With Orders</span> <strong>Over  Tk.2000</strong></label>
                    </div> -->
-                <div class="top-bar-right">
-                    <ul class="list-inline">
-                        @auth
-                            <li class="icon-user">
-                                <a href="{{ route('user-profile') }}">
-                                    <img src="{{ asset('assets/user/img/user.svg') }}" alt=""/>
-                                    <span>My Account</span>
-                                </a>
-                            </li>
-                            <li class="icon-user">
-                                <a href="{{ route('user-logout') }}">
-                                    <img src="{{ asset('assets/user/img/logout.svg') }}" alt=""/>
-                                    <span>Logout</span>
-                                </a>
-                            </li>
-                        @else
-                            <li class="icon-user">
-                                <a href="{{ route('login') }}">
-                                    <img src="{{ asset('assets/user/img/user.svg') }}" alt=""/>
-                                    <span>Login</span>
-                                </a>
-                            </li>
-                            <li class="icon-form">
-                                <a href="{{ route('register') }}">
-                                    <img src="{{ asset('assets/user/img/mem.svg') }}" alt=""/>
-                                    <span>Not a Member? <span class="colored">Sign Up</span></span>
-                                </a>
-                            </li>
-                        @endauth
-                    </ul>
+                    <div class="top-bar-right">
+                        <ul class="list-inline">
+                            @auth
+                                <li class="icon-user">
+                                    <a href="{{ route('user-profile') }}">
+                                        <img src="{{ asset('assets/user/img/user.svg') }}" alt="" />
+                                        <span>My Account</span>
+                                    </a>
+                                </li>
+                                <li class="icon-user">
+                                    <a href="{{ route('user-logout') }}">
+                                        <img src="{{ asset('assets/user/img/logout.svg') }}" alt="" />
+                                        <span>Logout</span>
+                                    </a>
+                                </li>
+                            @else
+                                <li class="icon-user">
+                                    <a href="{{ route('login') }}">
+                                        <img src="{{ asset('assets/user/img/user.svg') }}" alt="" />
+                                        <span>Login</span>
+                                    </a>
+                                </li>
+                                <li class="icon-form">
+                                    <a href="{{ route('register') }}">
+                                        <img src="{{ asset('assets/user/img/mem.svg') }}" alt="" />
+                                        <span>Not a Member? <span class="colored">Sign Up</span></span>
+                                    </a>
+                                </li>
+                            @endauth
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- /Header top bar -->
-    <!-- HEADER -->
-    <header class="header fixed">
-        <div class="header-wrapper">
-            <div class="container">
-                <div class="navigation-wrapper">
-                    <!-- Navigation -->
-                    <nav class="navigation closed clearfix">
-                        <a href="#" class="menu-toggle-close btn"><i class="fa fa-times"></i></a>
-                        <ul class="nav sf-menu">
-                            @foreach(megaMenus() as $menu)
-                                <li class="megamenu">
-                                    <a href="{{ route('product-lists',['category' => $menu->slug]) }}">{{ $menu->name ?? '' }}</a>
-                                    @if(count($menu->subcategories))
-                                        <ul>
-                                            <li class="row">
-                                                @foreach($menu->subcategories as $subcategory)
-                                                    <div class="col-md-4">
-                                                        <h4 class="block-title">
-                                                            <span>
-                                                                <a href="{{ route('product-lists',['category' => $menu->slug, 'subcategory' => $subcategory->slug]) }}">{{ $subcategory->name ?? '' }}</span></a>
-
-                                                        </h4>
-                                                        @if(count($subcategory->sub_subcategories))
-                                                            <ul>
-                                                                @foreach($subcategory->sub_subcategories as $sub_subcategory)
-                                                                    <li>
-                                                                        <a href="{{ route('product-lists',['category' => $menu->slug, 'subcategory' => $subcategory->slug,'sub_subcategory' => $sub_subcategory->slug]) }}">{{ $sub_subcategory->name ?? '' }}</a>
-                                                                    </li>
-                                                                @endforeach
-                                                            </ul>
-                                                        @endif
-                                                    </div>
-                                                @endforeach
-                                            </li>
-                                        </ul>
-                                    @endif
-                                </li>
-                            @endforeach
-                            <li class="megamenu">
-                                <a href="#">BRANDS</a>
-                                <ul>
-                                    <li class="row">
-                                        <div class="col-md-4">
-                                            <h4 class="block-title"><span>Explore</span></h4>
+        <!-- /Header top bar -->
+        <!-- HEADER -->
+        <header class="header fixed">
+            <div class="header-wrapper">
+                <div class="container">
+                    <div class="navigation-wrapper">
+                        <!-- Navigation -->
+                        <nav class="navigation closed clearfix">
+                            <a href="#" class="menu-toggle-close btn"><i class="fa fa-times"></i></a>
+                            <ul class="nav sf-menu">
+                                @foreach (megaMenus() as $menu)
+                                    <li class="megamenu">
+                                        <a
+                                            href="{{ route('product-lists', ['category' => $menu->slug]) }}">{{ $menu->name ?? '' }}</a>
+                                        @if (count($menu->subcategories))
                                             <ul>
-                                                @foreach(getBrands() as $brand)
-                                                    <li>
-                                                        <a href="{{ route('product-lists',['brand' => $brand->slug]) }}">{{ $brand->slug }}</a>
-                                                    </li>
-                                                @endforeach
+                                                <li class="row">
+                                                    @foreach ($menu->subcategories as $subcategory)
+                                                        <div class="col-md-4">
+                                                            <h4 class="block-title">
+                                                                <span>
+                                                                    <a
+                                                                        href="{{ route('product-lists', ['category' => $menu->slug, 'subcategory' => $subcategory->slug]) }}">{{ $subcategory->name ?? '' }}</span></a>
+
+                                                            </h4>
+                                                            @if (count($subcategory->sub_subcategories))
+                                                                <ul>
+                                                                    @foreach ($subcategory->sub_subcategories as $sub_subcategory)
+                                                                        <li>
+                                                                            <a
+                                                                                href="{{ route('product-lists', ['category' => $menu->slug, 'subcategory' => $subcategory->slug, 'sub_subcategory' => $sub_subcategory->slug]) }}">{{ $sub_subcategory->name ?? '' }}</a>
+                                                                        </li>
+                                                                    @endforeach
+                                                                </ul>
+                                                            @endif
+                                                        </div>
+                                                    @endforeach
+                                                </li>
                                             </ul>
-                                        </div>
+                                        @endif
                                     </li>
-                                </ul>
-                            </li>
-                            <li><a href="{{ route('product-lists') }}" class="orange-text">SALE</a></li>
-                        </ul>
-                    </nav>
-                    <!-- /Navigation -->
-                </div>
-                <!-- Logo -->
-                <div class="logo">
-                    <a href="{{ route('home') }}">
-                        <img src="{{ asset(siteSettings()['logo'] ?? devLogo()) }}"
-                             alt="logo"/></a>
-                </div>
-                <!-- /Logo -->
-                <!-- Header search -->
-                <div class="header-search">
-                    <input name="search" class="form-control searchInput" type="text"
-                           placeholder="Search for products"
-                           value="{{ implode(' ', session('search_keywords_' . session('user_search_key'), [])) }}"/>
-                    <button class="searchBtn"><i class="fa fa-search"></i></button>
-                </div>
-                <!-- /Header search -->
-                <!-- Header shopping cart -->
-                <div class="header-cart">
-                    <div class="cart-wrapper">
-                        @if(\Illuminate\Support\Facades\Auth::check())
-                            <a href="{{ route('wishlists') }}" class="btn btn-theme-transparent hidden-xs hidden-sm"><i
-                                    class="fa-regular fa-heart"></i></a>
-                        @endif
-                        <a href="#" class="btn btn-theme-transparent cart-value" data-toggle="modal"
-                           data-target="#popup-cart"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs"
-                                                                                               id="cart-item-total">  </span>
-                            <i class="fa fa-angle-down cart-drop"></i></a>
-                        <!-- Mobile menu toggle button -->
-                        <a href="#" class="menu-toggle btn btn-theme-transparent"><i class="fa fa-bars"></i></a>
-                        <!-- /Mobile menu toggle button -->
+                                @endforeach
+                                <li class="megamenu">
+                                    <a href="#">BRANDS</a>
+                                    <ul>
+                                        <li class="row">
+                                            <div class="col-md-4">
+                                                <h4 class="block-title"><span>Explore</span></h4>
+                                                <ul>
+                                                    @foreach (getBrands() as $brand)
+                                                        <li>
+                                                            <a
+                                                                href="{{ route('product-lists', ['brand' => $brand->slug]) }}">{{ $brand->slug }}</a>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li><a href="{{ route('product-lists') }}" class="orange-text">SALE</a></li>
+                            </ul>
+                        </nav>
+                        <!-- /Navigation -->
                     </div>
-                </div>
-                <!-- Header shopping cart -->
-                <div class="text-slider">
-                    <span>MAKING </span>
-                    <div id="carousel-example-generic " class="carousel carousel-fade slide slider-slo"
-                         data-ride="carousel">
-                        <!-- Wrapper for slides -->
-                        <div class="carousel-inner" role="listbox">
-                            <div class="item active">
-                                <div class="carousel-caption">
-                                    BANGLADESH
+                    <!-- Logo -->
+                    <div class="logo">
+                        <a href="{{ route('home') }}">
+                            <img src="{{ asset(siteSettings()['logo'] ?? devLogo()) }}" alt="logo" /></a>
+                    </div>
+                    <!-- /Logo -->
+                    <!-- Header search -->
+                    <div class="header-search">
+                        <input name="search" class="form-control searchInput" type="text"
+                            placeholder="Search for products"
+                            value="{{ implode(' ', session('search_keywords_' . session('user_search_key'), [])) }}" />
+                        <button class="searchBtn"><i class="fa fa-search"></i></button>
+                    </div>
+                    <!-- /Header search -->
+                    <!-- Header shopping cart -->
+                    <div class="header-cart">
+                        <div class="cart-wrapper">
+                            @if (\Illuminate\Support\Facades\Auth::check())
+                                <a href="{{ route('wishlists') }}"
+                                    class="btn btn-theme-transparent hidden-xs hidden-sm"><i
+                                        class="fa-regular fa-heart"></i></a>
+                            @endif
+                            <a href="#" class="btn btn-theme-transparent cart-value" data-toggle="modal"
+                                data-target="#popup-cart"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs"
+                                    id="cart-item-total"> </span>
+                                <i class="fa fa-angle-down cart-drop"></i></a>
+                            <!-- Mobile menu toggle button -->
+                            <a href="#" class="menu-toggle btn btn-theme-transparent"><i
+                                    class="fa fa-bars"></i></a>
+                            <!-- /Mobile menu toggle button -->
+                        </div>
+                    </div>
+                    <!-- Header shopping cart -->
+                    <div class="text-slider">
+                        <span>MAKING </span>
+                        <div id="carousel-example-generic " class="carousel carousel-fade slide slider-slo"
+                            data-ride="carousel">
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner" role="listbox">
+                                <div class="item active">
+                                    <div class="carousel-caption">
+                                        BANGLADESH
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="item">
-                                <div class="carousel-caption">
-                                    YOU
+                                <div class="item">
+                                    <div class="carousel-caption">
+                                        YOU
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <span>LOOK <i>GOOD</i><strong class="orange-text font-s">.</strong></span>
                     </div>
-                    <span>LOOK <i>GOOD</i><strong class="orange-text font-s">.</strong></span>
                 </div>
             </div>
+        </header>
+        <!-- /HEADER -->
+        <!-- CONTENT AREA -->
+        <div class="content-area">
+            @yield('content')
         </div>
-    </header>
-    <!-- /HEADER -->
-    <!-- CONTENT AREA -->
-    <div class="content-area">
-        @yield('content')
-    </div>
-    <!-- /CONTENT AREA -->
-    @if(siteSettings()['whatsapp_number'])
-        <div class="chat-wa">
-            <a href="https://api.whatsapp.com/send?phone=+88{{ siteSettings()['whatsapp_number'] }}&text=Hello!&type=phone_number&app_absent=0"
-               target="_blank"
-               id="footerImage">
-                <img src="{{ asset('assets/user/img/chat.svg') }}" alt="Chat on WhatsApp">
-            </a>
+        <!-- /CONTENT AREA -->
+        <!-- Floating Action Buttons -->
+        {{-- ── Floating Action Button Stack ── --}}
+        <div class="fab-stack" id="fab-stack">
+            {{-- 1) Chatbot (always bottom) --}}
+            @if (!isset(siteSettings()['show_chatbot']) || siteSettings()['show_chatbot'])
+                <div id="chatbot-icon" class="fab-btn fab-chatbot" data-label="AI Assistant">
+                    <i class="fa-solid fa-comments"></i>
+                </div>
+            @endif
+
+            {{-- 2) WhatsApp --}}
+            @if (
+                !empty(siteSettings()['whatsapp_number']) &&
+                    (!isset(siteSettings()['show_whatsapp']) || siteSettings()['show_whatsapp']))
+                <a href="https://api.whatsapp.com/send?phone=+88{{ siteSettings()['whatsapp_number'] }}&text=Hello!&type=phone_number&app_absent=0"
+                    target="_blank" class="fab-btn fab-whatsapp" data-label="WhatsApp">
+                    <img src="{{ asset('assets/user/img/chat.svg') }}" alt="WhatsApp"
+                        style="width:26px;height:26px;filter:brightness(0)invert(1);">
+                </a>
+            @endif
+
+            {{-- 3) Messenger --}}
+            @if (
+                !empty(siteSettings()['facebook_url']) &&
+                    (!isset(siteSettings()['show_messenger']) || siteSettings()['show_messenger']))
+                <a href="{{ siteSettings()['facebook_url'] }}" target="_blank" class="fab-btn fab-messenger"
+                    data-label="Messenger">
+                    <i class="fa-brands fa-facebook-messenger"></i>
+                </a>
+            @endif
+
+            {{-- 4) Back to Top (hidden until scroll) --}}
+            <button class="fab-btn fab-totop" id="fab-to-top" data-label="Back to Top"
+                onclick="window.scrollTo({top:0,behavior:'smooth'})">
+                <i class="fa-solid fa-arrow-up"></i>
+            </button>
         </div>
-    @endif
-    <!-- FOOTER -->
-    <footer class="footer">
-        <div class="footer-widgets">
-            <div class="container">
-                <div class="col-md-12 text-center border-b">
-                    <div class="form-list-search">
-                        <input type="text" name="search" placeholder="Search for products"
-                               class="form-control searchInput"
-                               value="{{ implode(' ', session('search_keywords_' . session('user_search_key'), [])) }}">
-                        <button class="btn orange-bg searchBtn">SERACH<i class="fa-solid fa-magnifying-glass"></i>
-                        </button>
+        <!-- FOOTER -->
+        <footer class="footer">
+            <div class="footer-widgets">
+                <div class="container">
+                    <div class="col-md-12 text-center border-b">
+                        <div class="form-list-search">
+                            <input type="text" name="search" placeholder="Search for products"
+                                class="form-control searchInput"
+                                value="{{ implode(' ', session('search_keywords_' . session('user_search_key'), [])) }}">
+                            <button class="btn orange-bg searchBtn">SERACH<i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
 
 
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-12">
-                    <ul class="list-inline list-group footer-nav">
-                        @foreach(activeCategories() as $category)
-                            <li>
-                                <a href="{{ route('product-lists', ['category' => $category->slug]) }}">{{ $category->name ?? '' }}</a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="widget">
-                            <h4 class="widget-title">FOLLOW US</h4>
-                            <ul class="social-icons">
-                                <li><a href="{{ siteSettings()['facebook_url'] ?? '#' }}" class="facebook"><i
-                                            class="fa-brands fa-facebook-f"></i></a></li>
-                                <li><a href="{{ siteSettings()['twitter_url'] ?? '#' }}" class="twitter"><i
-                                            class="fa-brands fa-instagram"></i></a></li>
-                                <li><a href="{{ siteSettings()['instagram_url'] ?? '#' }}" class="instagram"><i
-                                            class="fa-brands fa-tiktok"></i></a></li>
-                                <li><a href="#" class="pinterest"><i class="fa-brands fa-linkedin-in"></i></a></li>
+                    <div class="col-md-12">
+                        <ul class="list-inline list-group footer-nav">
+                            @foreach (activeCategories() as $category)
+                                <li>
+                                    <a
+                                        href="{{ route('product-lists', ['category' => $category->slug]) }}">{{ $category->name ?? '' }}</a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="widget">
+                                <h4 class="widget-title">FOLLOW US</h4>
+                                <ul class="social-icons">
+                                    <li><a href="{{ siteSettings()['facebook_url'] ?? '#' }}" class="facebook"><i
+                                                class="fa-brands fa-facebook-f"></i></a></li>
+                                    <li><a href="{{ siteSettings()['twitter_url'] ?? '#' }}" class="twitter"><i
+                                                class="fa-brands fa-instagram"></i></a></li>
+                                    <li><a href="{{ siteSettings()['instagram_url'] ?? '#' }}" class="instagram"><i
+                                                class="fa-brands fa-tiktok"></i></a></li>
+                                    <li><a href="#" class="pinterest"><i
+                                                class="fa-brands fa-linkedin-in"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <a href="{{ route('home') }}"><img class="logo-f"
+                                    src="{{ asset(siteSettings()['logo']) }}" alt="logo"></a>
+                            <p class="p-f">
+                                Corporate Office<br>
+                                {{ siteSettings()['address'] ?? '' }}
+                            </p>
+                            <h4 class="h4-f">Need help? Call Us:<span
+                                    class="orange-text">{{ siteSettings()['company_mobile'] ?? '' }}</span></h4>
+                            <p class="mail-f">{{ siteSettings()['company_email'] ?? '' }}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <ul class="ul-link-f">
+                                <li><a href="{{ route('privacy-policy') }}">Privacy Policy</a></li>
+                                <li><a href="{{ route('terms-and-conditions') }}">Terms & Conditions</a></li>
                             </ul>
                         </div>
                     </div>
-                    <div class="col-md-6 text-center">
-                        <a href="{{ route('home') }}"><img class="logo-f" src="{{ asset(siteSettings()['logo']) }}"
-                                                           alt="logo"></a>
-                        <p class="p-f">
-                            Corporate Office<br>
-                            {{ siteSettings()['address'] ?? '' }}
-                        </p>
-                        <h4 class="h4-f">Need help? Call Us:<span
-                                class="orange-text">{{ siteSettings()['company_mobile'] ?? '' }}</span></h4>
-                        <p class="mail-f">{{ siteSettings()['company_email'] ?? '' }}</p>
-                    </div>
-                    <div class="col-md-3">
-                        <ul class="ul-link-f">
-                            <li><a href="{{ route('privacy-policy') }}">Privacy Policy</a></li>
-                            <li><a href="{{ route('terms-and-conditions') }}">Terms & Conditions</a></li>
-                        </ul>
-                    </div>
                 </div>
             </div>
-        </div>
-        <div class="footer-meta">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-12 text-center">
-                        <div class="copyright">
-                            © Copyright {{ date('Y') }} {{ siteSettings()['company_name'] }}. All Rights Reserved.
+            <div class="footer-meta">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12 text-center">
+                            <div class="copyright">
+                                © Copyright {{ date('Y') }} {{ siteSettings()['company_name'] }}. All Rights
+                                Reserved.
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </footer>
-    <!-- /FOOTER -->
-    <div id="to-top" class="to-top"><i class="fa fa-angle-up"></i></div>
+        </footer>
+        <!-- /FOOTER -->
+        <div id="to-top" class="to-top"><i class="fa fa-angle-up"></i></div>
 
 
-</div>
-<!-- /WRAPPER -->
-<!-- product -details modal -->
-<div class="modal" id="productView" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog modal-lg custom-modal" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body p-thumbnails" id="productInfo">
+    </div>
+    <!-- /WRAPPER -->
+    <!-- product -details modal -->
+    <div class="modal" id="productView" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg custom-modal" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body p-thumbnails" id="productInfo">
 
+                </div>
             </div>
         </div>
     </div>
-</div>
-<!--end product details modal-->
-
-<!-- The main chat icon -->
-{{--<div id="chatbot-icon">--}}
-{{--    <i class="fa-solid fa-comments"></i>--}}
-{{--</div>--}}
-
-{{--<!-- The chat container, initially hidden -->--}}
-{{--<div id="chat-container">--}}
-{{--    <div class="chat-header">--}}
-{{--        <span>E-commerce Chatbot</span>--}}
-{{--        <button id="close-chat-button">&times;</button>--}}
-{{--    </div>--}}
-{{--    <div id="chat-messages" class="chat-messages">--}}
-{{--        <div class="message bot-message">Hello! How can I help you find a product today?</div>--}}
-{{--    </div>--}}
-{{--    <div class="input-container">--}}
-{{--        <input type="text" id="user-input" placeholder="Ask about products...">--}}
-{{--        <button id="send-button">Send</button>--}}
-{{--    </div>--}}
-{{--</div>--}}
-
-<!-- JS Global -->
-<script src="{{ asset('assets/user/plugins/jquery/jquery-1.11.1.min.js') }}"></script>
-<script src="{{ asset('assets/user/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
-<script src="{{ asset('assets/user/plugins/bootstrap-select/js/bootstrap-select.min.js') }}"></script>
-<script src="{{ asset('assets/user/plugins/superfish/js/superfish.min.js') }}"></script>
-<script src="{{ asset('assets/user/plugins/prettyphoto/js/jquery.prettyPhoto.js') }}"></script>
-<script src="{{ asset('assets/user/plugins/owl-carousel2/owl.carousel.min.js') }}"></script>
-<script src="{{ asset('assets/user/plugins/jquery.sticky.min.js') }}"></script>
-<script src="{{ asset('assets/user/plugins/jquery.easing.min.js') }}"></script>
-<script src="{{ asset('assets/user/plugins/jquery.smoothscroll.min.js') }}"></script>
-<script src="{{ asset('assets/user/plugins/smooth-scrollbar.min.js') }}"></script>
-<!-- JS Page Level -->
-<script src="{{ asset('assets/user/js/theme.js') }}"></script>
-<!--[if (gte IE 9)|!(IE)]><!-->
-<script src="{{ asset('assets/user/plugins/jquery.cookie.js') }}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<!--<![endif]-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
-<script src="{{ asset('assets/admin/js/helpers.js') }}"></script>
-<script src="{{ asset('assets/user/js/common.js') }}"></script>
-{{--<script src="{{ asset('assets/user/js/product-details.js') }}"></script>--}}
-<script src="{{ asset('assets/user/js/checkout_manage.js') }}"></script>
-<script src="{{ asset('assets/user/js/gemini_chat.js') }}"></script>
+    <!--end product details modal-->
 
 
-@stack('js')
+
+    <!-- The chat container, initially hidden -->
+    <div id="chat-container">
+        <div class="chat-header">
+            <span>AI Assistant</span>
+            <button id="close-chat-button">&times;</button>
+        </div>
+        <div id="chat-messages" class="chat-messages">
+            <div class="message bot-message">Hello! How can I help you regarding your order or our products?</div>
+        </div>
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="Ask about products...">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <!-- JS Global -->
+    <script src="{{ asset('assets/user/plugins/jquery/jquery-1.11.1.min.js') }}"></script>
+    <script src="{{ asset('assets/user/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('assets/user/plugins/bootstrap-select/js/bootstrap-select.min.js') }}"></script>
+    <script src="{{ asset('assets/user/plugins/superfish/js/superfish.min.js') }}"></script>
+    <script src="{{ asset('assets/user/plugins/prettyphoto/js/jquery.prettyPhoto.js') }}"></script>
+    <script src="{{ asset('assets/user/plugins/owl-carousel2/owl.carousel.min.js') }}"></script>
+    <script src="{{ asset('assets/user/plugins/jquery.sticky.min.js') }}"></script>
+    <script src="{{ asset('assets/user/plugins/jquery.easing.min.js') }}"></script>
+    <script src="{{ asset('assets/user/plugins/jquery.smoothscroll.min.js') }}"></script>
+    <script src="{{ asset('assets/user/plugins/smooth-scrollbar.min.js') }}"></script>
+    <!-- JS Page Level -->
+    <script src="{{ asset('assets/user/js/theme.js') }}"></script>
+    <script src="{{ asset('assets/user/plugins/jquery.cookie.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <!--<![endif]-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script src="{{ asset('assets/admin/js/helpers.js') }}"></script>
+    <script src="{{ asset('assets/user/js/common.js') }}"></script>
+    {{-- <script src="{{ asset('assets/user/js/product-details.js') }}"></script> --}}
+    <script src="{{ asset('assets/user/js/checkout_manage.js') }}"></script>
+    <script src="{{ asset('assets/user/js/gemini_chat.js') }}"></script>
+
+    <script>
+        // ── Back-to-top FAB in the stack ─────────────────────────
+        (function() {
+            var fabTop = document.getElementById('fab-to-top');
+            if (!fabTop) return;
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                    fabTop.classList.add('visible');
+                } else {
+                    fabTop.classList.remove('visible');
+                }
+            });
+        })();
+    </script>
+
+    @stack('js')
 </body>
+
 </html>

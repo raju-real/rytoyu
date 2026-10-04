@@ -134,17 +134,30 @@ class HomePageController extends Controller
 
     public function singleProductInfo($product_id)
     {
-        $product = Product::active()->findOrFail($product_id);
+        $product = \Illuminate\Support\Facades\Cache::tags(['frontend'])->rememberForever("singleProduct_{$product_id}", function () use ($product_id) {
+            return Product::active()->findOrFail($product_id);
+        });
+
         $html = view('user.pages.single_product_view', compact('product'))->render();
         return response()->json(['html' => $html]);
     }
 
     public function productDetails($slug = null)
     {
-        $product = Product::whereSlug($slug)->firstOrFail();
-        $related_products = Product::where('category_id', $product->category_id)->inRandomOrder()->take(16)->get();
-        $reviews = Review::where('product_id',$product->id)->paginate(50);
-        return view('user.pages.product_details', compact('product', 'related_products','reviews'));
+        $product = \Illuminate\Support\Facades\Cache::tags(['frontend'])->rememberForever("productDetails_{$slug}", function () use ($slug) {
+            return Product::whereSlug($slug)->firstOrFail();
+        });
+
+        $related_products = \Illuminate\Support\Facades\Cache::tags(['frontend'])->rememberForever("relatedProducts_{$product->category_id}", function () use ($product) {
+            return Product::where('category_id', $product->category_id)->inRandomOrder()->take(16)->get();
+        });
+
+        $page = request()->get('page', 1);
+        $reviews = \Illuminate\Support\Facades\Cache::tags(['frontend'])->rememberForever("productReviews_{$product->id}_page_{$page}", function () use ($product) {
+            return Review::where('product_id', $product->id)->paginate(50);
+        });
+
+        return view('user.pages.product_details', compact('product', 'related_products', 'reviews'));
     }
 
     // Authentication Part
@@ -223,7 +236,7 @@ class HomePageController extends Controller
         $seller->status = 'inactive';
         $seller->request_status = 'pending';
         $seller->save();
-        return redirect()->route('seller-registration-form')->with('message','Thanks for registering! Our admin team will get in touch with you as soon as possible.');
+        return redirect()->route('seller-registration-form')->with('message', 'Thanks for registering! Our admin team will get in touch with you as soon as possible.');
     }
 
     public function userLoginPage()
@@ -269,7 +282,7 @@ class HomePageController extends Controller
 
     public function sendJoinRequest(Request $request)
     {
-        $this->validate($request,[
+        $this->validate($request, [
             'name' => 'required|max:50',
             'email' => 'required|email|max:50',
             'mobile' => 'required|max:11',
@@ -284,7 +297,7 @@ class HomePageController extends Controller
             $row->cv_path = uploadFile($request->file('curriculum_vitae'), 'curriculum_vitae');
         }
         $row->save();
-        return redirect()->route('join-request')->with('message','Your request has been sent successfully! Our admin team will get in touch with you as soon as possible.');
+        return redirect()->route('join-request')->with('message', 'Your request has been sent successfully! Our admin team will get in touch with you as soon as possible.');
     }
 
 
@@ -316,7 +329,5 @@ class HomePageController extends Controller
         } catch (\Exception $e) {
             return redirect()->route("contact")->with(['type' => 'danger', 'message' => 'Message not sent. Something went wrong!']);
         }
-
     }
-
 }

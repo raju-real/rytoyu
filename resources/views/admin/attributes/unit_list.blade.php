@@ -35,7 +35,7 @@
                             @forelse($units as $unit)
                                 <tr>
                                     <td>{{ $loop->index + 1 }}</td>
-                                    <td>{{ $unit->name ?? '' }}</td>
+                                    <td {!! tooltip($unit->name ?? '') !!}>{{ textLimit($unit->name ?? '') }}</td>
                                     <td>
                                         <a data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" href="{{ route('admin.units.edit',$unit->slug) }}"
                                            class="btn btn-sm btn-soft-success" ><i class="fa fa-edit"></i></a>

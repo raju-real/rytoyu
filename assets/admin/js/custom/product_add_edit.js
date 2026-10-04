@@ -6,15 +6,18 @@
     // });
 
     let config = {
+        height: 200,
         toolbar: [
-            ['Bold', 'Italic', 'Strike', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'NumberedList', 'BulletedList', '-', 'Maximize']
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font', ['strikethrough', 'superscript', 'subscript']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['view', ['fullscreen', 'codeview']]
         ],
     };
 
-    CKEDITOR.config.allowedContent = true;
-    CKEDITOR.replace("product_details", config);
-    CKEDITOR.replace("product_specification", config);
-    CKEDITOR.replace("product_compare", config);
+    $("#product_details").summernote(config);
+    $("#product_specification").summernote(config);
+    $("#product_compare").summernote(config);
 
     const methodMode = $("#method_mode").val();
     const subCategorySelector = $("#subcategory");
@@ -554,11 +557,10 @@
         const method = form.attr("method") || "POST"; // Default to POST if method not defined
         const action = form.attr("action"); // Action URL from form
 
-        // Add CKEditor data to FormData
-        const productDetails = CKEDITOR.instances["product_details"].getData();
+        // Add Summernote data to FormData
+        const productDetails = $("#product_details").summernote('code');
         formData.append("product_details", productDetails);
-        const productSpecification =
-            CKEDITOR.instances["product_specification"].getData();
+        const productSpecification = $("#product_specification").summernote('code');
         formData.append("product_specification", productSpecification);
 
         // If the method is PUT, append `_method` for Laravel compatibility

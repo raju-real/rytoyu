@@ -11,14 +11,17 @@
     <li class="{{ request()->segment(1) === 'change-mobile' ? 'active' : '' }}">
         <a href="{{ route('change-mobile') }}">Change Mobile</a>
     </li>
-    @if(Auth::check() && Auth::user()->mobile_verified_at == null)
-    <li class="{{ request()->segment(1) === 'verify-user-mobile' ? 'active' : '' }}">
-        <a href="{{ route('verify-user-mobile') }}">Verify Mobile</a>
-    </li>
+    @if (Auth::check() && Auth::user()->mobile_verified_at == null)
+        <li class="{{ request()->segment(1) === 'verify-user-mobile' ? 'active' : '' }}">
+            <a href="{{ route('verify-user-mobile') }}">Verify Mobile</a>
+        </li>
     @endif
 
-{{--    <li><a href="order-status.html">Order Status</a></li>--}}
-{{--    <li><a href="review-rating.html">Reviews and Ratings</a></li>--}}
-{{--    <li><a href="return.html">Returns Requests</a></li>--}}
+    <li class="{{ request()->segment(1) === 'my-refunds' ? 'active' : '' }}">
+        <a href="{{ route('my-refunds') }}">My Refunds</a>
+    </li>
+    {{--    <li><a href="order-status.html">Order Status</a></li> --}}
+    {{--    <li><a href="review-rating.html">Reviews and Ratings</a></li> --}}
+    {{--    <li><a href="return.html">Returns Requests</a></li> --}}
 
 </ul>

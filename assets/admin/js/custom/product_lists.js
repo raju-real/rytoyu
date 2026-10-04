@@ -36,11 +36,12 @@
                         variants.forEach(variant => {
                             tbody.append(`
                             <tr>
-                                <td>${variant.size_name ?? 'N/A'}</td>
-                                <td>${variant.color_name ?? '0'}</td>
-                                <td>${variant.unit_price ?? '0'}</td>
-                                <td>${variant.discount_price ?? '0'}</td>
-                                <td>${variant.inventory ?? '0'}</td>
+                                <td class="align-middle">${variant.size_name ?? 'N/A'}</td>
+                                <td class="align-middle">${variant.color_name ?? '0'}</td>
+                                <td><input type="number" step="0.01" class="form-control form-control-sm variant-price" data-id="${variant.id}" value="${variant.unit_price ?? '0'}"></td>
+                                <td><input type="number" step="0.01" class="form-control form-control-sm variant-discount" data-id="${variant.id}" value="${variant.discount_price ?? '0'}"></td>
+                                <td><input type="number" class="form-control form-control-sm variant-inventory" data-id="${variant.id}" value="${variant.inventory ?? '0'}"></td>
+                                <td class="align-middle text-center"><button type="button" class="btn btn-sm btn-primary update-variant-btn" data-id="${variant.id}">Update</button></td>
                             </tr>
                         `);
                         });
@@ -52,9 +53,41 @@
                 }
             })
             .catch(error => {
-                tbody.html('<tr><td colspan="5"><p class="alert alert-danger">Error loading variants. Please try again.</p></td></tr>');
+                tbody.html('<tr><td colspan="6"><p class="alert alert-danger">Error loading variants. Please try again.</p></td></tr>');
                 console.error(error);
             });
+    });
+
+    $(document).on('click', '.update-variant-btn', function () {
+        const btn = $(this);
+        const variant_id = btn.data('id');
+        const row = btn.closest('tr');
+        
+        const price = row.find('.variant-price').val();
+        const discount_price = row.find('.variant-discount').val();
+        const inventory = row.find('.variant-inventory').val();
+        
+        btn.prop('disabled', true).text('...');
+        
+        axios.put(`${base_url}/update-product-variant/${variant_id}`, {
+            unit_price: price,
+            discount_price: discount_price,
+            inventory: inventory
+        })
+        .then(response => {
+            if (response.data.success) {
+                AppHelpers.showAlert("success", "Success", response.data.message);
+            } else {
+                AppHelpers.showAlert("error", "Error", response.data.message);
+            }
+        })
+        .catch(error => {
+            const errorMessage = error.response?.data?.message || 'Failed to update variant.';
+            AppHelpers.showAlert("error", "Error", errorMessage);
+        })
+        .finally(() => {
+            btn.prop('disabled', false).text('Update');
+        });
     });
 
     const subCategorySelector = $('#subcategory');

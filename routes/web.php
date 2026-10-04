@@ -15,12 +15,12 @@ Route::controller(\App\Http\Controllers\HomePageController::class)->group(functi
     Route::get('product-lists', 'products')->name('product-lists');
     Route::get('product-details/{slug}', 'productDetails')->name('product-details');
 
-    Route::view('about','user.pages.about')->name('about');
-    Route::view('contact','user.pages.contact')->name('contact');
-    Route::post('send-contact-message','sendContactMessage')->name('send-contact-message');
-    Route::view('faq','user.pages.faq')->name('faq');
-    Route::view('privacy-policy','user.pages.privacy_policy')->name('privacy-policy');
-    Route::view('terms-and-conditions','user.pages.terms_conditions')->name('terms-and-conditions');
+    Route::view('about', 'user.pages.about')->name('about');
+    Route::view('contact', 'user.pages.contact')->name('contact');
+    Route::post('send-contact-message', 'sendContactMessage')->name('send-contact-message');
+    Route::view('faq', 'user.pages.faq')->name('faq');
+    Route::view('privacy-policy', 'user.pages.privacy_policy')->name('privacy-policy');
+    Route::view('terms-and-conditions', 'user.pages.terms_conditions')->name('terms-and-conditions');
     // Authentication Part
     Route::get('register', 'userRegisterPage')->name('register');
     Route::post('user-register', 'userRegistration')->name('user-register');
@@ -28,11 +28,11 @@ Route::controller(\App\Http\Controllers\HomePageController::class)->group(functi
     Route::post('user-login', 'userLogin')->name('user-login');
 
     // Seller Registration
-    Route::view('seller-registration-form','user.pages.seller_registration')->name('seller-registration-form');
-    Route::post('seller-register','sellerRegister')->name('seller-register');
+    Route::view('seller-registration-form', 'user.pages.seller_registration')->name('seller-registration-form');
+    Route::post('seller-register', 'sellerRegister')->name('seller-register');
     // Team Join request
-    Route::view('join-request','user.pages.join_request')->name('join-request');
-    Route::post('send-join-request','sendJoinRequest')->name('send-join-request');
+    Route::view('join-request', 'user.pages.join_request')->name('join-request');
+    Route::post('send-join-request', 'sendJoinRequest')->name('send-join-request');
 });
 // Cart and Order
 Route::controller(\App\Http\Controllers\CacheCartController::class)->group(function () {
@@ -54,9 +54,9 @@ Route::controller(\App\Http\Controllers\CacheCartController::class)->group(funct
         Route::get('checkout-products', 'getCheckoutProducts')->name('checkout-products');
         Route::post('submit-order', 'submitOrder')->name('submit-order');
         // Manage wishlists
-        Route::get('wishlists','wishlists')->name('wishlists');
-        Route::post('add-to-wishlist','addToWishList')->name('add-to-wishlist');
-        Route::get('delete-wish-list-item/{item_id}','deleteWishListItem')->name('delete-wish-list-item');
+        Route::get('wishlists', 'wishlists')->name('wishlists');
+        Route::post('add-to-wishlist', 'addToWishList')->name('add-to-wishlist');
+        Route::get('delete-wish-list-item/{item_id}', 'deleteWishListItem')->name('delete-wish-list-item');
     });
 });
 // User Part
@@ -80,11 +80,42 @@ Route::middleware('auth')->group(function () {
         Route::get('order-list', 'orderList')->name('order-list');
         Route::get('order-details/{unique_id}', 'orderDetails')->name('order-details');
         Route::get('user-order-invoice/{unique_id}', 'orderInvoice')->name('user-order-invoice');
-        Route::get('submit-review/{combine_id}','submitReview')->name('submit-review');
-        Route::post('store-review/{order_product_id}','storeReview')->name('store-review');
+        Route::get('submit-review/{combine_id}', 'submitReview')->name('submit-review');
+        Route::post('store-review/{order_product_id}', 'storeReview')->name('store-review');
     });
 
+    // Refunds
+    Route::controller(\App\Http\Controllers\User\RefundController::class)->group(function () {
+        Route::get('my-refunds', 'index')->name('my-refunds');
+        Route::post('request-refund/{order_product_id}', 'requestRefund')->name('request-refund');
+    });
+
+
     Route::controller(SslCommerzPaymentController::class)->as('sslcommerz.')->group(function () {
+        Route::any('pay-now', 'index')->name('pay-now');
+        Route::any('success', 'success');
+        Route::any('fail', 'fail');
+        Route::any('cancel', 'cancel');
+        Route::any('ipn', 'ipn');
+    });
+
+    Route::controller(\App\Http\Controllers\User\BkashPaymentController::class)->as('bkash.')->group(function () {
+        Route::any('pay-now', 'index')->name('pay-now');
+        Route::any('success', 'success');
+        Route::any('fail', 'fail');
+        Route::any('cancel', 'cancel');
+        Route::any('ipn', 'ipn');
+    });
+
+    Route::controller(\App\Http\Controllers\User\RocketPaymentController::class)->as('rocket.')->group(function () {
+        Route::any('pay-now', 'index')->name('pay-now');
+        Route::any('success', 'success');
+        Route::any('fail', 'fail');
+        Route::any('cancel', 'cancel');
+        Route::any('ipn', 'ipn');
+    });
+
+    Route::controller(\App\Http\Controllers\User\NagadPaymentController::class)->as('nagad.')->group(function () {
         Route::any('pay-now', 'index')->name('pay-now');
         Route::any('success', 'success');
         Route::any('fail', 'fail');
@@ -107,7 +138,7 @@ Route::controller(\App\Http\Controllers\SocialLoginController::class)->group(fun
 
 //Gemini chatbot
 Route::controller(GeminiChatBotController::class)->group(function () {
-   Route::post('chat-bot-query','handleQuery')->name('chat-bot-query');
+    Route::post('chat-bot-query', 'handleQuery')->name('chat-bot-query');
 });
 
 
@@ -121,7 +152,7 @@ Route::match(['get', 'post'], '/botman', function () {
     $botman = app('botman');
 
     // Add simple test response
-    $botman->hears('test', function(BotMan $bot) {
+    $botman->hears('test', function (BotMan $bot) {
         $bot->reply('Test successful!');
     });
 

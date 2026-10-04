@@ -162,7 +162,7 @@
                                                  class="avatar-sm rounded-3 d-block">
                                         @endif
                                     </td>
-                                    <td>{{ $product->name ?? '' }}</td>
+                                    <td {!! tooltip($product->name ?? '') !!}>{{ textLimit($product->name ?? '') }}</td>
                                     <td>
                                         <a data-bs-toggle="tooltip" data-bs-placement="top" title="Show Details"
                                            href="{{ route('admin.seller-product', $product->slug) }}"

@@ -19,7 +19,7 @@ class AdminOrderManageController extends Controller
         $data = Order::query();
         $data->with([
             'seller_order_logs' => function ($seller_order_log) {
-                $seller_order_log->select('id','seller_id','order_id','order_amount');
+                $seller_order_log->select('id', 'seller_id', 'order_id', 'order_amount');
             }
         ]);
         if ($createdAt = request()->get('order_date')) { // Use $request->get()
@@ -37,7 +37,6 @@ class AdminOrderManageController extends Controller
         $orders =  $data->latest()->paginate(50);
 
         return view('admin.orders.manage_orders', compact('orders'));
-
     }
 
     public function orderProducts($unique_id)
@@ -88,7 +87,7 @@ class AdminOrderManageController extends Controller
                     ->orWhere('mobile', 'LIKE', "%{$search}%");
             });
         }
-        $data->select('id', 'unique_id', 'order_number', 'invoice', 'total_order_price','seller_count', 'created_at');
+        $data->select('id', 'unique_id', 'order_number', 'invoice', 'total_order_price', 'seller_count', 'created_at');
         $orders = $data->paginate(20);
         return view('admin.orders.commission_logs', compact('orders'));
     }
@@ -149,6 +148,15 @@ class AdminOrderManageController extends Controller
         $orderProduct->last_updated_by = Auth::id();
         $orderProduct->save();
 
+        if ($validated['order_status'] === 'delivered' && $orderProduct->seller_id) {
+            $sellerAdmin = \App\Models\Admin::find($orderProduct->seller_id);
+            if ($sellerAdmin) {
+                // Add the total price to the seller's balance
+                $sellerAdmin->balance += $orderProduct->total_price;
+                $sellerAdmin->save();
+            }
+        }
+
         // Update order status by order product status ratio
 
         return back()->with(successMessage('success', 'Order product status updated to ' . ucfirst($validated['order_status']) . '.'));
@@ -166,14 +174,37 @@ class AdminOrderManageController extends Controller
         }
 
         $order = Order::whereUniqueId(request()->get('unique_id'))->firstOrFail();
-        OrderProduct::whereIn('order_id', [$order->id])->update([
-            'order_status' => request()->get('order_status'),
-            'last_updated_by' => Auth::id()
-        ]);
+
+        $orderProducts = OrderProduct::whereIn('order_id', [$order->id])->get();
+        foreach ($orderProducts as $op) {
+            if ($op->order_status !== request()->get('order_status')) {
+                $op->order_status = request()->get('order_status');
+                $op->last_updated_by = Auth::id();
+                $op->save();
+
+                if (request()->get('order_status') === 'delivered' && $op->seller_id) {
+                    $sellerAdmin = \App\Models\Admin::find($op->seller_id);
+                    if ($sellerAdmin) {
+                        $sellerAdmin->balance += $op->total_price;
+                        $sellerAdmin->save();
+                    }
+                }
+            }
+        }
 
         // Update order status by order product status ratio
 
         return back()->with(successMessage('success', 'All Order product status updated to ' . ucfirst(request()->get('order_status')) . '.'));
     }
 
+    public function updateCourier($unique_id)
+    {
+        $order = Order::orderByUniqueId($unique_id);
+        $order->courier_name = request('courier_name');
+        $order->courier_tracking_id = request('courier_tracking_id');
+        $order->courier_status = request('courier_status');
+        $order->save();
+
+        return back()->with(successMessage('success', 'Courier information updated successfully.'));
+    }
 }

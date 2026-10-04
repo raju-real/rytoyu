@@ -415,20 +415,35 @@
             const form = $("#order-form")[0];
             const formData = new FormData(form);
 
-            // If using FormData
             const selectedPayment = $("#accordion a.selected").data("value") || "cash-on-delivery";
 
             formData.append("payment_method", selectedPayment);
+            
+            // Add gateway if it is online-payment
+            if (selectedPayment === 'online-payment') {
+                const selectedGateway = $("input[name='gateway']:checked").val();
+                if (selectedGateway) {
+                    formData.append("gateway", selectedGateway);
+                } else {
+                    $("#order_gateway_error").text("Please select a payment gateway.");
+                    submitButton.removeClass("disabled").css({"pointer-events": "", opacity: ""}).html("Submit Order");
+                    return;
+                }
+            }
 
             axios
                 .post(base_url + "/submit-order", formData)
                 .then(function (response) {
                     if (response.data.status === "success") {
-                        const message = encodeURIComponent(
-                            response.data.message
-                        );
-                        window.location.href =
-                            base_url + "/order-list?message=" + message;
+                        if (response.data.redirect_url) {
+                            window.location.href = response.data.redirect_url;
+                        } else {
+                            const message = encodeURIComponent(
+                                response.data.message
+                            );
+                            window.location.href =
+                                base_url + "/order-list?message=" + message;
+                        }
                     }
                 })
                 .catch(function (error) {

@@ -3,135 +3,222 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-
-// Assuming your product model is here
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-
-// For making HTTP requests to Gemini
 use Exception;
-use GuzzleHttp\Exception\ClientException;
 
 class GeminiChatBotController extends Controller
 {
+    /* ── Conversational keywords ──────────────────────────────── */
+    private const GREETINGS    = ['hi', 'hello', 'hey', 'hola', 'greetings', 'good morning', 'good afternoon', 'good evening', 'good night', 'salam', 'salaam', 'assalamu alaikum'];
+    private const THANKS_WORDS = ['thanks', 'thank you', 'thank u', 'thx', 'dhonnobad'];
+    private const HELP_WORDS   = ['help', 'help me', 'support', 'assist'];
+    private const OFF_TOPIC_THRESHOLD = 2; // after 2 off-topic messages, redirect gently
+
     public function handleQuery(Request $request)
     {
-        $query = $request->input('query');
+        $query     = trim($request->input('query', ''));
+        $sessionId = $request->session()->getId();
 
         if (!$query) {
-            return response()->json([
-                'type' => 'text',
-                'data' => "Please enter a message to chat."
-            ]);
+            return response()->json(['type' => 'text', 'data' => "Please type a message."]);
         }
 
-        // --- Step 1: Smart Product Search with Price Filtering ---
-        // Use a regular expression to extract the product name and price from the query
-        $productName = preg_replace('/under\s+\d+/', '', $query);
-        $productName = trim(strtolower($productName));
+        $lower = mb_strtolower($query);
 
-        preg_match('/under\s+(\d+)/', strtolower($query), $matches);
-        $priceLimit = isset($matches[1]) ? (int)$matches[1] : null;
-
-        // Start the query with the product name search
-        $products = Product::where(function ($q) use ($productName) {
-            $keywords = explode(' ', $productName);
-            foreach ($keywords as $keyword) {
-                if (!empty($keyword)) {
-                    $q->orWhere('name', 'like', '%' . $keyword . '%');
-                }
-            }
-        });
-
-        // Apply the conditional price filtering if a price limit was found
-        if ($priceLimit !== null) {
-            $products->where(function ($q) use ($priceLimit) {
-                // Case 1: Filter by discount_price if it exists and is within the limit
-                $q->whereNotNull('discount_price')
-                    ->where('discount_price', '<=', $priceLimit);
-            })->orWhere(function ($q) use ($priceLimit) {
-                // Case 2: If no discount_price, filter by unit_price if it's within the limit
-                $q->whereNull('discount_price')
-                    ->where('unit_price', '<=', $priceLimit);
-            });
-        }
-
-        $filteredProducts = $products->select('id', 'name', 'slug', 'unit_price', 'discount_price', 'thumbnail_path')->get();
-
-        if ($filteredProducts->isNotEmpty()) {
-            // Map the products to send only necessary data, including the full thumbnail path
-            $data = $filteredProducts->map(function ($product) {
-                return [
-                    'id' => $product->id,
-                    'name' => $product->name,
-                    'unit_price' => $product->unit_price,
-                    'discount_price' => $product->discount_price,
-                    'slug' => $product->slug,
-                    'thumbnail_path' => url($product->thumbnail_path),
-                    'details_link' => route('product-details', $product->slug)
-                ];
-            });
-
-            return response()->json([
-                'type' => 'products',
-                'data' => $data,
-                'total_products' => $filteredProducts->count(),
-                'original_query' => $productName,
-                'min_amount' => $priceLimit,
-                'all_results_link' => route('product-lists', ['search' => $productName,'amount_min' => $priceLimit])
-            ]);
-        } else {
-            // --- Step 2: General Chat with Gemini API ---
-            $apiKey = "AIzaSyDFG7EnRvMDVExoZr-9oDS2AX2TKaMjGZ0";
-
-            if (!$apiKey) {
+        // ── 1. Greeting ────────────────────────────────────────────
+        foreach (self::GREETINGS as $greet) {
+            if (str_contains($lower, $greet)) {
+                $request->session()->put("chat_offtopic_{$sessionId}", 0);
+                $company = siteSettings()['company_name'] ?? 'our store';
                 return response()->json([
                     'type' => 'text',
-                    'data' => "API Key Error: The Google Gemini API key is missing. Please set it in your .env file."
-                ], 500);
+                    'data' =>
+                    "👋 Hello! Welcome to **{$company}**! I'm your AI shopping assistant.\n\n" .
+                        "I can help you with:\n• 🛍️ Finding products\n• 📦 Tracking your orders\n• 💬 General questions\n\n" .
+                        "What are you looking for today?"
+                ]);
             }
+        }
 
-            try {
-                $payload = [
-                    'contents' => [['parts' => [['text' => $query]]]],
-                    'tools' => [['google_search' => (object)[]]],
-                ];
+        // ── 2. Thanks ──────────────────────────────────────────────
+        foreach (self::THANKS_WORDS as $t) {
+            if (str_contains($lower, $t)) {
+                $request->session()->put("chat_offtopic_{$sessionId}", 0);
+                return response()->json(['type' => 'text', 'data' => "You're most welcome! 😊 Is there anything else I can help you with? Feel free to ask about our products or your orders."]);
+            }
+        }
 
-                $response = Http::post("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key={$apiKey}", $payload);
+        // ── 3. Help keywords ──────────────────────────────────────
+        foreach (self::HELP_WORDS as $h) {
+            if ($lower === $h) {
+                return response()->json([
+                    'type' => 'text',
+                    'data' =>
+                    "Sure! Here's what I can help with:\n\n" .
+                        "🛍️ **Product Search** — Just type what you're looking for, e.g. *\"show me shirts under 500\"*\n" .
+                        "📦 **Order Tracking** — Type your order number like *\"track order 1001\"*\n" .
+                        "💬 **General Chat** — Ask me anything!\n\n" .
+                        "What would you like to do?"
+                ]);
+            }
+        }
 
-                if ($response->successful()) {
-                    $geminiResponse = $response->json();
+        // ── 4. Order Tracking ─────────────────────────────────────
+        $orderPatterns = [
+            '/(?:track|order|status|where is my|check)\s*(?:order|order no|no|#)?\s*[:\-]?\s*(\d{4,})/i',
+            '/(?:#|no[. :]?)?\s*(\d{4,})\s*(?:track|order|status)/i',
+        ];
+        foreach ($orderPatterns as $pattern) {
+            if (preg_match($pattern, $lower, $m)) {
+                $orderNumber = $m[1];
+                $order = \App\Models\Order::where('order_number', $orderNumber)
+                    ->orWhere('invoice', 'like', "%{$orderNumber}%")->first();
 
-                    if (isset($geminiResponse['candidates'][0]['content']['parts'][0]['text'])) {
-                        $generatedText = $geminiResponse['candidates'][0]['content']['parts'][0]['text'];
-                        return response()->json([
-                            'type' => 'text',
-                            'data' => $generatedText
-                        ]);
-                    } else {
-                        return response()->json([
-                            'type' => 'text',
-                            'data' => "Sorry, I couldn't generate a response. The API returned an empty or invalid response."
-                        ], 500);
+                if ($order) {
+                    $courierInfo = '';
+                    if (!empty($order->courier_name) && !empty($order->courier_tracking_id)) {
+                        $courierInfo = "\n🚚 Courier: **{$order->courier_name}** | Tracking ID: `{$order->courier_tracking_id}`";
                     }
-                } else {
-                    $errorDetails = $response->json();
                     return response()->json([
                         'type' => 'text',
-                        'data' => "API Error: The request failed with status " . $response->status() . ". " . ($errorDetails['error']['message'] ?? 'Unknown error.')
-                    ], 500);
+                        'data' =>
+                        "📦 **Order #{$order->order_number}**\n" .
+                            "Status: **" . ucwords(str_replace('_', ' ', $order->order_status)) . "**\n" .
+                            ($order->delivery_status ? "Delivery: **" . ucwords($order->delivery_status) . "**\n" : '') .
+                            $courierInfo
+                    ]);
+                } else {
+                    return response()->json([
+                        'type' => 'text',
+                        'data' =>
+                        "❌ I couldn't find order **#{$orderNumber}**. Please double-check the number and try again.\n\nYou can also view your orders in your **account dashboard**."
+                    ]);
                 }
-            } catch (ClientException $e) {
-                return response()->json([
-                    'type' => 'text',
-                    'data' => "HTTP Client Error: The request failed. " . $e->getMessage()
-                ], 500);
-            } catch (Exception $e) {
-                return response()->json([
-                    'type' => 'text',
-                    'data' => "Network Error: Could not connect to the Gemini API. Please check your internet connection."
-                ], 500);
             }
+        }
+
+        // Generic order track prompt (no number given)
+        if (preg_match('/track|order status|where is my order|my order/i', $lower)) {
+            return response()->json([
+                'type' => 'text',
+                'data' =>
+                "📦 To track your order, please share your **order number**.\n\nExample: *\"track order 1023\"*\n\nYou can find it in the confirmation email or your account dashboard."
+            ]);
+        }
+
+        // ── 5. Smart Product Search ────────────────────────────────
+        preg_match('/(?:under|below|max|less than)\s*([\d,]+)/i', $lower, $priceMatch);
+        $priceLimit = isset($priceMatch[1]) ? (int) str_replace(',', '', $priceMatch[1]) : null;
+
+        $searchTerm = preg_replace('/(?:under|below|max|less than)\s*[\d,]+/i', '', $lower);
+        $searchTerm = preg_replace('/^(?:find|search|show|give me|show me|i want|looking for|need|buy|get|cheap|any)\s+/i', '', $searchTerm);
+        $searchTerm = trim(preg_replace('/\s+/', ' ', $searchTerm));
+
+        $isConversational = strlen($searchTerm) <= 2 ||
+            in_array($searchTerm, array_merge(self::GREETINGS, self::THANKS_WORDS, self::HELP_WORDS));
+
+        if (!$isConversational && strlen($searchTerm) > 2) {
+            $productQuery = Product::where(function ($q) use ($searchTerm) {
+                $keywords = array_filter(explode(' ', $searchTerm), function ($k) {
+                    return strlen($k) > 1;
+                });
+                foreach ($keywords as $keyword) {
+                    $q->orWhere('name', 'like', "%{$keyword}%")
+                        ->orWhere('description', 'like', "%{$keyword}%");
+                }
+            });
+
+            if ($priceLimit !== null) {
+                $productQuery->where(function ($q) use ($priceLimit) {
+                    $q->where(function ($q2) use ($priceLimit) {
+                        $q2->whereNotNull('discount_price')->where('discount_price', '<=', $priceLimit);
+                    })->orWhere(function ($q2) use ($priceLimit) {
+                        $q2->whereNull('discount_price')->orWhere('discount_price', 0);
+                        $q2->where('unit_price', '<=', $priceLimit);
+                    });
+                });
+            }
+
+            $products = $productQuery->select('id', 'name', 'slug', 'unit_price', 'discount_price', 'thumbnail_path')
+                ->limit(5)->get();
+
+            if ($products->isNotEmpty()) {
+                $request->session()->put("chat_offtopic_{$sessionId}", 0);
+                $data = $products->map(function ($p) {
+                    return [
+                        'id'             => $p->id,
+                        'name'           => $p->name,
+                        'unit_price'     => $p->unit_price,
+                        'discount_price' => $p->discount_price,
+                        'slug'           => $p->slug,
+                        'thumbnail_path' => $p->thumbnail_path ? url($p->thumbnail_path) : null,
+                        'details_link'   => route('product-details', $p->slug),
+                    ];
+                });
+
+                return response()->json([
+                    'type'             => 'products',
+                    'data'             => $data,
+                    'total_products'   => $products->count(),
+                    'original_query'   => $searchTerm,
+                    'min_amount'       => $priceLimit,
+                    'all_results_link' => route('product-lists', ['search' => $searchTerm, 'amount_max' => $priceLimit]),
+                ]);
+            }
+
+            if (strlen($searchTerm) > 3) {
+                return response()->json([
+                    'type' => 'text',
+                    'data' =>
+                    "😔 Sorry, I couldn't find any products matching **\"{$searchTerm}\"**" .
+                        ($priceLimit ? " under ৳{$priceLimit}" : "") . ".\n\n" .
+                        "Try a different keyword or [browse all products](" . route('product-lists') . ")."
+                ]);
+            }
+        }
+
+        // ── 6. Off-topic redirect logic ───────────────────────────
+        $offTopicCount = $request->session()->get("chat_offtopic_{$sessionId}", 0);
+
+        if ($offTopicCount >= self::OFF_TOPIC_THRESHOLD) {
+            $request->session()->put("chat_offtopic_{$sessionId}", 0);
+            return response()->json([
+                'type' => 'text',
+                'data' =>
+                "😊 I'm best at helping you with **products and orders**!\n\n" .
+                    "• Type a product name to search (e.g. *\"show me phones\"*)\n" .
+                    "• Type your order number to track (e.g. *\"track order 1001\"*)\n\n" .
+                    "How can I help you shop today?"
+            ]);
+        }
+
+        // ── 7. Gemini fallback (general chat) ─────────────────────
+        $apiKey = env('GEMINI_API_KEY', 'AIzaSyDFG7EnRvMDVExoZr-9oDS2AX2TKaMjGZ0');
+
+        try {
+            $company      = siteSettings()['company_name'] ?? 'our store';
+            $systemPrompt = "You are a friendly, helpful AI shopping assistant for {$company}, an e-commerce store. " .
+                "Help customers with their questions. Keep answers SHORT (1-3 sentences). " .
+                "If they ask about unrelated topics, politely guide them toward browsing products or tracking orders. " .
+                "Always maintain a warm, professional tone.";
+
+            $response = Http::timeout(15)->post(
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={$apiKey}",
+                ['contents' => [['parts' => [['text' => "{$systemPrompt}\n\nUser: {$query}"]]]]]
+            );
+
+            if ($response->successful()) {
+                $text = $response->json('candidates.0.content.parts.0.text');
+                if ($text) {
+                    $request->session()->put("chat_offtopic_{$sessionId}", $offTopicCount + 1);
+                    return response()->json(['type' => 'text', 'data' => $text]);
+                }
+            }
+
+            return response()->json(['type' => 'text', 'data' => "I couldn't get a response right now. Please try searching for a product or ask about your order!"]);
+        } catch (Exception $e) {
+            return response()->json(['type' => 'text', 'data' => "Network error. Please check your internet connection."], 500);
         }
     }
 }

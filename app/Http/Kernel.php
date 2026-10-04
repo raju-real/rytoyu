@@ -74,5 +74,6 @@ class Kernel extends HttpKernel
         'admin' => AdminMiddleware::class,
         'administrator_admin' => AdministratorAdminMiddleware::class,
         'seller' => SellerMiddleware::class,
+        'permission' => \App\Http\Middleware\CheckPermission::class,
     ];
 }

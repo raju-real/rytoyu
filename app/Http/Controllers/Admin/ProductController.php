@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -110,6 +111,7 @@ class ProductController extends Controller
                 'is_exchangeable' => $validatedData['is_exchangeable'] ?? 0,
                 'is_refundable' => $validatedData['is_refundable'] ?? 0,
                 'listed_on' => $validatedData['listed_on'] ?? 'featured',
+                'weight' => $validatedData['weight'] ?? null,
                 'status' => $validatedData['status'],
                 'thumbnail_path' => $request->hasFile('product_thumbnail')
                     ? uploadImage($request->file('product_thumbnail'), 'products')
@@ -183,9 +185,15 @@ class ProductController extends Controller
         $product->warranty = $validatedData['warranty'] ?? Null;
         $product->video_link = $validatedData['video_link'];
         $product->product_tags = $request->tags ? implode(',', $request->tags) : Null;
+        $product->meta_title = $request->meta_title;
+        $product->meta_description = $request->meta_description;
+        if ($request->hasFile('meta_image')) {
+            $product->meta_image = uploadImage($request->file('meta_image'), 'products/meta');
+        }
         $product->is_exchangeable = $request->is_exchangeable;
         $product->is_refundable = $request->is_refundable;
         $product->listed_on = $request->listed_on ?? 'featured';
+        $product->weight = $request->weight;
         if (authAdminType() === 'seller') {
             $product->request_status = 'pending';
         } else {
@@ -282,9 +290,15 @@ class ProductController extends Controller
         $product->warranty = $validatedData['warranty'] ?? Null;
         $product->video_link = $validatedData['video_link'];
         $product->product_tags = $request->tags ? implode(',', $request->tags) : Null;
+        $product->meta_title = $request->meta_title;
+        $product->meta_description = $request->meta_description;
+        if ($request->hasFile('meta_image')) {
+            $product->meta_image = uploadImage($request->file('meta_image'), 'products/meta');
+        }
         $product->is_exchangeable = $request->is_exchangeable;
         $product->is_refundable = $request->is_refundable;
         $product->listed_on = $request->listed_on ?? 'featured';
+        $product->weight = $request->weight;
         $product->status = $request->status;
         $product->updated_by = Auth::id();
 
@@ -419,9 +433,6 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
-     * Update unit_price and discount_price based on the default product variant.
-     */
     protected function updatePricing($product_id): void
     {
         $defaultVariant = ProductVariant::withoutGlobalScope(ProductApproved::class)->where('product_id', $product_id)
@@ -431,5 +442,33 @@ class ProductController extends Controller
             'unit_price' => $defaultVariant->unit_price,
             'discount_price' => $defaultVariant->discount_price
         ]);
+    }
+
+    public function updateProductVariant(Request $request, $id): \Illuminate\Http\JsonResponse
+    {
+        $variant = ProductVariant::findOrFail($id);
+        $variant->inventory = $request->inventory;
+        if ($request->has('unit_price')) {
+            $variant->unit_price = $request->unit_price;
+        }
+        if ($request->has('discount_price')) {
+            $variant->discount_price = $request->discount_price;
+        }
+
+        if ($variant->save()) {
+            // If this variant is default, update product pricing
+            if ($variant->is_default) {
+                $this->updatePricing($variant->product_id);
+            }
+            return response()->json([
+                'success' => true,
+                'message' => 'Variant updated successfully.'
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update variant.'
+        ], 500);
     }
 }

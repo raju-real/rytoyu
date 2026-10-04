@@ -15,7 +15,7 @@
                         </tr>
                         <tr>
                             <th class="w-25">Name</th>
-                            <td>{{ $seller->name ?? '' }}</td>
+                            <td {!! tooltip($seller->name ?? '') !!}>{{ textLimit($seller->name ?? '') }}</td>
                             <th class="w-25">Mobile</th>
                             <td>{{ $seller->mobile ?? '' }}</td>
                         </tr>
@@ -24,6 +24,11 @@
                             <td>{{ $seller->email ?? '' }}</td>
                             <th class="w-25">Commission Rate</th>
                             <td>{{ $seller->commission_rate ?? '' }} %</td>
+                        </tr>
+                        <tr>
+                            <th class="w-25">Current Balance</th>
+                            <td colspan="3"><span class="badge badge-success" style="font-size:14px;">৳
+                                    {{ number_format($seller->balance, 2) }}</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -51,8 +56,8 @@
                             <th style="width: 150px;">Email</th>
                             <td>{{ $seller->shop->email ?? '' }}</td>
                         </tr>
-                       <tr>
-                            
+                        <tr>
+
                             <th style="width: 150px;">Address</th>
                             <td>{{ $seller->shop->address ?? '' }}</td>
                         </tr>
@@ -62,4 +67,3 @@
         </div>
     </div>
 </div>
-

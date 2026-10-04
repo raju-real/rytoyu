@@ -60,11 +60,15 @@ class ProductRequest extends FormRequest
             'product_thumbnail' => $isUpdating
                 ? ['nullable', 'image', 'mimes:jpg,jpeg,png', 'dimensions:width=375,height=480', 'max:1024', new ThumbnailExistsRule($recordId)]
                 : ['required', 'image', 'mimes:jpg,jpeg,png', 'dimensions:width=375,height=480', 'max:1024'],
+            'meta_title' => ['nullable', 'sometimes', 'string', 'max:191'],
+            'meta_description' => ['nullable', 'sometimes', 'string', 'max:1000'],
+            'meta_image' => ['nullable', 'sometimes', 'image', 'mimes:jpg,jpeg,png,webp', 'max:1024'],
 
 
             'is_refundable' => ['required', 'in:0,1'],
             'is_exchangeable' => ['required', 'in:0,1'],
             'listed_on' => ['nullable', 'sometimes', 'in:featured,new-arrivals,best-selling'],
+            'weight' => ['nullable', 'sometimes', 'numeric', 'min:0'],
             'status' => ['required', 'in:active,inactive'],
             'warranty' => ['nullable', 'sometimes', 'max:1000']
         ];
@@ -109,7 +113,6 @@ class ProductRequest extends FormRequest
             } elseif (!$isUpdating && $image['is_new'] == 1) {
                 $rules["images.{$image['index_no']}.image"] = ['required', 'image', 'mimes:jpeg,jpg,png', 'dimensions:width=375,height=480', 'max:1024'];
             }
-
         }
 
         return $rules;

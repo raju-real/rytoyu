@@ -59,7 +59,26 @@ class Admin extends Authenticatable
         return $newCode;
     }
 
-    public function shop() {
-        return $this->hasOne(SellerShop::class,'seller_id','id');
+    public function shop()
+    {
+        return $this->hasOne(SellerShop::class, 'seller_id', 'id');
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function hasPermissionTo($permission)
+    {
+        if ($this->type === 'administrator') {
+            return true;
+        }
+
+        if ($this->role && is_array($this->role->permissions)) {
+            return in_array($permission, $this->role->permissions);
+        }
+
+        return false;
     }
 }

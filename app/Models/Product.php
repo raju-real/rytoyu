@@ -33,25 +33,25 @@ class Product extends Model
     use HasFactory, SoftDeletes, ModelHelper;
 
     protected $table = "products";
-    protected $appends = ['total_variant','default_variant', 'total_images','seller_shop_name','total_reviews','max_review'];
-    protected $fillable = ['name', 'unit_price', 'discount_price', 'category_id', 'slug'];
+    protected $appends = ['total_variant', 'default_variant', 'total_images', 'seller_shop_name', 'total_reviews', 'max_review'];
+    protected $fillable = ['name', 'unit_price', 'discount_price', 'category_id', 'slug', 'meta_title', 'meta_description', 'meta_image'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      * php artisan scout:import "App\Models\Product"
      */
-//    public function toSearchableArray()
-//    {
-//        return [
-//            'id' => $this->id,
-//            'name' => $this->name,
-//            'description' => $this->description,
-//        ];
-//    }
+    //    public function toSearchableArray()
+    //    {
+    //        return [
+    //            'id' => $this->id,
+    //            'name' => $this->name,
+    //            'description' => $this->description,
+    //        ];
+    //    }
 
     public function seller()
     {
-        return $this->belongsTo(Admin::class,'seller_id','id');
+        return $this->belongsTo(Admin::class, 'seller_id', 'id');
     }
 
     public function getTotalReviewsAttribute()
@@ -71,7 +71,7 @@ class Product extends Model
 
     public function getDefaultVariantAttribute()
     {
-        return ProductVariant::where('product_id',$this->id)->where('is_default',1)->first();
+        return ProductVariant::where('product_id', $this->id)->where('is_default', 1)->first();
     }
 
     public function getTotalImagesAttribute()
@@ -81,7 +81,7 @@ class Product extends Model
 
     public function getSellerShopNameAttribute()
     {
-        return SellerShop::where('seller_id',$this->seller_id)->first()->shop_name ?? '';
+        return SellerShop::where('seller_id', $this->seller_id)->first()->shop_name ?? '';
     }
 
     public function type()
@@ -125,7 +125,6 @@ class Product extends Model
 
     public function reviews()
     {
-        return $this->hasMany(Review::class,'product_id','id');
+        return $this->hasMany(Review::class, 'product_id', 'id');
     }
-
 }

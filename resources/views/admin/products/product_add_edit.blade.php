@@ -23,21 +23,28 @@
             justify-content: space-between;
             align-items: center;
         }
+
         .inherit-box {
             white-space: inherit !important;
         }
+
         .variant-error-message {
-            display: block; /* Ensure the message stays within its column */
-            white-space: normal; /* Wrap text if it's too long */
-            max-width: 100%; /* Prevent overflow from the table cell */
-            overflow-wrap: break-word; /* Break long words */
-            font-size: 0.875rem; /* Optional: Adjust the font size */
-            padding-top: 5px; /* Add spacing between the input and the error message */
+            display: block;
+            /* Ensure the message stays within its column */
+            white-space: normal;
+            /* Wrap text if it's too long */
+            max-width: 100%;
+            /* Prevent overflow from the table cell */
+            overflow-wrap: break-word;
+            /* Break long words */
+            font-size: 0.875rem;
+            /* Optional: Adjust the font size */
+            padding-top: 5px;
+            /* Add spacing between the input and the error message */
         }
 
 
         /* Breaks long words if necessary */
-
     </style>
 @endpush
 
@@ -70,19 +77,19 @@
                                 <div class="mb-3">
                                     <label class="form-label">Product Code (SKU) {!! starSign() !!}</label>
                                     <input type="text" name="product_code" value="{{ $product->product_code ?? '' }}"
-                                           class="form-control product_product_code product-input-control"
-                                           placeholder="Product Code">
+                                        class="form-control product_product_code product-input-control"
+                                        placeholder="Product Code">
                                     <span id="product_product_code_error"
-                                          class="text-danger font-weight-500 product-error-message"></span>
+                                        class="text-danger font-weight-500 product-error-message"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Name {!! starSign() !!}</label>
                                     <input type="text" name="name" value="{{ $product->name ?? '' }}"
-                                           class="form-control product_name product-input-control" placeholder="Name">
+                                        class="form-control product_name product-input-control" placeholder="Name">
                                     <span id="product_name_error"
-                                          class="text-danger font-weight-500 product-error-message"></span>
+                                        class="text-danger font-weight-500 product-error-message"></span>
                                 </div>
                             </div>
                         </div>
@@ -92,7 +99,7 @@
                                 <div class="mb-3">
                                     <label class="form-label">Product Type {!! starSign() !!}</label>
                                     <select name="product_type" id="product_type"
-                                            class="form-control select2 product_product_type product-input-control">
+                                        class="form-control select2 product_product_type product-input-control">
                                         <option value="">Select Product Type</option>
                                         @foreach (activeProductTypes() as $type)
                                             <option value="{{ $type->id }}"
@@ -101,14 +108,14 @@
                                         @endforeach
                                     </select>
                                     <span id="product_product_type_error"
-                                          class="text-danger font-weight-500 product-error-message"></span>
+                                        class="text-danger font-weight-500 product-error-message"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Category {!! starSign() !!}</label>
                                     <select name="category" id="category"
-                                            class="form-control select2 product_category product-input-control">
+                                        class="form-control select2 product_category product-input-control">
                                         <option value="">Select Category</option>
                                         @foreach (activeCategories() as $category)
                                             <option value="{{ $category->id }}"
@@ -117,7 +124,7 @@
                                         @endforeach
                                     </select>
                                     <span id="product_category_error"
-                                          class="text-danger font-weight-500 product-error-message"></span>
+                                        class="text-danger font-weight-500 product-error-message"></span>
                                 </div>
                             </div>
 
@@ -128,24 +135,24 @@
                                 <div class="mb-3">
                                     <label class="form-label">Sub Category</label>
                                     <select name="subcategory" id="subcategory"
-                                            class="form-control select2 product_subcategory product-input-control"
-                                            data-old-value="{{ $product->subcategory_id ?? '' }}">
+                                        class="form-control select2 product_subcategory product-input-control"
+                                        data-old-value="{{ $product->subcategory_id ?? '' }}">
                                         <option value="">Select Sub Category</option>
                                     </select>
                                     <span id="product_subcategory_error"
-                                          class="text-danger font-weight-500 product-error-message"></span>
+                                        class="text-danger font-weight-500 product-error-message"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Sub Subcategory</label>
                                     <select name="sub_subcategory" id="sub_subcategory"
-                                            class="form-control select2 product_sub_subcategory product-input-control"
-                                            data-old-value="{{ $product->sub_subcategory_id ?? '' }}">
+                                        class="form-control select2 product_sub_subcategory product-input-control"
+                                        data-old-value="{{ $product->sub_subcategory_id ?? '' }}">
                                         <option value="">Select Sub Subcategory</option>
                                     </select>
                                     <span id="product_sub_subcategory_error"
-                                          class="text-danger font-weight-500 product-error-message"></span>
+                                        class="text-danger font-weight-500 product-error-message"></span>
                                 </div>
                             </div>
                         </div>
@@ -155,12 +162,12 @@
                                     <label class="form-label d-flex align-items-center justify-content-between">
                                         <span>Brand</span>
                                         <a type="button" class="text-primary" data-bs-toggle="modal"
-                                           data-bs-target="#brand-add-modal">
+                                            data-bs-target="#brand-add-modal">
                                             <i class="fa fa-plus-circle fa-xl"></i>
                                         </a>
                                     </label>
                                     <select name="brand" id="brand"
-                                            class="form-control select2 product_brand product-input-control">
+                                        class="form-control select2 product_brand product-input-control">
                                         <option value="">Select Brand</option>
                                         @foreach (activeBrands() as $brand)
                                             <option value="{{ $brand->id }}"
@@ -169,7 +176,7 @@
                                         @endforeach
                                     </select>
                                     <span id="product_brand_error"
-                                          class="text-danger font-weight-500 product-error-message"></span>
+                                        class="text-danger font-weight-500 product-error-message"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -177,13 +184,13 @@
                                     <label class="form-label d-flex align-items-center justify-content-between">
                                         <span>Tags</span>
                                         <a type="button" class="text-primary" data-bs-toggle="modal"
-                                           data-bs-target="#tag-add-modal">
+                                            data-bs-target="#tag-add-modal">
                                             <i class="fa fa-plus-circle fa-xl"></i>
                                         </a>
                                     </label>
                                     <select name="tags[]" id="tag"
-                                            class="form-control select2 product_tags product-input-control"
-                                            multiple="multiple" data-placeholder="Tags ...">
+                                        class="form-control select2 product_tags product-input-control"
+                                        multiple="multiple" data-placeholder="Tags ...">
                                         <option value="">Select Tags</option>
                                         @foreach (allTags() as $tag)
                                             <option value="{{ $tag->name }}"
@@ -192,7 +199,7 @@
                                         @endforeach
                                     </select>
                                     <span id="product_tags_error"
-                                          class="text-danger font-weight-500 product-error-message"></span>
+                                        class="text-danger font-weight-500 product-error-message"></span>
                                 </div>
                             </div>
                         </div>
@@ -201,31 +208,28 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Short Description</label>
-                                    <textarea name="short_description"
-                                              class="form-control product_short_description product-input-control"
-                                              placeholder="Short Description">{{ $product->short_description ?? '' }}</textarea>
+                                    <textarea name="short_description" class="form-control product_short_description product-input-control"
+                                        placeholder="Short Description">{{ $product->short_description ?? '' }}</textarea>
                                     <span id="product_short_description_error"
-                                          class="text-danger font-weight-500 product-error-message"></span>
+                                        class="text-danger font-weight-500 product-error-message"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Special Note</label>
-                                    <textarea name="special_note"
-                                              class="form-control product_special_note product-input-control"
-                                              placeholder="Special Note">{{ $product->special_note ?? '' }}</textarea>
+                                    <textarea name="special_note" class="form-control product_special_note product-input-control"
+                                        placeholder="Special Note">{{ $product->special_note ?? '' }}</textarea>
                                     <span id="product_special_note_error"
-                                          class="text-danger font-weight-500 product-error-message"></span>
+                                        class="text-danger font-weight-500 product-error-message"></span>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <label class="form-label">Product Details {!! starSign() !!}</label>
-                                    <textarea name="product_details"
-                                              class="form-control product_product_details product-input-control"
-                                              id="product_details">{{ $product->product_details ?? '' }}</textarea>
+                                    <textarea name="product_details" class="form-control product_product_details product-input-control"
+                                        id="product_details">{{ $product->product_details ?? '' }}</textarea>
                                     <span id="product_product_details_error"
-                                          class="text-danger font-weight-500 product-error-message"></span>
+                                        class="text-danger font-weight-500 product-error-message"></span>
                                 </div>
                             </div>
                         </div>
@@ -234,11 +238,10 @@
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <label class="form-label">Product Specification</label>
-                                    <textarea name="product_specification"
-                                              class="form-control product_product_specification product-input-control"
-                                              id="product_specification">{{ $product->product_specification ?? '' }}</textarea>
+                                    <textarea name="product_specification" class="form-control product_product_specification product-input-control"
+                                        id="product_specification">{{ $product->product_specification ?? '' }}</textarea>
                                     <span id="product_product_specification_error"
-                                          class="text-danger font-weight-500 product-error-message"></span>
+                                        class="text-danger font-weight-500 product-error-message"></span>
                                 </div>
                             </div>
                         </div>
@@ -246,11 +249,10 @@
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <label class="form-label">Product Compare</label>
-                                    <textarea name="product_compare"
-                                              class="form-control product_product_compare product-input-control"
-                                              id="product_compare">{{ $product->product_compare ?? '' }}</textarea>
+                                    <textarea name="product_compare" class="form-control product_product_compare product-input-control"
+                                        id="product_compare">{{ $product->product_compare ?? '' }}</textarea>
                                     <span id="product_product_compare_error"
-                                          class="text-danger font-weight-500 product-error-message"></span>
+                                        class="text-danger font-weight-500 product-error-message"></span>
                                 </div>
                             </div>
                         </div>
@@ -264,130 +266,132 @@
                                         </div>
                                         <div class="card-body">
                                             <table class="table table-bordered table-responsive"
-                                                   id="product-variant-table">
+                                                id="product-variant-table">
                                                 <thead>
-                                                <tr class="form-label">
-                                                    <th class="w-10">Default</th>
-                                                    <th>
-                                                        <div class="th-content">
-                                                            <span>Size</span>
-                                                            <a type="button" class="text-primary"
-                                                               data-bs-toggle="modal"
-                                                               data-bs-target="#size-add-modal">
-                                                                <i class="fa fa-plus-circle fa-xl"></i>
-                                                            </a>
-                                                        </div>
-                                                    </th>
-                                                    <th>
-                                                        <div class="th-content">
-                                                            <span>Color</span>
-                                                            <a type="button" class="text-primary"
-                                                               data-bs-toggle="modal"
-                                                               data-bs-target="#color-add-modal">
-                                                                <i class="fa fa-plus-circle fa-xl"></i>
-                                                            </a>
-                                                        </div>
-                                                    </th>
-                                                    <th>Unit Price {!! starSign() !!}</th>
-                                                    <th>Discount Price {!! starSign() !!}</th>
-                                                    <th>Inventory {!! starSign() !!}</th>
-                                                    <th class="w-10">Action</th>
-                                                </tr>
+                                                    <tr class="form-label">
+                                                        <th class="w-10">Default</th>
+                                                        <th>
+                                                            <div class="th-content">
+                                                                <span>Size</span>
+                                                                <a type="button" class="text-primary"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#size-add-modal">
+                                                                    <i class="fa fa-plus-circle fa-xl"></i>
+                                                                </a>
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="th-content">
+                                                                <span>Color</span>
+                                                                <a type="button" class="text-primary"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#color-add-modal">
+                                                                    <i class="fa fa-plus-circle fa-xl"></i>
+                                                                </a>
+                                                            </div>
+                                                        </th>
+                                                        <th>Unit Price {!! starSign() !!}</th>
+                                                        <th>Discount Price {!! starSign() !!}</th>
+                                                        <th>Inventory {!! starSign() !!}</th>
+                                                        <th class="w-10">Action</th>
+                                                    </tr>
 
 
                                                 </thead>
                                                 <tbody>
-                                                @if (isset($product) && $product->total_variant > 0)
-                                                    <input type="hidden" id="total_variant"
-                                                           value="{{ $product->total_variant }}">
-                                                    @foreach ($product->variants as $key => $variant)
-                                                        <tr data-index="{{ $key }}">
-                                                            <td>
-                                                                {{-- Hidden Inputs--}}
-                                                                <input type="hidden" name="variants[{{ $key }}][is_new]"
-                                                                       value="0">
-                                                                <input type="hidden"
-                                                                       name="variants[{{ $key }}][variant_id]"
-                                                                       value="{{ $variant->id }}">
-                                                                <input type="hidden"
-                                                                       name="variants[{{ $key }}][index_no]"
-                                                                       value="{{ $key }}">
+                                                    @if (isset($product) && $product->total_variant > 0)
+                                                        <input type="hidden" id="total_variant"
+                                                            value="{{ $product->total_variant }}">
+                                                        @foreach ($product->variants as $key => $variant)
+                                                            <tr data-index="{{ $key }}">
+                                                                <td>
+                                                                    {{-- Hidden Inputs --}}
+                                                                    <input type="hidden"
+                                                                        name="variants[{{ $key }}][is_new]"
+                                                                        value="0">
+                                                                    <input type="hidden"
+                                                                        name="variants[{{ $key }}][variant_id]"
+                                                                        value="{{ $variant->id }}">
+                                                                    <input type="hidden"
+                                                                        name="variants[{{ $key }}][index_no]"
+                                                                        value="{{ $key }}">
 
-                                                                <input type="radio"
-                                                                       name="variants[{{ $key }}][is_default]"
-                                                                       id="variant_is_default_{{ $key }}"
-                                                                       value="{{ $variant->is_default }}"
-                                                                       class="variant-is-default" {{ $variant->is_default == 1 ? 'checked' : '' }}>
-                                                                <label
-                                                                    for="variant_is_default_{{ $key }}"></label>
-                                                            </td>
-                                                            <td>
-                                                                <select name="variants[{{ $key }}][size]"
+                                                                    <input type="radio"
+                                                                        name="variants[{{ $key }}][is_default]"
+                                                                        id="variant_is_default_{{ $key }}"
+                                                                        value="{{ $variant->is_default }}"
+                                                                        class="variant-is-default"
+                                                                        {{ $variant->is_default == 1 ? 'checked' : '' }}>
+                                                                    <label
+                                                                        for="variant_is_default_{{ $key }}"></label>
+                                                                </td>
+                                                                <td>
+                                                                    <select name="variants[{{ $key }}][size]"
                                                                         id="variant_size_{{ $key }}"
                                                                         class="form-select product_sizes">
-                                                                    <option value="">Select Size</option>
-                                                                    @foreach (allSizes() as $size)
-                                                                        <option value="{{ $size->id }}"
-                                                                            {{ isset($product) && $size->id == $variant->size_id ? 'selected' : '' }}>
-                                                                            {{ $size->name ?? '' }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                                <small class="text-danger variant-error-message"
-                                                                       id="variant_size_{{ $key }}_error"></small>
-                                                            </td>
-                                                            <td>
-                                                                <select name="variants[{{ $key }}][color]"
+                                                                        <option value="">Select Size</option>
+                                                                        @foreach (allSizes() as $size)
+                                                                            <option value="{{ $size->id }}"
+                                                                                {{ isset($product) && $size->id == $variant->size_id ? 'selected' : '' }}>
+                                                                                {{ $size->name ?? '' }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                    <small class="text-danger variant-error-message"
+                                                                        id="variant_size_{{ $key }}_error"></small>
+                                                                </td>
+                                                                <td>
+                                                                    <select name="variants[{{ $key }}][color]"
                                                                         id="variant_color_{{ $key }}"
                                                                         class="form-control select2 product_colors">
-                                                                    <option value="">Select Color</option>
-                                                                    @foreach (allColors() as $color)
-                                                                        <option value="{{ $color->id }}"
-                                                                            {{ isset($product) && $color->id == $variant->color_id ? 'selected' : '' }}>
-                                                                            {{ $color->name ?? '' }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                                <small class="text-danger variant-error-message"
-                                                                       id="variant_color_{{ $key }}_error"></small>
-                                                            </td>
-                                                            <td class="inherit-box">
-                                                                <input type="number"
-                                                                       value="{{ $variant->unit_price ?? 0 }}"
-                                                                       name="variants[{{ $key }}][unit_price]"
-                                                                       id="variant_unit_price_{{ $key }}"
-                                                                       class="form-control product_unit_price"
-                                                                       placeholder="Unit Price">
-                                                                <small class="text-danger variant-error-message"
-                                                                       id="variant_unit_price_{{ $key }}_error"></small>
-                                                            </td>
-                                                            <td class="inherit-box">
-                                                                <input type="number"
-                                                                       value="{{ $variant->discount_price ?? 0 }}"
-                                                                       name="variants[{{ $key }}][discount_price]"
-                                                                       id="variant_discount_price_{{ $key }}"
-                                                                       class="form-control product_discount_price"
-                                                                       placeholder="Discount Price">
-                                                                <small class="text-danger variant-error-message"
-                                                                       id="variant_discount_price_{{ $key }}_error"></small>
-                                                            </td>
-                                                            <td class="inherit-box">
-                                                                <input type="number"
-                                                                       value="{{ $variant->inventory ?? 0 }}"
-                                                                       name="variants[{{ $key }}][inventory]"
-                                                                       id="variant_inventory_{{ $key }}"
-                                                                       class="form-control product_inventory"
-                                                                       placeholder="Discount Price">
-                                                                <small class="text-danger variant-error-message"
-                                                                       id="variant_inventory_{{ $key }}_error"></small>
-                                                            </td>
-                                                            <td class="w-10 pull-right">
-                                                                <button type="button"
+                                                                        <option value="">Select Color</option>
+                                                                        @foreach (allColors() as $color)
+                                                                            <option value="{{ $color->id }}"
+                                                                                {{ isset($product) && $color->id == $variant->color_id ? 'selected' : '' }}>
+                                                                                {{ $color->name ?? '' }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                    <small class="text-danger variant-error-message"
+                                                                        id="variant_color_{{ $key }}_error"></small>
+                                                                </td>
+                                                                <td class="inherit-box">
+                                                                    <input type="number"
+                                                                        value="{{ $variant->unit_price ?? 0 }}"
+                                                                        name="variants[{{ $key }}][unit_price]"
+                                                                        id="variant_unit_price_{{ $key }}"
+                                                                        class="form-control product_unit_price"
+                                                                        placeholder="Unit Price">
+                                                                    <small class="text-danger variant-error-message"
+                                                                        id="variant_unit_price_{{ $key }}_error"></small>
+                                                                </td>
+                                                                <td class="inherit-box">
+                                                                    <input type="number"
+                                                                        value="{{ $variant->discount_price ?? 0 }}"
+                                                                        name="variants[{{ $key }}][discount_price]"
+                                                                        id="variant_discount_price_{{ $key }}"
+                                                                        class="form-control product_discount_price"
+                                                                        placeholder="Discount Price">
+                                                                    <small class="text-danger variant-error-message"
+                                                                        id="variant_discount_price_{{ $key }}_error"></small>
+                                                                </td>
+                                                                <td class="inherit-box">
+                                                                    <input type="number"
+                                                                        value="{{ $variant->inventory ?? 0 }}"
+                                                                        name="variants[{{ $key }}][inventory]"
+                                                                        id="variant_inventory_{{ $key }}"
+                                                                        class="form-control product_inventory"
+                                                                        placeholder="Discount Price">
+                                                                    <small class="text-danger variant-error-message"
+                                                                        id="variant_inventory_{{ $key }}_error"></small>
+                                                                </td>
+                                                                <td class="w-10 pull-right">
+                                                                    <button type="button"
                                                                         class="btn btn-md btn-danger text-right remove_variant">
-                                                                    <i class="fa fa-trash"></i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                @endif
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    @endif
                                                 </tbody>
                                             </table>
 
@@ -407,12 +411,12 @@
                                         <label class="form-label d-flex align-items-center justify-content-between">
                                             <span>Unit</span>
                                             <a type="button" class="text-primary" data-bs-toggle="modal"
-                                               data-bs-target="#unit-add-modal">
+                                                data-bs-target="#unit-add-modal">
                                                 <i class="fa fa-plus-circle fa-xl"></i>
                                             </a>
                                         </label>
                                         <select name="unit" id="unit"
-                                                class="form-control select2 product_unit product-input-control">
+                                            class="form-control select2 product_unit product-input-control">
                                             <option value="">Select Unit</option>
                                             @foreach (allUnits() as $unit)
                                                 <option value="{{ $unit->id }}"
@@ -421,12 +425,12 @@
                                             @endforeach
                                         </select>
                                         <span id="product_unit_error"
-                                              class="text-danger font-weight-500 product-error-message"></span>
+                                            class="text-danger font-weight-500 product-error-message"></span>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Refundable {!! starSign() !!}</label>
                                         <select name="is_refundable"
-                                                class="form-select product_is_refundable product-input-control">
+                                            class="form-select product_is_refundable product-input-control">
                                             <option value="0"
                                                 {{ isset($product) && $product->is_refundable == 0 ? 'selected' : '' }}>
                                                 No
@@ -437,12 +441,12 @@
                                             </option>
                                         </select>
                                         <span id="product_is_refundable_error"
-                                              class="text-danger font-weight-500 product-error-message"></span>
+                                            class="text-danger font-weight-500 product-error-message"></span>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Exchangeable {!! starSign() !!}</label>
                                         <select name="is_exchangeable"
-                                                class="form-select product_is_exchangeable product-input-control">
+                                            class="form-select product_is_exchangeable product-input-control">
                                             <option value="0"
                                                 {{ isset($product) && $product->is_exchangeable == 0 ? 'selected' : '' }}>
                                                 No
@@ -453,37 +457,46 @@
                                             </option>
                                         </select>
                                         <span id="product_is_exchangeable_error"
-                                              class="text-danger font-weight-500 product-error-message"></span>
+                                            class="text-danger font-weight-500 product-error-message"></span>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Warranty</label>
                                         <input type="text" name="warranty" value="{{ $product->warranty ?? '' }}"
-                                               class="form-control product_warranty product-input-control"
-                                               placeholder="Warranty">
+                                            class="form-control product_warranty product-input-control"
+                                            placeholder="Warranty">
                                         <span id="product_warranty_error"
-                                              class="text-danger font-weight-500 product-error-message"></span>
+                                            class="text-danger font-weight-500 product-error-message"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Weight</label>
+                                        <input type="number" step="any" name="weight"
+                                            value="{{ $product->weight ?? '' }}"
+                                            class="form-control product_weight product-input-control"
+                                            placeholder="Weight">
+                                        <span id="product_weight_error"
+                                            class="text-danger font-weight-500 product-error-message"></span>
                                     </div>
                                     <div class="col-md-12 mb-3">
                                         <label class="form-label">Video Link</label>
                                         <input type="text" name="video_link" value="{{ $product->video_link ?? '' }}"
-                                               class="form-control product_video_link product-input-control"
-                                               placeholder="Video Link">
+                                            class="form-control product_video_link product-input-control"
+                                            placeholder="Video Link">
                                         <span id="product_video_link_error"
-                                              class="text-danger font-weight-500 product-error-message"></span>
+                                            class="text-danger font-weight-500 product-error-message"></span>
                                     </div>
-{{--                                    <div class="col-md-6 mb-3">--}}
-{{--                                        <label class="form-label">Listed On {!! starSign() !!}</label>--}}
-{{--                                        <select name="listed_on"--}}
-{{--                                                class="form-select product_status product-input-control">--}}
-{{--                                            @foreach (listedOn() as $listed_on)--}}
-{{--                                                <option value="{{ $listed_on->value }}"--}}
-{{--                                                    {{ isset($product) && $product->listed_on === $listed_on->value ? 'selected' : '' }}>--}}
-{{--                                                    {{ $listed_on->title }}</option>--}}
-{{--                                            @endforeach--}}
-{{--                                        </select>--}}
-{{--                                        <span id="product_status_error"--}}
-{{--                                              class="text-danger font-weight-500 product-error-message"></span>--}}
-{{--                                    </div>--}}
+                                    {{--                                    <div class="col-md-6 mb-3"> --}}
+                                    {{--                                        <label class="form-label">Listed On {!! starSign() !!}</label> --}}
+                                    {{--                                        <select name="listed_on" --}}
+                                    {{--                                                class="form-select product_status product-input-control"> --}}
+                                    {{--                                            @foreach (listedOn() as $listed_on) --}}
+                                    {{--                                                <option value="{{ $listed_on->value }}" --}}
+                                    {{--                                                    {{ isset($product) && $product->listed_on === $listed_on->value ? 'selected' : '' }}> --}}
+                                    {{--                                                    {{ $listed_on->title }}</option> --}}
+                                    {{--                                            @endforeach --}}
+                                    {{--                                        </select> --}}
+                                    {{--                                        <span id="product_status_error" --}}
+                                    {{--                                              class="text-danger font-weight-500 product-error-message"></span> --}}
+                                    {{--                                    </div> --}}
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Status {!! starSign() !!}</label>
                                         <select name="status" class="form-select product_status product-input-control">
@@ -494,7 +507,7 @@
                                             @endforeach
                                         </select>
                                         <span id="product_status_error"
-                                              class="text-danger font-weight-500 product-error-message"></span>
+                                            class="text-danger font-weight-500 product-error-message"></span>
                                     </div>
                                 </div>
                             </div>
@@ -503,21 +516,20 @@
                                 <div class="mb-3">
                                     <label class="form-label d-flex align-items-center justify-content-between">
                                         <span>Thumbnail (Type:jpg,jpeg,png, Max:
-                                        1MB, Rc: 375x480) {!! starSign() !!}</span>
-                                        @if(isset($product->thumbnail_path) && file_exists($product->thumbnail_path))
-                                            <button type="button"
-                                                    class="custom-badge badge-info view-image"
-                                                    data-image-url="{{ asset($product->thumbnail_path) }}"
-                                                    title="View Image">
+                                            1MB, Rc: 375x480) {!! starSign() !!}</span>
+                                        @if (isset($product->thumbnail_path) && file_exists($product->thumbnail_path))
+                                            <button type="button" class="custom-badge badge-info view-image"
+                                                data-image-url="{{ asset($product->thumbnail_path) }}"
+                                                title="View Image">
                                                 <i class="fa fa-eye"></i>
                                             </button>
                                         @endif
                                     </label>
                                     <input type="file" name="product_thumbnail"
-                                           class="form-control product_product_thumbnail product-input-control"
-                                           accept=".jpg,.jpeg,.png">
+                                        class="form-control product_product_thumbnail product-input-control"
+                                        accept=".jpg,.jpeg,.png">
                                     <span id="product_product_thumbnail_error"
-                                          class="text-danger font-weight-500 product-error-message"></span>
+                                        class="text-danger font-weight-500 product-error-message"></span>
                                 </div>
 
                                 <div class="mb-3">
@@ -531,64 +543,133 @@
                                         </div>
                                         <div class="card-body">
                                             <b id="product_images_error"
-                                               class="text-danger font-weight-500 product-error-message"></b>
+                                                class="text-danger font-weight-500 product-error-message"></b>
                                             <table class="table table-responsive table-stripped w-100"
-                                                   id="product_image_table">
+                                                id="product_image_table">
                                                 <thead>
-                                                <tr class="form-label">
-                                                    <th>Image{!! starSign() !!}</th>
-                                                    <th>Action</th>
-                                                </tr>
+                                                    <tr class="form-label">
+                                                        <th>Image{!! starSign() !!}</th>
+                                                        <th>Action</th>
+                                                    </tr>
                                                 </thead>
                                                 <tbody>
-                                                @if (isset($product) && count($product->images))
-                                                    <input type="hidden" id="total_images"
-                                                           value="{{ $product->total_images }}">
-                                                    @foreach ($product->images as $key => $image)
-                                                        <tr data-index="{{ $key }}">
-                                                            <td class="w-85">
-                                                                {{--Hidden inputs--}}
-                                                                <input type="hidden" name="images[{{ $key }}][is_new]"
-                                                                       value="0">
-                                                                <input type="hidden" name="images[{{ $key }}][index_no]"
-                                                                       value="{{ $key }}">
-                                                                <input type="hidden" name="images[{{ $key }}][image_id]"
-                                                                       value="{{ $image->id }}">
-                                                                {{--file input--}}
-                                                                <input type="file" name="images[{{ $key }}][image]"
-                                                                       id="product_image_{{ $key }}"
-                                                                       class="form-control" accept=".jpg,.jpeg,.png">
-                                                                <small
-                                                                    class="text-danger font-weight-500 product-image-error-message"
-                                                                    id="product_image_{{ $key }}_error"></small>
-                                                            </td>
-                                                            <td class="w-15 float-end">
-                                                                <!-- View Image Link -->
-                                                                @if ($image->image_path && file_exists($image->image_path))
-                                                                    <button type="button"
+                                                    @if (isset($product) && count($product->images))
+                                                        <input type="hidden" id="total_images"
+                                                            value="{{ $product->total_images }}">
+                                                        @foreach ($product->images as $key => $image)
+                                                            <tr data-index="{{ $key }}">
+                                                                <td class="w-85">
+                                                                    {{-- Hidden inputs --}}
+                                                                    <input type="hidden"
+                                                                        name="images[{{ $key }}][is_new]"
+                                                                        value="0">
+                                                                    <input type="hidden"
+                                                                        name="images[{{ $key }}][index_no]"
+                                                                        value="{{ $key }}">
+                                                                    <input type="hidden"
+                                                                        name="images[{{ $key }}][image_id]"
+                                                                        value="{{ $image->id }}">
+                                                                    {{-- file input --}}
+                                                                    <input type="file"
+                                                                        name="images[{{ $key }}][image]"
+                                                                        id="product_image_{{ $key }}"
+                                                                        class="form-control" accept=".jpg,.jpeg,.png">
+                                                                    <small
+                                                                        class="text-danger font-weight-500 product-image-error-message"
+                                                                        id="product_image_{{ $key }}_error"></small>
+                                                                </td>
+                                                                <td class="w-15 float-end">
+                                                                    <!-- View Image Link -->
+                                                                    @if ($image->image_path && file_exists($image->image_path))
+                                                                        <button type="button"
                                                                             class="btn btn-md btn-info view-image"
                                                                             data-image-url="{{ asset($image->image_path) }}"
                                                                             title="View Image">
-                                                                        <i class="fa fa-eye"></i>
-                                                                    </button>
-                                                            @endif
-                                                            <!-- Remove Image Button -->
-                                                                <button type="button"
+                                                                            <i class="fa fa-eye"></i>
+                                                                        </button>
+                                                                    @endif
+                                                                    <!-- Remove Image Button -->
+                                                                    <button type="button"
                                                                         class="btn btn-md btn-danger remove_image"
                                                                         title="Remove Image">
-                                                                    <i class="fa fa-trash"></i>
-                                                                </button>
-                                                            </td>
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </button>
+                                                                </td>
 
-                                                        </tr>
-                                                    @endforeach
-                                                @endif
+                                                            </tr>
+                                                        @endforeach
+                                                    @endif
                                                 </tbody>
                                             </table>
 
                                             <button type="button" class="btn btn-sm btn-success" id="add_image">Add
                                                 Image
                                             </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <div class="card border border-primary">
+                                        <div class="card-header bg-soft-primary">
+                                            <div class="card-title text-primary"><i class="fa fa-globe"></i> SEO Meta Data
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Meta Title</label>
+                                                        <input type="text" name="meta_title" id="seo_meta_title"
+                                                            value="{{ $product->meta_title ?? '' }}" class="form-control"
+                                                            placeholder="Meta Title">
+                                                        <small class="text-muted">Optimum 50-60 characters</small>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Meta Description</label>
+                                                        <textarea name="meta_description" id="seo_meta_description" class="form-control" rows="4"
+                                                            placeholder="Meta Description">{{ $product->meta_description ?? '' }}</textarea>
+                                                        <small class="text-muted">Optimum 150-160 characters</small>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Meta Image
+                                                            (Type:jpg,jpeg,png,webp)</label>
+                                                        <input type="file" name="meta_image" class="form-control"
+                                                            accept=".jpg,.jpeg,.png,.webp">
+                                                        @if (isset($product->meta_image) && file_exists($product->meta_image))
+                                                            <div class="mt-2 text-primary">✓ Image currently uploaded</div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                <!-- Google Search Preview -->
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Search Engine Preview <i
+                                                            class="fab fa-google text-danger"></i></label>
+                                                    <div class="p-4"
+                                                        style="background:#fff; border-radius:8px; border:1px solid #dfe1e5; min-height: 150px; box-shadow: 0 1px 6px rgba(32,33,36,.28);">
+                                                        <div style="font-family: Arial, sans-serif;">
+                                                            <div
+                                                                style="font-size: 14px; color: #202124; display: flex; align-items: center; margin-bottom: 5px;">
+                                                                <span>{{ url('/') }}</span> <span
+                                                                    style="font-size: 12px; margin-left: 5px;">›
+                                                                    products</span>
+                                                            </div>
+                                                            <h3 style="font-size: 20px; color: #1a0dab; margin: 0 0 3px 0; font-weight: normal; font-family: 'Roboto', arial, sans-serif;"
+                                                                id="preview_seo_title">
+                                                                {{ rtrim($product->meta_title ?? 'Product Title', ' ') }}
+                                                            </h3>
+                                                            <div style="font-size: 14px; color: #4d5156; line-height: 1.58;"
+                                                                id="preview_seo_desc">
+                                                                {{ rtrim($product->meta_description ?? 'This is how your product description will appear on search engines like Google when customers discover your catalog.', ' ') }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -618,13 +699,13 @@
                         <div class="col-12 mb-3">
                             <label class="col-form-label">Name {!! starSign() !!}</label>
                             <input type="text" name="name" placeholder="Name"
-                                   class="form-control brand-form-control brand-name-input">
+                                class="form-control brand-form-control brand-name-input">
                             <span id="brand_name_error" class="text-danger font-weight-500 brand-error-message"></span>
                         </div>
                         <div class="col-12 mb-3">
                             <label class="form-label">Logo (Type:jpg,jpeg,png, Max: 1MB)</label>
                             <input type="file" name="logo" class="form-control brand-form-control brand-logo-input"
-                                   accept=".jpg,jpeg,.png">
+                                accept=".jpg,jpeg,.png">
                             <span id="brand_logo_error" class="text-danger font-weight-500 brand-error-message"></span>
                         </div>
                         <div class="col-12 mb-3">
@@ -634,8 +715,7 @@
                                     <option value="{{ $status->value }}">{{ $status->title }}</option>
                                 @endforeach
                             </select>
-                            <span id="brand_status_error"
-                                  class="text-danger font-weight-500 brand-error-message"></span>
+                            <span id="brand_status_error" class="text-danger font-weight-500 brand-error-message"></span>
                         </div>
                     </form>
                 </div>
@@ -660,7 +740,7 @@
                         <div class="col-12 mb-3">
                             <label class="col-form-label">Name {!! starSign() !!}</label>
                             <input type="text" name="name" placeholder="Name"
-                                   class="form-control unit-form-input">
+                                class="form-control unit-form-input">
                             <span id="unit_name_error" class="text-danger font-weight-500"></span>
                         </div>
                     </form>
@@ -686,7 +766,7 @@
                         <div class="col-12 mb-3">
                             <label class="col-form-label">Name {!! starSign() !!}</label>
                             <input type="text" name="name" placeholder="Name"
-                                   class="form-control size-form-input">
+                                class="form-control size-form-input">
                             <span id="size_name_error" class="text-danger font-weight-500"></span>
                         </div>
                     </form>
@@ -712,7 +792,7 @@
                         <div class="col-12 mb-3">
                             <label class="col-form-label">Name {!! starSign() !!}</label>
                             <input type="text" name="name" placeholder="Name"
-                                   class="form-control color-form-input">
+                                class="form-control color-form-input">
                             <span id="color_name_error" class="text-danger font-weight-500"></span>
                         </div>
                     </form>
@@ -753,4 +833,26 @@
 
 @push('js')
     <script src="{{ asset('assets/admin/js/custom/product_add_edit.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            // Real-time SEO Preview handler
+            $('#seo_meta_title').on('input', function() {
+                var val = $(this).val();
+                if (val === '') val = $('.product_name').val() || 'Product Title';
+                $('#preview_seo_title').text(val);
+            });
+            $('#seo_meta_description').on('input', function() {
+                var val = $(this).val();
+                if (val === '') val =
+                    'This is how your product description will appear on search engines like Google when customers discover your catalog.';
+                $('#preview_seo_desc').text(val);
+            });
+            // Fallback product name to title if empty title typed
+            $('.product_name').on('input', function() {
+                if ($('#seo_meta_title').val() === '') {
+                    $('#preview_seo_title').text($(this).val() || 'Product Title');
+                }
+            });
+        });
+    </script>
 @endpush

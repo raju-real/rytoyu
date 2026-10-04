@@ -28,7 +28,7 @@
 
     <section class="page-section color">
         <div class="container">
-            @if(count($cart_items['items']) > 0)
+            @if (count($cart_items['items']) > 0)
                 <h3 class="block-title alt item-row">
                     <label class="che-lab">
                         <input type="checkbox" id="select-all"> Select All ({{ count($cart_items['items']) }} item(s))
@@ -45,13 +45,13 @@
                         <div class="col-md-8">
                             <table class="table table-custom">
                                 <thead>
-                                <tr>
-                                    <th class="text-center"></th>
-                                    <th>Image</th>
-                                    <th>Quantity</th>
-                                    <th>Product Name</th>
-                                    <th>Total</th>
-                                </tr>
+                                    <tr>
+                                        <th class="text-center"></th>
+                                        <th>Image</th>
+                                        <th>Quantity</th>
+                                        <th>Product Name</th>
+                                        <th>Total</th>
+                                    </tr>
                                 </thead>
                                 <tbody id="cart-items-tbody">
 
@@ -77,35 +77,35 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <input name="first_name" id="first_name" class="form-control" type="text"
-                                           placeholder="First Name" value="{{ $user->first_name ?? '' }}">
+                                        placeholder="First Name" value="{{ $user->first_name ?? '' }}">
                                     <span id="order_first_name_error"
-                                          class="text-danger font-weight-500 order-error-message"></span>
+                                        class="text-danger font-weight-500 order-error-message"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <input name="last_name" id="last_name" class="form-control" type="text"
-                                           placeholder="Last Name" value="{{ $user->last_name ?? '' }}">
+                                        placeholder="Last Name" value="{{ $user->last_name ?? '' }}">
                                     <span id="order_last_name_error"
-                                          class="text-danger font-weight-500 order-error-message"></span>
+                                        class="text-danger font-weight-500 order-error-message"></span>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input name="email" id="email" class="form-control" type="text" placeholder="Email"
-                                           value="{{ $user->email ?? '' }}">
+                                    <input name="email" id="email" class="form-control" type="text"
+                                        placeholder="Email" value="{{ $user->email ?? '' }}">
                                     <span id="order_email_error"
-                                          class="text-danger font-weight-500 order-error-message"></span>
+                                        class="text-danger font-weight-500 order-error-message"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <input name="mobile" id="mobile" class="form-control" type="text"
-                                           placeholder="Phone Number" value="{{ $user->mobile ?? '' }}">
+                                        placeholder="Phone Number" value="{{ $user->mobile ?? '' }}">
                                 </div>
                                 <span id="order_mobile_error"
-                                      class="text-danger font-weight-500 order-error-message"></span>
+                                    class="text-danger font-weight-500 order-error-message"></span>
                             </div>
 
                             <div class="col-md-4">
@@ -118,44 +118,44 @@
                                         @endforeach
                                     </select>
                                     <span id="order_district_error"
-                                          class="text-danger font-weight-500 order-error-message"></span>
+                                        class="text-danger font-weight-500 order-error-message"></span>
                                 </div>
                             </div>
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <input name="city" id="city" class="form-control" type="text" placeholder="City"
-                                           value="{{ $user->city ?? '' }}">
+                                    <input name="city" id="city" class="form-control" type="text"
+                                        placeholder="City" value="{{ $user->city ?? '' }}">
                                     <span id="order_city_error"
-                                          class="text-danger font-weight-500 order-error-message"></span>
+                                        class="text-danger font-weight-500 order-error-message"></span>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <input name="zip_code" id="zip_code" class="form-control" type="text"
-                                           placeholder="Postcode/ZIP" value="{{ $user->zip_code ?? '' }}">
+                                        placeholder="Postcode/ZIP" value="{{ $user->zip_code ?? '' }}">
                                     <span id="order_zip_code_error"
-                                          class="text-danger font-weight-500 order-error-message"></span>
+                                        class="text-danger font-weight-500 order-error-message"></span>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <input name="address" id="address" class="form-control" type="text"
-                                           placeholder="Address" value="{{ $user->delivery_address ?? '' }}">
+                                        placeholder="Address" value="{{ $user->delivery_address ?? '' }}">
                                     <span id="order_address_error"
-                                          class="text-danger font-weight-500 order-error-message"></span>
+                                        class="text-danger font-weight-500 order-error-message"></span>
                                 </div>
                             </div>
 
 
                             <div class="col-md-12">
                                 <div class="form-group">
-                                <textarea name="additional_information" id="additional_information" class="form-control"
-                                          placeholder="Addıtıonal Informatıon" cols="30" rows="4"></textarea>
+                                    <textarea name="additional_information" id="additional_information" class="form-control"
+                                        placeholder="Addıtıonal Informatıon" cols="30" rows="4"></textarea>
                                 </div>
                                 <span id="order_additional_information_error"
-                                      class="text-danger font-weight-500 order-error-message"></span>
+                                    class="text-danger font-weight-500 order-error-message"></span>
                             </div>
 
                         </div>
@@ -171,51 +171,82 @@
                             <div class="panel-heading" role="tab" id="headingTwo">
                                 <h4 class="panel-title">
                                     <a class="collapsed" data-toggle="collapse" data-parent="#accordion"
-                                       href="#collapse2"
-                                       aria-expanded="false" aria-controls="collapse2" data-value="cash-on-delivery">
+                                        href="#collapse2" aria-expanded="false" aria-controls="collapse2"
+                                        data-value="cash-on-delivery">
                                         <span class="dot"></span> Cash on Delivery
                                     </a>
                                 </h4>
                             </div>
                             <div id="collapse2" class="panel-collapse collapse" role="tabpanel"
-                                 aria-labelledby="heading2">
+                                aria-labelledby="heading2">
                             </div>
                         </div>
                         <div class="panel panel-default">
                             <div class="panel-heading" role="tab" id="headingThree">
                                 <h4 class="panel-title">
                                     <a class="collapsed" data-toggle="collapse" data-parent="#accordion"
-                                       href="#collapse3"
-                                       aria-expanded="false" aria-controls="collapse3" data-value="online-payment">
+                                        href="#collapse3" aria-expanded="false" aria-controls="collapse3"
+                                        data-value="online-payment">
                                         <span class="dot"></span> Online Payment
                                     </a>
                                     <span class="overflowed pull-right">
-                                    <img src="{{ asset('assets/user/img/preview/payments/mastercard-2.jpg') }}"
-                                         alt=""/>
-                                    <img src="{{ asset('assets/user/img/preview/payments/visa-2.jpg') }}"
-                                         alt=""/>
-                                    <img src="{{ asset('assets/user/img/preview/payments/american-express-2.jpg') }}"
-                                         alt=""/>
-                                    <img src="{{ asset('assets/user/img/preview/payments/discovery-2.jpg') }}"
-                                         alt=""/>
-                                    <img src="{{ asset('assets/user/img/preview/payments/eheck-2.jpg') }}"
-                                         alt=""/>
-                                </span>
+                                        <img src="{{ asset('assets/user/img/preview/payments/mastercard-2.jpg') }}"
+                                            alt="" />
+                                        <img src="{{ asset('assets/user/img/preview/payments/visa-2.jpg') }}"
+                                            alt="" />
+                                        <img src="{{ asset('assets/user/img/preview/payments/american-express-2.jpg') }}"
+                                            alt="" />
+                                        <img src="{{ asset('assets/user/img/preview/payments/discovery-2.jpg') }}"
+                                            alt="" />
+                                        <img src="{{ asset('assets/user/img/preview/payments/eheck-2.jpg') }}"
+                                            alt="" />
+                                    </span>
                                 </h4>
                             </div>
                             <div id="collapse3" class="panel-collapse collapse" role="tabpanel"
-                                 aria-labelledby="heading3">
+                                aria-labelledby="heading3">
+                                <div class="panel-body" style="padding: 15px;">
+                                    @php
+                                        $payment_settings = paymentSettings();
+                                    @endphp
+
+                                    @if (isset($payment_settings['sslcommerz_status']) && $payment_settings['sslcommerz_status'] == 1)
+                                        <div class="radio">
+                                            <label><input type="radio" name="gateway" value="sslcommerz" checked>
+                                                SSLCommerz</label>
+                                        </div>
+                                    @endif
+
+                                    @if (isset($payment_settings['bkash_status']) && $payment_settings['bkash_status'] == 1)
+                                        <div class="radio">
+                                            <label><input type="radio" name="gateway" value="bkash"> bKash</label>
+                                        </div>
+                                    @endif
+
+                                    @if (isset($payment_settings['rocket_status']) && $payment_settings['rocket_status'] == 1)
+                                        <div class="radio">
+                                            <label><input type="radio" name="gateway" value="rocket"> Rocket</label>
+                                        </div>
+                                    @endif
+
+                                    @if (isset($payment_settings['nagad_status']) && $payment_settings['nagad_status'] == 1)
+                                        <div class="radio">
+                                            <label><input type="radio" name="gateway" value="nagad"> Nagad</label>
+                                        </div>
+                                    @endif
+                                    <span id="order_gateway_error"
+                                        class="text-danger font-weight-500 order-error-message"></span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <span id="order_payment_method_error"
-                          class="text-danger font-weight-500 order-error-message"></span>
+                    <span id="order_payment_method_error" class="text-danger font-weight-500 order-error-message"></span>
                 </section>
 
                 <div class="clearfix"></div>
                 <div class="overflowed">
                     <a class="btn btn-theme pull-right orange-bg place-btn" href="javascript:void(0)"
-                       id="order-submit">Submit
+                        id="order-submit">Submit
                         Order</a>
                 </div>
             @else

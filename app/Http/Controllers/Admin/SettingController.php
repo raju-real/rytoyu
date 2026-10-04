@@ -14,7 +14,7 @@ class SettingController extends Controller
 
     public function updateSiteSettings(Request $request)
     {
-        $this->validate($request,[
+        $this->validate($request, [
             'company_name' => 'required|string|max:100',
             'company_email' => 'nullable|sometimes|email|max:50',
             'company_mobile' => 'nullable|sometimes|string|max:15',
@@ -38,21 +38,28 @@ class SettingController extends Controller
             'return_policy' => 'nullable|sometimes|string|max:30000',
             'about_us' => 'nullable|sometimes|string|max:30000',
             'mission_and_vision' => 'nullable|sometimes|string|max:10000',
+            'show_chatbot'   => 'nullable|in:0,1',
+            'show_whatsapp'  => 'nullable|in:0,1',
+            'show_messenger' => 'nullable|in:0,1',
         ]);
         // Process keys and values
-        $keys = array_keys($request->all());// Fetch all keys from the request
+        $keys = array_keys($request->all()); // Fetch all keys from the request
         $setting_data = [];
         foreach ($keys as $key) {
             $setting_data[$key] = $request->input($key, '');
         }
+        // Cast toggle fields to booleans
+        foreach (['show_chatbot', 'show_whatsapp', 'show_messenger'] as $toggleKey) {
+            $setting_data[$toggleKey] = (bool) $request->input($toggleKey, 1);
+        }
         if ($request->file('favicon')) {
             $setting_data['favicon'] = uploadImage($request->file('favicon'), 'settings');
-        } elseif(isset(siteSettings()['favicon'])) {
+        } elseif (isset(siteSettings()['favicon'])) {
             $setting_data['favicon'] = siteSettings()['favicon'];
         }
         if ($request->file('logo')) {
             $setting_data['logo'] = uploadImage($request->file('logo'), 'settings');
-        } elseif(isset(siteSettings()['logo'])) {
+        } elseif (isset(siteSettings()['logo'])) {
             $setting_data['logo'] = siteSettings()['logo'];
         }
         $newJsonString = json_encode($setting_data, JSON_PRETTY_PRINT);

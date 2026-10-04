@@ -160,6 +160,7 @@ if (!function_exists('paymentMethodName')) {
         } elseif ($value === 'online-payment') {
             return 'Online Payment';
         }
+        return '';
     }
 }
 
@@ -452,7 +453,6 @@ if (!function_exists('generateQr')) {
         $logo = Logo::create((siteSettings()['logo']))->setResizeToWidth(50); // Optional logo
         $result = $writer->write($qrCode, $logo); // Write to file
         $result->saveToFile($file_path);
-
     }
 }
 
@@ -545,31 +545,37 @@ if (! function_exists('encrypt_decrypt')) {
 if (!function_exists('megaMenus')) {
     function megaMenus()
     {
-        return \App\Models\Category::with([
-            'subcategories' => function ($subcategory) {
-                $subcategory->where('is_mega_menu', 'yes')->active();
-                $subcategory->with([
-                    'sub_subcategories' => function ($sub_subcategory) {
-                        $sub_subcategory->where('is_mega_menu', 'yes')->active()->select('id', 'category_id', 'subcategory_id', 'name', 'slug');
-                    }
-                ]);
-                $subcategory->select('id', 'category_id', 'name', 'slug');
-            }
-        ])->active()->where('is_mega_menu', 'yes')->select('id', 'name', 'slug')->get();
+        return \Illuminate\Support\Facades\Cache::tags(['frontend'])->rememberForever('megaMenus', function () {
+            return \App\Models\Category::with([
+                'subcategories' => function ($subcategory) {
+                    $subcategory->where('is_mega_menu', 'yes')->active();
+                    $subcategory->with([
+                        'sub_subcategories' => function ($sub_subcategory) {
+                            $sub_subcategory->where('is_mega_menu', 'yes')->active()->select('id', 'category_id', 'subcategory_id', 'name', 'slug');
+                        }
+                    ]);
+                    $subcategory->select('id', 'category_id', 'name', 'slug');
+                }
+            ])->active()->where('is_mega_menu', 'yes')->select('id', 'name', 'slug')->get();
+        });
     }
 }
 
 if (!function_exists('latestAnnouncements')) {
     function latestAnnouncements()
     {
-        return \App\Models\Announcement::latest()->get();
+        return \Illuminate\Support\Facades\Cache::tags(['frontend'])->rememberForever('latestAnnouncements', function () {
+            return \App\Models\Announcement::latest()->get();
+        });
     }
 }
 
 if (!function_exists('activeSliders')) {
     function activeSliders()
     {
-        return \App\Models\Slider::active()->sort()->get();
+        return \Illuminate\Support\Facades\Cache::tags(['frontend'])->rememberForever('activeSliders', function () {
+            return \App\Models\Slider::active()->sort()->get();
+        });
     }
 }
 
@@ -581,17 +587,43 @@ if (!function_exists('siteSettings')) {
     }
 }
 
+if (!function_exists('paymentSettings')) {
+    function paymentSettings()
+    {
+        if (file_exists('assets/common/json/payment_settings.json')) {
+            $jsonString = file_get_contents('assets/common/json/payment_settings.json');
+            return json_decode($jsonString, true);
+        }
+        return [];
+    }
+}
+
+if (!function_exists('courierSettings')) {
+    function courierSettings()
+    {
+        if (file_exists('assets/common/json/courier_settings.json')) {
+            $jsonString = file_get_contents('assets/common/json/courier_settings.json');
+            return json_decode($jsonString, true);
+        }
+        return [];
+    }
+}
+
 if (!function_exists('activeProductTypes')) {
     function activeProductTypes()
     {
-        return \App\Models\ProductType::active()->select('id', 'name', 'slug')->orderBy('name')->get();
+        return \Illuminate\Support\Facades\Cache::tags(['frontend'])->rememberForever('activeProductTypes', function () {
+            return \App\Models\ProductType::active()->select('id', 'name', 'slug')->orderBy('name')->get();
+        });
     }
 }
 
 if (!function_exists('activeCategories')) {
     function activeCategories()
     {
-        return \App\Models\Category::active()->select('id', 'name', 'slug')->orderBy('name')->get();
+        return \Illuminate\Support\Facades\Cache::tags(['frontend'])->rememberForever('activeCategories', function () {
+            return \App\Models\Category::active()->select('id', 'name', 'slug')->orderBy('name')->get();
+        });
     }
 }
 
@@ -605,7 +637,9 @@ if (!function_exists('allBrands')) {
 if (!function_exists('activeBrands')) {
     function activeBrands()
     {
-        return \App\Models\Brand::active()->select('id', 'name', 'slug', 'logo')->orderBy('name')->get();
+        return \Illuminate\Support\Facades\Cache::tags(['frontend'])->rememberForever('activeBrands', function () {
+            return \App\Models\Brand::active()->select('id', 'name', 'slug', 'logo')->orderBy('name')->get();
+        });
     }
 }
 
@@ -765,35 +799,35 @@ if (!function_exists('getNewInProducts')) {
 
     function getNewInProducts()
     {
-        $limit = 16;
-        $product_ids = NewInProduct::sort()->pluck('product_id')->toArray();
+        return \Illuminate\Support\Facades\Cache::tags(['frontend'])->rememberForever('getNewInProducts', function () {
+            $limit = 16;
+            $product_ids = \App\Models\NewInProduct::sort()->pluck('product_id')->toArray();
 
-        $newInProducts = collect();
-        if (!empty($product_ids)) {
-            $ids_string = implode(',', $product_ids);
-            $newInProducts = Product::whereIn('id', $product_ids)
-                ->active()
-                ->orderByRaw("FIELD(id, $ids_string)")
-                ->select('id', 'seller_id', 'brand_id', 'product_code', 'name', 'slug', 'thumbnail_path', 'unit_price', 'discount_price')
-                ->get();
-        }
+            $newInProducts = collect();
+            if (!empty($product_ids)) {
+                $ids_string = implode(',', $product_ids);
+                $newInProducts = \App\Models\Product::whereIn('id', $product_ids)
+                    ->active()
+                    ->orderByRaw("FIELD(id, $ids_string)")
+                    ->select('id', 'seller_id', 'brand_id', 'product_code', 'name', 'slug', 'thumbnail_path', 'unit_price', 'discount_price')
+                    ->get();
+            }
 
-        $remaining = $limit - $newInProducts->count();
+            $remaining = $limit - $newInProducts->count();
 
-        // If less than 16, fetch latest active products (excluding already fetched IDs)
-        if ($remaining > 0) {
-            $extraProducts = Product::active()
-                ->whereNotIn('id', $product_ids)
-                ->latest()
-                ->take($remaining)
-                ->select('id', 'seller_id', 'brand_id', 'product_code', 'name', 'slug', 'thumbnail_path', 'unit_price', 'discount_price')
-                ->get();
+            if ($remaining > 0) {
+                $extraProducts = \App\Models\Product::active()
+                    ->whereNotIn('id', $product_ids)
+                    ->latest()
+                    ->take($remaining)
+                    ->select('id', 'seller_id', 'brand_id', 'product_code', 'name', 'slug', 'thumbnail_path', 'unit_price', 'discount_price')
+                    ->get();
 
-            // Merge NewIn products with the extra latest products
-            $newInProducts = $newInProducts->merge($extraProducts);
-        }
+                $newInProducts = $newInProducts->merge($extraProducts);
+            }
 
-        return $newInProducts;
+            return $newInProducts;
+        });
     }
 
     //    function getNewInProducts()
@@ -823,58 +857,64 @@ if (!function_exists('getNewInProducts')) {
 if (!function_exists('getLatestOfferProducts')) {
     function getLatestOfferProducts()
     {
-        $limit = 16;
-        $product_ids = LatestOfferProduct::sort()->pluck('product_id')->toArray();
+        return \Illuminate\Support\Facades\Cache::tags(['frontend'])->rememberForever('getLatestOfferProducts', function () {
+            $limit = 16;
+            $product_ids = \App\Models\LatestOfferProduct::sort()->pluck('product_id')->toArray();
 
-        $offerProducts = collect();
-        if (!empty($product_ids)) {
-            $ids_string = implode(',', $product_ids);
-            $offerProducts = Product::whereIn('id', $product_ids)
-                ->active()
-                ->where('discount_price', '>', 0)
-                ->orderByRaw("FIELD(id, $ids_string)")
-                ->select('id', 'seller_id', 'brand_id', 'product_code', 'name', 'slug', 'thumbnail_path', 'unit_price', 'discount_price')
-                ->get();
-        }
+            $offerProducts = collect();
+            if (!empty($product_ids)) {
+                $ids_string = implode(',', $product_ids);
+                $offerProducts = \App\Models\Product::whereIn('id', $product_ids)
+                    ->active()
+                    ->where('discount_price', '>', 0)
+                    ->orderByRaw("FIELD(id, $ids_string)")
+                    ->select('id', 'seller_id', 'brand_id', 'product_code', 'name', 'slug', 'thumbnail_path', 'unit_price', 'discount_price')
+                    ->get();
+            }
 
-        $remaining = $limit - $offerProducts->count();
+            $remaining = $limit - $offerProducts->count();
 
-        // If less than 16, fetch latest active products with discount_price > 0 (excluding already fetched IDs)
-        if ($remaining > 0) {
-            $extraProducts = Product::active()
-                ->where('discount_price', '>', 0)
-                ->whereNotIn('id', $product_ids)
-                ->latest()
-                ->take($remaining)
-                ->select('id', 'seller_id', 'brand_id', 'product_code', 'name', 'slug', 'thumbnail_path', 'unit_price', 'discount_price')
-                ->get();
+            if ($remaining > 0) {
+                $extraProducts = \App\Models\Product::active()
+                    ->where('discount_price', '>', 0)
+                    ->whereNotIn('id', $product_ids)
+                    ->latest()
+                    ->take($remaining)
+                    ->select('id', 'seller_id', 'brand_id', 'product_code', 'name', 'slug', 'thumbnail_path', 'unit_price', 'discount_price')
+                    ->get();
 
-            // Merge offer products with the extra latest discounted products
-            $offerProducts = $offerProducts->merge($extraProducts);
-        }
+                $offerProducts = $offerProducts->merge($extraProducts);
+            }
 
-        return $offerProducts;
+            return $offerProducts;
+        });
     }
 }
 
 if (!function_exists('getProductTypes')) {
     function getProductTypes()
     {
-        return \App\Models\ProductType::active()->select('id', 'name', 'slug', 'icon', 'image')->orderBy('sorting_serial')->get();
+        return \Illuminate\Support\Facades\Cache::tags(['frontend'])->rememberForever('getProductTypes', function () {
+            return \App\Models\ProductType::active()->select('id', 'name', 'slug', 'icon', 'image')->orderBy('sorting_serial')->get();
+        });
     }
 }
 
 if (!function_exists('getBrands')) {
     function getBrands()
     {
-        return \App\Models\Brand::active()->select('id', 'name', 'slug', 'logo', 'image')->orderBy('sorting_serial')->get();
+        return \Illuminate\Support\Facades\Cache::tags(['frontend'])->rememberForever('getBrands', function () {
+            return \App\Models\Brand::active()->select('id', 'name', 'slug', 'logo', 'image')->orderBy('sorting_serial')->get();
+        });
     }
 }
 
 if (!function_exists('getActiveCategories')) {
     function getActiveCategories()
     {
-        return \App\Models\Category::active()->sort()->select('id', 'name', 'slug')->get();
+        return \Illuminate\Support\Facades\Cache::tags(['frontend'])->rememberForever('getActiveCategories', function () {
+            return \App\Models\Category::active()->sort()->select('id', 'name', 'slug')->get();
+        });
     }
 }
 

@@ -1,0 +1,21 @@
+{
+    "sslcommerz_status": "1",
+    "sslcommerz_store_id": null,
+    "sslcommerz_store_password": null,
+    "sslcommerz_mode": "sandbox",
+    "bkash_status": "0",
+    "bkash_app_key": null,
+    "bkash_app_secret": null,
+    "bkash_username": null,
+    "bkash_password": null,
+    "bkash_mode": "sandbox",
+    "rocket_status": "0",
+    "rocket_merchant_account": null,
+    "rocket_mode": "sandbox",
+    "nagad_status": "0",
+    "nagad_merchant_id": null,
+    "nagad_merchant_number": null,
+    "nagad_public_key": null,
+    "nagad_private_key": null,
+    "nagad_mode": "sandbox"
+}

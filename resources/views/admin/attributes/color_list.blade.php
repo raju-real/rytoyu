@@ -36,7 +36,7 @@
                             @forelse($colors as $color)
                                 <tr>
                                     <td>{{ $loop->index + 1 }}</td>
-                                    <td>{{ $color->name ?? '' }}</td>
+                                    <td {!! tooltip($color->name ?? '') !!}>{{ textLimit($color->name ?? '') }}</td>
                                     <td>
                                         <div class="color-box"
                                              style="{{ colorControl('background-color', $color->color_code) }};{{ colorControl('color', $color->color_code) }}">

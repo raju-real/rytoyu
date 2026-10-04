@@ -33,7 +33,7 @@
                             @forelse($sizes as $size)
                                 <tr>
                                     <td>{{ $loop->index + 1 }}</td>
-                                    <td>{{ $size->name ?? '' }}</td>
+                                    <td {!! tooltip($size->name ?? '') !!}>{{ textLimit($size->name ?? '') }}</td>
                                     <td>
                                         <a data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" href="{{ route('admin.sizes.edit',$size->slug) }}"
                                            class="btn btn-sm btn-soft-success" ><i class="fa fa-edit"></i></a>

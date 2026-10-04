@@ -88,7 +88,7 @@
                         <tr>
                             <td>Name</td>
                             <td>:</td>
-                            <td>{{ $product->name ?? '' }}</td>
+                            <td {!! tooltip($product->name ?? '') !!}>{{ textLimit($product->name ?? '') }}</td>
                         </tr>
                         <tr>
                             <td>Type</td>

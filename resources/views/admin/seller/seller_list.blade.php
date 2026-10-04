@@ -110,7 +110,7 @@
                                             <img src="{{ asset(userAvatar()) }}" class="avatar-sm rounded-3 img-50">
                                         @endif
                                     </td>
-                                    <td>{{ $seller->name ?? '' }}</td>
+                                    <td {!! tooltip($seller->name ?? '') !!}>{{ textLimit($seller->name ?? '') }}</td>
                                     <td>{{ $seller->email ?? '' }}</td>
                                     <td>{{ $seller->mobile ?? '' }}</td>
                                     <td class="text-center">{{ $seller->commission_rate ?? '' }} %</td>
